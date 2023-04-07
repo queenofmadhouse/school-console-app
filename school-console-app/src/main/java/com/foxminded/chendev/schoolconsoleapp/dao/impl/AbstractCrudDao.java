@@ -1,11 +1,5 @@
 package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.CrudDao;
-import com.foxminded.chendev.schoolconsoleapp.dao.DBConnector;
-import com.foxminded.chendev.schoolconsoleapp.dao.DataBaseRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,11 +7,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
-public abstract class AbstractCrudDao<E> implements CrudDao<E> {
+import com.foxminded.chendev.schoolconsoleapp.dao.CrudDao;
+import com.foxminded.chendev.schoolconsoleapp.dao.DBConnector;
+import com.foxminded.chendev.schoolconsoleapp.dao.DataBaseRuntimeException;
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractCrudDao.class);
+public abstract class AbstractCrudDao<E> implements CrudDao<E, Long> {
+
     private final DBConnector connector;
     private final String saveQuery;
     private final String findByIdQuery;
@@ -29,9 +27,8 @@ public abstract class AbstractCrudDao<E> implements CrudDao<E> {
             = (PreparedStatement pr, String param) -> {
         try {
             pr.setString(1, param);
-        } catch (SQLException e) {
-            logger.error("SQLException in BiConsumer<PreparedStatement, String>", e);
-            throw new DataBaseRuntimeException(e);
+        } catch (SQLException e1) {
+            throw new DataBaseRuntimeException(e1);
         }
     };
 
@@ -40,13 +37,12 @@ public abstract class AbstractCrudDao<E> implements CrudDao<E> {
         try {
             pr.setLong(1, param);
         } catch (SQLException e) {
-            logger.error("SQLException in BiConsumer<PreparedStatement, String>", e);
             throw new DataBaseRuntimeException(e);
         }
     };
 
-    protected AbstractCrudDao(DBConnector connector, String saveQuery, String findByIdQuery,
-                              String findAllQuery, String updateQuery, String deleteByIdQuery) {
+    public AbstractCrudDao(DBConnector connector, String saveQuery, String findByIdQuery,
+                           String findAllQuery, String updateQuery, String deleteByIdQuery) {
         this.connector = connector;
         this.saveQuery = saveQuery;
         this.findByIdQuery = findByIdQuery;
@@ -63,7 +59,6 @@ public abstract class AbstractCrudDao<E> implements CrudDao<E> {
             insert(preparedStatement, entity);
             preparedStatement.execute();
         } catch (SQLException e) {
-            logger.error("SQLException in save", e);
             throw new DataBaseRuntimeException("Insertion is failed", e);
         }
     }
@@ -77,7 +72,7 @@ public abstract class AbstractCrudDao<E> implements CrudDao<E> {
     public List<E> findAll() {
         try (Connection connection = connector.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(findAllQuery);
-             final ResultSet resultSet = preparedStatement.executeQuery()) {
+             final ResultSet resultSet = preparedStatement.executeQuery();) {
 
             List<E> entities = new ArrayList<>();
             while (resultSet.next()) {
@@ -86,7 +81,6 @@ public abstract class AbstractCrudDao<E> implements CrudDao<E> {
 
             return entities;
         } catch (SQLException e) {
-            logger.error("SQLException in findAll", e);
             throw new DataBaseRuntimeException(e);
         }
     }
@@ -95,24 +89,22 @@ public abstract class AbstractCrudDao<E> implements CrudDao<E> {
     public void update(E entity) {
         try (Connection connection = connector.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
-            updateValues(preparedStatement, entity);
+             updateValues(preparedStatement, entity);
 
-            preparedStatement.executeUpdate();
+             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("SQLException in update", e);
             throw new DataBaseRuntimeException(e);
         }
     }
 
     @Override
-    public void deleteByID(long id) {
+    public void deleteByID(long ID) {
         try (Connection connection = connector.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(deleteByIdQuery)) {
-            preparedStatement.setLong(1, id);
+            preparedStatement.setLong(1, ID);
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("SQLException in deleteByID", e);
             throw new DataBaseRuntimeException(e);
         }
     }
@@ -133,7 +125,6 @@ public abstract class AbstractCrudDao<E> implements CrudDao<E> {
                 return resultSet.next() ? Optional.ofNullable(mapResultSetToEntity(resultSet)) : Optional.empty();
             }
         } catch (SQLException e) {
-            logger.error("SQLException in findByParam", e);
             throw new DataBaseRuntimeException(e);
         }
     }

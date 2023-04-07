@@ -45,7 +45,6 @@ public class StudentCourseRelationDaoImpl implements StudentCourseRelationDao {
 
 
     protected void insert(PreparedStatement preparedStatement, StudentCourseRelation entity) throws SQLException {
-        System.out.println(entity.getStudentID());
         preparedStatement.setLong(1, entity.getStudentID());
         preparedStatement.setLong(2, entity.getCourseID());
     }

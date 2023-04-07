@@ -15,11 +15,8 @@ public class SQLFileReader implements FileReader{
         String sqlScript = "";
 
         if (inputStream != null) {
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-                sqlScript = reader.lines().collect(Collectors.joining(" "));
-            } catch (IOException e) {
-                throw new FileReaderException("Не удалось прочитать файл SQL скрипта: " + e.getMessage());
-            }
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            sqlScript = reader.lines().collect(Collectors.joining(" "));
         } else {
             throw new FileReaderException("Не удалось найти файл SQL скрипта: " + filePath);
         }

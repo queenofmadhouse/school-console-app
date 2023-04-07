@@ -4,8 +4,6 @@ import com.foxminded.chendev.schoolconsoleapp.dao.DBConnector;
 import com.foxminded.chendev.schoolconsoleapp.dao.DataBaseRuntimeException;
 import com.foxminded.chendev.schoolconsoleapp.dao.GroupDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,7 +14,6 @@ import java.util.List;
 
 public class GroupDaoImpl extends AbstractCrudDao<Group> implements GroupDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(GroupDaoImpl.class);
     private static final String INSERT_GROUP = "INSERT INTO school.groups (group_name) VALUES (?)";
     private static final String SELECT_GROUP_BY_ID = "SELECT * FROM school.groups WHERE group_id = ?";
     private static final String SELECT_ALL_GROUPS = "SELECT * FROM school.groups";
@@ -30,15 +27,15 @@ public class GroupDaoImpl extends AbstractCrudDao<Group> implements GroupDao {
 
     private final DBConnector connector;
 
-    public GroupDaoImpl(DBConnector connector) {
-        super(connector, INSERT_GROUP, SELECT_GROUP_BY_ID, SELECT_ALL_GROUPS, UPDATE_GROUP, DELETE_GROUP_BY_ID);
-        this.connector = connector;
+    public GroupDaoImpl(DBConnector сonnector) {
+        super(сonnector, INSERT_GROUP, SELECT_GROUP_BY_ID, SELECT_ALL_GROUPS, UPDATE_GROUP, DELETE_GROUP_BY_ID);
+        this.connector = сonnector;
     }
 
     @Override
     protected Group mapResultSetToEntity(ResultSet resultSet) throws SQLException {
         return Group.builder()
-                .withGroupId(resultSet.getLong("group_id"))
+                .withGroupID(resultSet.getLong("group_id"))
                 .withGroupName(resultSet.getString("group_name"))
                 .build();
     }
@@ -51,7 +48,7 @@ public class GroupDaoImpl extends AbstractCrudDao<Group> implements GroupDao {
     @Override
     protected void updateValues(PreparedStatement preparedStatement, Group entity) throws SQLException {
         preparedStatement.setString(1, entity.getGroupName());
-        preparedStatement.setLong(2, entity.getGroupId());
+        preparedStatement.setLong(2, entity.getGroupID());
     }
 
     @Override
@@ -64,14 +61,13 @@ public class GroupDaoImpl extends AbstractCrudDao<Group> implements GroupDao {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     Group group = Group.builder()
-                            .withGroupId(resultSet.getLong("group_id"))
+                            .withGroupID(resultSet.getLong("group_id"))
                             .withGroupName(resultSet.getString("group_name"))
                             .build();
                     groups.add(group);
                 }
             }
         } catch (SQLException e) {
-            logger.error("SQLException in findGroupsWithLessOrEqualStudents", e);
             throw new DataBaseRuntimeException("Failed to find groups with less or equal students", e);
         }
         return groups;

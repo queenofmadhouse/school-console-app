@@ -10,10 +10,6 @@
     <properties>
         <junit.jupiter.engine.version>5.9.1</junit.jupiter.engine.version>
         <org.mockito.version>3.12.4</org.mockito.version>
-        <org.postgresql.version>42.6.0</org.postgresql.version>
-        <com.h2database.version>2.1.214</com.h2database.version>
-        <com.zaxxer.version>4.0.3</com.zaxxer.version>
-        <ch.qos.logback.version>1.2.9</ch.qos.logback.version>
     </properties>
 
     <build>
@@ -54,26 +50,6 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.0.0-M5</version>
-                <executions>
-                    <execution>
-                        <id>integration-test</id>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                        <configuration>
-                            <includes>
-                                <include>**/*IT.java</include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.8</version>
@@ -96,9 +72,8 @@
                         </rule>
                     </rules>
                     <excludes>
-                        <exclude>com/foxminded/chendev/schoolconsoleapp/ApplicationRunner.class/</exclude>
+                        <exclude>com/foxminded/chendev/formulaonequalification/FormulaOneApplication.class</exclude>
                         <exclude>com/foxminded/chendev/schoolconsoleapp/entity/**</exclude>
-                        <exclude>com/foxminded/chendev/schoolconsoleapp/reader/FileReaderException.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -137,27 +112,16 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>${org.postgresql.version}</version>
+            <version>42.6.0</version>
         </dependency>
 
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>${com.h2database.version}</version>
+            <version>2.1.214</version>
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>${com.zaxxer.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${ch.qos.logback.version}</version>
-        </dependency>
 
     </dependencies>
 
