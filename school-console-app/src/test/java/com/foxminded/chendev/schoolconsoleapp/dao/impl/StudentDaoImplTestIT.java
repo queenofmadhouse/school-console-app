@@ -17,17 +17,17 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class StudentDaoImplTestIT {
+class StudentDaoImplTestIT {
 
     private StudentDaoImpl studentDao;
+    private CourseDaoImpl courseDao;
     private Connection connection;
     private DBConnector connector;
-    private StudentCourseRelationDaoImpl studentCourseRelationDao;
 
     private final String sqlQuery = "SELECT * FROM school.students WHERE first_name = ?";
     private final FileReader fileReader = new SQLFileReader();
@@ -46,7 +46,7 @@ public class StudentDaoImplTestIT {
         preparedStatement.execute();
 
         studentDao = new StudentDaoImpl(connector);
-        studentCourseRelationDao = new StudentCourseRelationDaoImpl(connector);
+        courseDao = new CourseDaoImpl(connector);
     }
 
     @AfterEach
@@ -58,13 +58,13 @@ public class StudentDaoImplTestIT {
     void saveShouldSaveInEntityInDataBase() {
 
         Group group = Group.builder()
-                .withGroupID(1)
+                .withGroupId(1)
                 .build();
 
         Student student = Student.builder()
                 .withFirstName("Alex")
                 .withLastName("Kapranos")
-                .withGroupID(group)
+                .withGroupId(group)
                 .build();
 
         studentDao.save(student);
@@ -73,7 +73,7 @@ public class StudentDaoImplTestIT {
 
         assertEquals("Alex", findedStudent.getFirstName());
         assertEquals("Kapranos", findedStudent.getLastName());
-        assertEquals(1, findedStudent.getStudentID());
+        assertEquals(1, findedStudent.getStudentId());
 
     }
 
@@ -81,40 +81,41 @@ public class StudentDaoImplTestIT {
     void findAllShouldReturnListOfStudentWhenFound() {
 
         Group group = Group.builder()
-                .withGroupID(1)
+                .withGroupId(1)
                 .build();
 
         Student student1 = Student.builder()
                 .withFirstName("Alex")
                 .withLastName("Kapranos")
-                .withGroupID(group)
+                .withGroupId(group)
                 .build();
         Student student2 = Student.builder()
                 .withFirstName("Nikol")
                 .withLastName("Smith")
-                .withGroupID(group)
+                .withGroupId(group)
                 .build();
 
         studentDao.save(student1);
         studentDao.save(student2);
 
-        List<Student> resultList= studentDao.findAll();
+        List<Student> resultList = studentDao.findAll();
 
         assertFalse(resultList.isEmpty());
-        assertEquals(2, resultList.size());;
+        assertEquals(2, resultList.size());
+        ;
     }
 
     @Test
     void updateShouldUpdateValues() {
 
         Group group = Group.builder()
-                .withGroupID(1)
+                .withGroupId(1)
                 .build();
 
         Student student = Student.builder()
                 .withFirstName("Alex")
                 .withLastName("Kapranos")
-                .withGroupID(group)
+                .withGroupId(group)
                 .build();
 
         studentDao.save(student);
@@ -138,47 +139,47 @@ public class StudentDaoImplTestIT {
     void deleteByIDShouldDeleteAllRelations() {
 
         Group group = Group.builder()
-                .withGroupID(1)
+                .withGroupId(1)
                 .build();
 
         StudentCourseRelation studentCourseRelation1 = StudentCourseRelation.builder()
-                .withStudentID(1)
-                .withCourseID(30)
+                .withStudentId(1)
+                .withCourseId(30)
                 .build();
         StudentCourseRelation studentCourseRelation2 = StudentCourseRelation.builder()
-                .withStudentID(1)
-                .withCourseID(35)
+                .withStudentId(1)
+                .withCourseId(35)
                 .build();
         StudentCourseRelation studentCourseRelation3 = StudentCourseRelation.builder()
-                .withStudentID(1)
-                .withCourseID(38)
+                .withStudentId(1)
+                .withCourseId(38)
                 .build();
         StudentCourseRelation studentCourseRelation4 = StudentCourseRelation.builder()
-                .withStudentID(2)
-                .withCourseID(20)
+                .withStudentId(2)
+                .withCourseId(20)
                 .build();
         StudentCourseRelation studentCourseRelation5 = StudentCourseRelation.builder()
-                .withStudentID(2)
-                .withCourseID(9)
+                .withStudentId(2)
+                .withCourseId(9)
                 .build();
 
         Student student = Student.builder()
                 .withFirstName("Alex")
                 .withLastName("Smith")
-                .withGroupID(group)
+                .withGroupId(group)
                 .build();
 
-        studentCourseRelationDao.saveRelation(studentCourseRelation1);
-        studentCourseRelationDao.saveRelation(studentCourseRelation2);
-        studentCourseRelationDao.saveRelation(studentCourseRelation3);
-        studentCourseRelationDao.saveRelation(studentCourseRelation4);
-        studentCourseRelationDao.saveRelation(studentCourseRelation5);
+        courseDao.saveRelation(studentCourseRelation1);
+        courseDao.saveRelation(studentCourseRelation2);
+        courseDao.saveRelation(studentCourseRelation3);
+        courseDao.saveRelation(studentCourseRelation4);
+        courseDao.saveRelation(studentCourseRelation5);
 
         studentDao.save(student);
 
         studentDao.deleteByID(1);
 
-        List<StudentCourseRelation> resultList = studentCourseRelationDao.findCoursesByStudentID(1);
+        List<StudentCourseRelation> resultList = courseDao.findCoursesByStudentID(1);
 
         assertTrue(resultList.isEmpty());
     }

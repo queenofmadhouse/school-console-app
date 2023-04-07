@@ -10,11 +10,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class SQLFileReaderTest {
+class SQLFileReaderTest {
 
     private SQLFileReader fileReader;
     private Path tempFile;
@@ -32,7 +31,7 @@ public class SQLFileReaderTest {
     }
 
     @Test
-    public void readFileShouldReturnFileContentWhenFileExists() throws IOException {
+    void readFileShouldReturnFileContentWhenFileExists() throws IOException {
 
         String sqlContent = "CREATE TABLE test_table (id INTEGER PRIMARY KEY, name TEXT);";
         Files.write(tempFile, sqlContent.getBytes(StandardCharsets.UTF_8));

@@ -27,15 +27,15 @@ public class GroupDaoImpl extends AbstractCrudDao<Group> implements GroupDao {
 
     private final DBConnector connector;
 
-    public GroupDaoImpl(DBConnector сonnector) {
-        super(сonnector, INSERT_GROUP, SELECT_GROUP_BY_ID, SELECT_ALL_GROUPS, UPDATE_GROUP, DELETE_GROUP_BY_ID);
-        this.connector = сonnector;
+    public GroupDaoImpl(DBConnector connector) {
+        super(connector, INSERT_GROUP, SELECT_GROUP_BY_ID, SELECT_ALL_GROUPS, UPDATE_GROUP, DELETE_GROUP_BY_ID);
+        this.connector = connector;
     }
 
     @Override
     protected Group mapResultSetToEntity(ResultSet resultSet) throws SQLException {
         return Group.builder()
-                .withGroupID(resultSet.getLong("group_id"))
+                .withGroupId(resultSet.getLong("group_id"))
                 .withGroupName(resultSet.getString("group_name"))
                 .build();
     }
@@ -48,7 +48,7 @@ public class GroupDaoImpl extends AbstractCrudDao<Group> implements GroupDao {
     @Override
     protected void updateValues(PreparedStatement preparedStatement, Group entity) throws SQLException {
         preparedStatement.setString(1, entity.getGroupName());
-        preparedStatement.setLong(2, entity.getGroupID());
+        preparedStatement.setLong(2, entity.getGroupId());
     }
 
     @Override
@@ -61,7 +61,7 @@ public class GroupDaoImpl extends AbstractCrudDao<Group> implements GroupDao {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     Group group = Group.builder()
-                            .withGroupID(resultSet.getLong("group_id"))
+                            .withGroupId(resultSet.getLong("group_id"))
                             .withGroupName(resultSet.getString("group_name"))
                             .build();
                     groups.add(group);

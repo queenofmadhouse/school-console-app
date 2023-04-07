@@ -4,10 +4,8 @@ import com.foxminded.chendev.schoolconsoleapp.generator.datagenegator.CoursesGen
 import com.foxminded.chendev.schoolconsoleapp.generator.datagenegator.GroupsGenerator;
 import com.foxminded.chendev.schoolconsoleapp.generator.datagenegator.StudentsCoursesRelationsGenerator;
 import com.foxminded.chendev.schoolconsoleapp.generator.datagenegator.StudentsGenerator;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;

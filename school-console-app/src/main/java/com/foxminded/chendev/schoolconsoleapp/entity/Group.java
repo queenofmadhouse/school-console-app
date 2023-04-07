@@ -2,28 +2,28 @@ package com.foxminded.chendev.schoolconsoleapp.entity;
 
 public class Group {
 
-    private long groupID;
+    private long groupId;
     private String groupName;
 
     private Group(Builder builder) {
-        this.groupID = builder.groupID;
+        this.groupId = builder.groupId;
         this.groupName = builder.groupName;
     }
 
     @Override
     public String toString() {
         return "Group{" +
-                "groupID=" + groupID +
+                "groupID=" + groupId +
                 ", groupName='" + groupName + '\'' +
                 '}';
     }
 
-    public long getGroupID() {
-        return groupID;
+    public long getGroupId() {
+        return groupId;
     }
 
-    public void setGroupID(int groupID) {
-        this.groupID = groupID;
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
     }
 
     public String getGroupName() {
@@ -40,11 +40,11 @@ public class Group {
 
     public static class Builder {
 
-        private long groupID;
+        private long groupId;
         private String groupName;
 
-        public Builder withGroupID(long groupID) {
-            this.groupID = groupID;
+        public Builder withGroupId(long groupID) {
+            this.groupId = groupID;
             return this;
         }
 

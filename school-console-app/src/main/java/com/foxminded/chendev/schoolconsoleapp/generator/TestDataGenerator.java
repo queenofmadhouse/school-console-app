@@ -1,11 +1,12 @@
 package com.foxminded.chendev.schoolconsoleapp.generator;
 
-import com.foxminded.chendev.schoolconsoleapp.generator.datagenegator.StudentsGenerator;
-import com.foxminded.chendev.schoolconsoleapp.generator.datagenegator.GroupsGenerator;
 import com.foxminded.chendev.schoolconsoleapp.generator.datagenegator.CoursesGenerator;
+import com.foxminded.chendev.schoolconsoleapp.generator.datagenegator.GroupsGenerator;
 import com.foxminded.chendev.schoolconsoleapp.generator.datagenegator.StudentsCoursesRelationsGenerator;
+import com.foxminded.chendev.schoolconsoleapp.generator.datagenegator.StudentsGenerator;
 
 public class TestDataGenerator {
+
     private final StudentsGenerator studentsGenerator;
     private final GroupsGenerator groupsGenerator;
     private final CoursesGenerator coursesGenerator;

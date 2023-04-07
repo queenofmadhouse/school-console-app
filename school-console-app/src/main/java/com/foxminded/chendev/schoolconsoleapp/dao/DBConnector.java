@@ -1,46 +1,34 @@
 package com.foxminded.chendev.schoolconsoleapp.dao;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class DBConnector implements Connector {
-    
-    private final String url;
-    private final String user;
-    private final String password;
-    
+
+    private final HikariDataSource dataSource;
+
     public DBConnector(String fileConfigurationName) {
+
         ResourceBundle resource = ResourceBundle.getBundle(fileConfigurationName);
-        this.url = resource.getString("db.url");
-        this.user = resource.getString("db.user");
-        this.password = resource.getString("db.password");
+        String url = resource.getString("db.url");
+        String user = resource.getString("db.user");
+        String password = resource.getString("db.password");
+
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(url);
+        config.setUsername(user);
+        config.setPassword(password);
+
+        dataSource = new HikariDataSource(config);
     }
 
-    public DBConnector(String url, String user, String password) {
-        this.url = url;
-        this.user = user;
-        this.password = password;
-    }
     @Override
-    public Connection getConnection() {
-        try {
-            return DriverManager.getConnection(url, user, password);
-        } catch(SQLException e) {
-            throw new DataBaseRuntimeException(e);
-        }
-    }
+    public Connection getConnection() throws SQLException {
 
-    public String getUrl() {
-        return url;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public String getPassword() {
-        return password;
+        return dataSource.getConnection();
     }
 }

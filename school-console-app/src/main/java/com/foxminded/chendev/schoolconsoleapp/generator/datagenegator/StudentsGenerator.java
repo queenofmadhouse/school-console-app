@@ -1,7 +1,7 @@
 package com.foxminded.chendev.schoolconsoleapp.generator.datagenegator;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.impl.GroupDaoImpl;
-import com.foxminded.chendev.schoolconsoleapp.dao.impl.StudentDaoImpl;
+import com.foxminded.chendev.schoolconsoleapp.dao.GroupDao;
+import com.foxminded.chendev.schoolconsoleapp.dao.StudentDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 
@@ -24,11 +24,11 @@ public class StudentsGenerator implements DataGenerator {
             "Thomas", "Taylor", "Moore", "Jackson", "Martin"
     };
     private static final Random random = new Random();
-    private final StudentDaoImpl studentDao;
-    private final GroupDaoImpl groupDao;
+    private final StudentDao studentDao;
+    private final GroupDao groupDao;
     private final int amountOfStudents;
 
-    public StudentsGenerator(StudentDaoImpl studentDao, GroupDaoImpl groupDao, int amountOfStudents) {
+    public StudentsGenerator(StudentDao studentDao, GroupDao groupDao, int amountOfStudents) {
         this.studentDao = studentDao;
         this.groupDao = groupDao;
         this.amountOfStudents = amountOfStudents;
@@ -46,7 +46,7 @@ public class StudentsGenerator implements DataGenerator {
             Student student = Student.builder()
                     .withFirstName(firstName)
                     .withLastName(lastName)
-                    .withGroupID(group)
+                    .withGroupId(group)
                     .build();
 
             studentDao.save(student);
@@ -55,13 +55,11 @@ public class StudentsGenerator implements DataGenerator {
     }
 
     private String generateFirstName() {
-        String firstName = FIRST_NAMES[random.nextInt(FIRST_NAMES.length)];
-        return firstName;
+        return FIRST_NAMES[random.nextInt(FIRST_NAMES.length)];
     }
 
     private String generateLastName() {
-        String lastName = LAST_NAMES[random.nextInt(LAST_NAMES.length)];
-        return lastName;
+        return LAST_NAMES[random.nextInt(LAST_NAMES.length)];
     }
 
     private Group getRandomGroup(List<Group> groups) {

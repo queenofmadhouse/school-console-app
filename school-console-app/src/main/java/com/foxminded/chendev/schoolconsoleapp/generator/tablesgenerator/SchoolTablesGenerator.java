@@ -1,6 +1,7 @@
 package com.foxminded.chendev.schoolconsoleapp.generator.tablesgenerator;
 
 public class SchoolTablesGenerator {
+
     private final String studentCreateQuery;
     private final String groupsCreateQuery;
     private final String coursesCreateQuery;

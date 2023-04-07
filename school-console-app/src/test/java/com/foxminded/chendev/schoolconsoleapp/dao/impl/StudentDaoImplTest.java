@@ -16,11 +16,11 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class StudentDaoImplTest {
+class StudentDaoImplTest {
 
     @Mock
     private DBConnector mockConnector;
@@ -38,7 +38,7 @@ public class StudentDaoImplTest {
     private StudentDaoImpl mockStudentDao;
 
     @Test
-    public void saveShouldThrowDataBaseRuntimeException() throws SQLException {
+    void saveShouldThrowDataBaseRuntimeException() throws SQLException {
 
         when(mockConnector.getConnection()).thenReturn(mockConnection);
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
@@ -48,7 +48,7 @@ public class StudentDaoImplTest {
     }
 
     @Test
-    public void findByIdShouldThrowDataBaseRuntimeException() throws SQLException {
+    void findByIdShouldThrowDataBaseRuntimeException() throws SQLException {
 
         when(mockConnector.getConnection()).thenReturn(mockConnection);
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
@@ -58,7 +58,7 @@ public class StudentDaoImplTest {
     }
 
     @Test
-    public void findAllShouldThrowDataBaseRuntimeException() throws SQLException {
+    void findAllShouldThrowDataBaseRuntimeException() throws SQLException {
 
         when(mockConnector.getConnection()).thenReturn(mockConnection);
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
@@ -69,7 +69,7 @@ public class StudentDaoImplTest {
     }
 
     @Test
-    public void updateShouldThrowDataBaseRuntimeException() throws SQLException {
+    void updateShouldThrowDataBaseRuntimeException() throws SQLException {
 
         when(mockConnector.getConnection()).thenReturn(mockConnection);
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
@@ -79,7 +79,7 @@ public class StudentDaoImplTest {
     }
 
     @Test
-    public void deleteByIdShouldThrowDataBaseRuntimeException() throws SQLException {
+    void deleteByIdShouldThrowDataBaseRuntimeException() throws SQLException {
 
         when(mockConnector.getConnection()).thenReturn(mockConnection);
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
@@ -89,7 +89,7 @@ public class StudentDaoImplTest {
     }
 
     @Test
-    public void findByStringParamShouldThrowDataBaseRuntimeException() throws SQLException {
+    void findByStringParamShouldThrowDataBaseRuntimeException() throws SQLException {
 
         when(mockConnector.getConnection()).thenReturn(mockConnection);
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
@@ -100,7 +100,7 @@ public class StudentDaoImplTest {
     }
 
     @Test
-    public void findByStringParamShouldThrowsDataBaseRuntimeException() throws SQLException {
+    void findByStringParamShouldThrowsDataBaseRuntimeException() throws SQLException {
 
         when(mockConnector.getConnection()).thenReturn(mockConnection);
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);

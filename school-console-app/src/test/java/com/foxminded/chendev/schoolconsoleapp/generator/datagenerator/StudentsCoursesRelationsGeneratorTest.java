@@ -1,7 +1,6 @@
 package com.foxminded.chendev.schoolconsoleapp.generator.datagenerator;
 
 import com.foxminded.chendev.schoolconsoleapp.dao.impl.CourseDaoImpl;
-import com.foxminded.chendev.schoolconsoleapp.dao.impl.StudentCourseRelationDaoImpl;
 import com.foxminded.chendev.schoolconsoleapp.dao.impl.StudentDaoImpl;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
@@ -17,17 +16,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class StudentsCoursesRelationsGeneratorTest {
+class StudentsCoursesRelationsGeneratorTest {
 
-    @Mock
-    private StudentCourseRelationDaoImpl studentCourseRelationDao;
     @Mock
     private StudentDaoImpl studentDao;
     @Mock
@@ -44,12 +41,12 @@ public class StudentsCoursesRelationsGeneratorTest {
 
         students = Arrays.asList(
                 Student.builder()
-                        .withStudentID(1)
+                        .withStudentId(1)
                         .withFirstName("John")
                         .withLastName("Doe")
                         .build(),
                 Student.builder()
-                        .withStudentID(2)
+                        .withStudentId(2)
                         .withFirstName("Jane")
                         .withLastName("Doe")
                         .build()
@@ -57,15 +54,15 @@ public class StudentsCoursesRelationsGeneratorTest {
 
         courses = Arrays.asList(
                 Course.builder()
-                        .withCourseID(1)
+                        .withCourseId(1)
                         .withCourseName("Math")
                         .build(),
                 Course.builder()
-                        .withCourseID(2)
+                        .withCourseId(2)
                         .withCourseName("Physics")
                         .build(),
                 Course.builder()
-                        .withCourseID(3)
+                        .withCourseId(3)
                         .withCourseName("Chemistry")
                         .build()
         );
@@ -81,6 +78,6 @@ public class StudentsCoursesRelationsGeneratorTest {
 
         verify(studentDao, times(1)).findAll();
         verify(courseDao, times(1)).findAll();
-        verify(studentCourseRelationDao, atLeast(1)).saveRelation(any(StudentCourseRelation.class));
+        verify(courseDao, atLeast(1)).saveRelation(any(StudentCourseRelation.class));
     }
 }

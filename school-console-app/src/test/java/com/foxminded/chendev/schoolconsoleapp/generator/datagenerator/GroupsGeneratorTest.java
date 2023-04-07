@@ -1,19 +1,24 @@
 package com.foxminded.chendev.schoolconsoleapp.generator.datagenerator;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.foxminded.chendev.schoolconsoleapp.dao.impl.GroupDaoImpl;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.foxminded.chendev.schoolconsoleapp.generator.datagenegator.GroupsGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 class GroupsGeneratorTest {
 

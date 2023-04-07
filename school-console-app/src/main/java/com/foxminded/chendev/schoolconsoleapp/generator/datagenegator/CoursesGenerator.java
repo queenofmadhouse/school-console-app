@@ -1,6 +1,6 @@
 package com.foxminded.chendev.schoolconsoleapp.generator.datagenegator;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.impl.CourseDaoImpl;
+import com.foxminded.chendev.schoolconsoleapp.dao.CourseDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 
 import java.util.Random;
@@ -19,10 +19,10 @@ public class CoursesGenerator implements DataGenerator {
             "collaboration", "communication", "innovation", "creativity", "research"
     };
     private static Random random = new Random();
-    private static CourseDaoImpl courseDao;
-    private static int amountOfCourses;
+    private final CourseDao courseDao;
+    private final int amountOfCourses;
 
-    public CoursesGenerator(CourseDaoImpl courseDao, int amountOfCourses) {
+    public CoursesGenerator(CourseDao courseDao, int amountOfCourses) {
         this.courseDao = courseDao;
         this.amountOfCourses = amountOfCourses;
     }
@@ -39,8 +39,6 @@ public class CoursesGenerator implements DataGenerator {
                     .withCourseName(courseName)
                     .withCourseDescription(courseDescription)
                     .build();
-
-            System.out.println(course);
 
             courseDao.save(course);
         }
