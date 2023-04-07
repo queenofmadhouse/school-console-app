@@ -12,7 +12,7 @@ import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 public class StudentDaoImpl extends AbstractCrudDao<Student> implements StudentDao {
 
     private final DBConnector connector;
-    private static final String INSERT_STUDENT = "INSERT INTO school.students (group_id, first_name, last_name) VALUES (?, ?, ?) RETURNING student_id";
+    private static final String INSERT_STUDENT = "INSERT INTO school.students (group_id, first_name, last_name) VALUES (?, ?, ?)";
     private static final String SELECT_STUDENT_BY_ID = "SELECT * FROM school.students WHERE student_id = ?";
     private static final String SELECT_ALL_STUDENTS = "SELECT * FROM school.students";
     private static final String UPDATE_STUDENT = "UPDATE school.students SET group_id = ?, first_name = ?, last_name = ? WHERE student_id = ?";

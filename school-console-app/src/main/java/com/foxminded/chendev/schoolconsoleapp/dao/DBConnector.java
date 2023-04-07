@@ -18,6 +18,11 @@ public class DBConnector implements Connector {
         this.password = resource.getString("db.password");
     }
 
+    public DBConnector(String url, String user, String password) {
+        this.url = url;
+        this.user = user;
+        this.password = password;
+    }
     @Override
     public Connection getConnection() {
         try {
@@ -25,5 +30,17 @@ public class DBConnector implements Connector {
         } catch(SQLException e) {
             throw new DataBaseRuntimeException(e);
         }
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }
