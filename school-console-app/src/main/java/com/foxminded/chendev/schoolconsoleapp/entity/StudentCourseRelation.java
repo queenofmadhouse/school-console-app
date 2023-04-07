@@ -2,36 +2,36 @@ package com.foxminded.chendev.schoolconsoleapp.entity;
 
 public class StudentCourseRelation {
 
-    private long studentID;
-    private long courseID;
+    private long studentId;
+    private long courseId;
 
     private StudentCourseRelation(Builder builder) {
-        this.studentID = builder.studentID;
-        this.courseID = builder.courseID;
+        this.studentId = builder.studentId;
+        this.courseId = builder.courseId;
     }
 
     @Override
     public String toString() {
         return "StudentCourseRelation{" +
-                "studentID=" + studentID +
-                ", courseID=" + courseID +
+                "studentID=" + studentId +
+                ", courseID=" + courseId +
                 '}';
     }
 
-    public long getStudentID() {
-        return studentID;
+    public long getStudentId() {
+        return studentId;
     }
 
-    public void setStudentID(long studentID) {
-        this.studentID = studentID;
+    public void setStudentId(long studentId) {
+        this.studentId = studentId;
     }
 
-    public long getCourseID() {
-        return courseID;
+    public long getCourseId() {
+        return courseId;
     }
 
-    public void setCourseID(long courseID) {
-        this.courseID = courseID;
+    public void setCourseId(long courseId) {
+        this.courseId = courseId;
     }
 
     public static Builder builder() {
@@ -39,16 +39,17 @@ public class StudentCourseRelation {
     }
 
     public static class Builder {
-        private long studentID;
-        private long courseID;
 
-        public Builder withStudentID(long studentID) {
-            this.studentID = studentID;
+        private long studentId;
+        private long courseId;
+
+        public Builder withStudentId(long studentID) {
+            this.studentId = studentID;
             return this;
         }
 
-        public Builder withCourseID(long courseID) {
-            this.courseID = courseID;
+        public Builder withCourseId(long courseID) {
+            this.courseId = courseID;
             return this;
         }
 

@@ -18,15 +18,14 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CourseDaoImplTestIT {
+class CourseDaoImplTestIT {
 
     private StudentDaoImpl studentDao;
-    private StudentCourseRelationDaoImpl studentCourseRelationDao;
     private CourseDaoImpl courseDao;
     private Connection connection;
     private DBConnector connector;
@@ -51,7 +50,6 @@ public class CourseDaoImplTestIT {
 
         courseDao = new CourseDaoImpl(connector);
         studentDao = new StudentDaoImpl(connector);
-        studentCourseRelationDao = new StudentCourseRelationDaoImpl(connector);
     }
 
     @AfterEach
@@ -83,7 +81,7 @@ public class CourseDaoImplTestIT {
 
         Course course = courseDao.findCourseByCourseName("Java");
 
-        assertEquals(3, course.getCourseID());
+        assertEquals(3, course.getCourseId());
         assertEquals("Java", course.getCourseName());
         assertEquals("Super hard level", course.getCourseDescription());
     }
@@ -92,93 +90,93 @@ public class CourseDaoImplTestIT {
     void addStudentToCourseShouldCreateRelationBetweenCourseAndStudent() {
 
         StudentCourseRelation expected = StudentCourseRelation.builder()
-                .withStudentID(0)
-                .withCourseID(5)
+                .withStudentId(0)
+                .withCourseId(5)
                 .build();
 
         Group group = Group.builder()
-                .withGroupID(35)
+                .withGroupId(35)
                 .build();
 
         Student student = Student.builder()
-                .withStudentID(1)
+                .withStudentId(1)
                 .withFirstName("Alex")
                 .withLastName("Smith")
-                .withGroupID(group)
+                .withGroupId(group)
                 .build();
 
         courseDao.addStudentToCourse(student, 5);
 
-        List<StudentCourseRelation> studentCourseRelationList = studentCourseRelationDao.findStudentsByCourseID(5);
+        List<StudentCourseRelation> studentCourseRelationList = courseDao.findStudentsByCourseID(5);
 
         assertFalse(studentCourseRelationList.isEmpty());
         assertEquals(1, studentCourseRelationList.size());
-        assertEquals(1, studentCourseRelationList.get(0).getStudentID());
-        assertEquals(5, studentCourseRelationList.get(0).getCourseID());
+        assertEquals(1, studentCourseRelationList.get(0).getStudentId());
+        assertEquals(5, studentCourseRelationList.get(0).getCourseId());
     }
 
     @Test
     void removeStudentFromCourseShouldDeleteStudentFromCourse() {
 
         StudentCourseRelation studentCourseRelation1 = StudentCourseRelation.builder()
-                .withStudentID(1)
-                .withCourseID(35)
+                .withStudentId(1)
+                .withCourseId(35)
                 .build();
         StudentCourseRelation studentCourseRelation2 = StudentCourseRelation.builder()
-                .withStudentID(3)
-                .withCourseID(35)
+                .withStudentId(3)
+                .withCourseId(35)
                 .build();
         StudentCourseRelation studentCourseRelation3 = StudentCourseRelation.builder()
-                .withStudentID(3)
-                .withCourseID(39)
+                .withStudentId(3)
+                .withCourseId(39)
                 .build();
         StudentCourseRelation studentCourseRelation4 = StudentCourseRelation.builder()
-                .withStudentID(4)
-                .withCourseID(81)
+                .withStudentId(4)
+                .withCourseId(81)
                 .build();
         StudentCourseRelation studentCourseRelation5 = StudentCourseRelation.builder()
-                .withStudentID(2)
-                .withCourseID(9)
+                .withStudentId(2)
+                .withCourseId(9)
                 .build();
 
-        studentCourseRelationDao.saveRelation(studentCourseRelation1);
-        studentCourseRelationDao.saveRelation(studentCourseRelation2);
-        studentCourseRelationDao.saveRelation(studentCourseRelation3);
-        studentCourseRelationDao.saveRelation(studentCourseRelation4);
-        studentCourseRelationDao.saveRelation(studentCourseRelation5);
+        courseDao.saveRelation(studentCourseRelation1);
+        courseDao.saveRelation(studentCourseRelation2);
+        courseDao.saveRelation(studentCourseRelation3);
+        courseDao.saveRelation(studentCourseRelation4);
+        courseDao.saveRelation(studentCourseRelation5);
 
         courseDao.removeStudentFromCourse(3, 35);
 
-        List<StudentCourseRelation> studentCourseRelationList = studentCourseRelationDao.findCoursesByStudentID(3);
+        List<StudentCourseRelation> studentCourseRelationList = courseDao.findCoursesByStudentID(3);
 
         assertFalse(studentCourseRelationList.isEmpty());
         assertEquals(1, studentCourseRelationList.size());
-        assertEquals(3, studentCourseRelationList.get(0).getStudentID());
-        assertEquals(39, studentCourseRelationList.get(0).getCourseID());
+        assertEquals(3, studentCourseRelationList.get(0).getStudentId());
+        assertEquals(39, studentCourseRelationList.get(0).getCourseId());
     }
 
     @Test
     void findAllStudentsByCourseNameShouldReturnListOfStudentsRelatedToCourse() {
 
         Group group = Group.builder()
-                .withGroupID(5)
+                .withGroupId(5)
                 .build();
 
         Student student1 = Student.builder()
                 .withFirstName("Joan")
                 .withLastName("Roberts")
-                .withGroupID(group)
+                .withGroupId(group)
                 .build();
 
         Student student2 = Student.builder()
                 .withFirstName("Fillip")
                 .withLastName("Some")
-                .withGroupID(group)
+                .withGroupId(group)
                 .build();
         Student student3 = Student.builder()
                 .withFirstName("Jane")
                 .withLastName("Potters")
-                .withGroupID(group)
+                .withGroupId(group)
                 .build();
 
         Course course = Course.builder()
@@ -192,9 +190,9 @@ public class CourseDaoImplTestIT {
         studentDao.save(student2);
         studentDao.save(student3);
 
-        student1.setStudentID(1);
-        student2.setStudentID(2);
-        student3.setStudentID(3);
+        student1.setStudentId(1);
+        student2.setStudentId(2);
+        student3.setStudentId(3);
 
         courseDao.addStudentToCourse(student1, 1);
         courseDao.addStudentToCourse(student2, 2);
@@ -206,10 +204,10 @@ public class CourseDaoImplTestIT {
 
         List<Student> studentList = courseDao.findAllStudentsByCourseName("Math");
 
-        assertEquals(student1.getStudentID(), studentList.get(0).getStudentID());
+        assertEquals(student1.getStudentId(), studentList.get(0).getStudentId());
         assertEquals(student1.getFirstName(), studentList.get(0).getFirstName());
         assertEquals(student1.getLastName(), studentList.get(0).getLastName());
-        assertEquals(student1.getGroupID(), studentList.get(0).getGroupID());
+        assertEquals(student1.getGroupId(), studentList.get(0).getGroupId());
     }
 
     @Test
@@ -239,24 +237,24 @@ public class CourseDaoImplTestIT {
     void deleteByIDShouldDeleteAllRelations() {
 
         Group group = Group.builder()
-                .withGroupID(5)
+                .withGroupId(5)
                 .build();
 
         Student student1 = Student.builder()
                 .withFirstName("Joan")
                 .withLastName("Roberts")
-                .withGroupID(group)
+                .withGroupId(group)
                 .build();
 
         Student student2 = Student.builder()
                 .withFirstName("Fillip")
                 .withLastName("Some")
-                .withGroupID(group)
+                .withGroupId(group)
                 .build();
         Student student3 = Student.builder()
                 .withFirstName("Jane")
                 .withLastName("Potters")
-                .withGroupID(group)
+                .withGroupId(group)
                 .build();
 
         Course course1 = Course.builder()
@@ -280,9 +278,9 @@ public class CourseDaoImplTestIT {
         studentDao.save(student2);
         studentDao.save(student3);
 
-        student1.setStudentID(1);
-        student2.setStudentID(2);
-        student3.setStudentID(3);
+        student1.setStudentId(1);
+        student2.setStudentId(2);
+        student3.setStudentId(3);
 
         courseDao.addStudentToCourse(student1, 1);
         courseDao.addStudentToCourse(student2, 2);
@@ -294,7 +292,7 @@ public class CourseDaoImplTestIT {
 
         courseDao.deleteByID(1);
 
-        List<StudentCourseRelation> studentCourseRelationFound = studentCourseRelationDao.findStudentsByCourseID(1);
+        List<StudentCourseRelation> studentCourseRelationFound = courseDao.findStudentsByCourseID(1);
         Course course = courseDao.findById(1).orElse(null);
 
         assertTrue(studentCourseRelationFound.isEmpty());
@@ -331,5 +329,201 @@ public class CourseDaoImplTestIT {
         assertEquals("Something hard", courseList.get(1).getCourseDescription());
         assertEquals("Art", courseList.get(2).getCourseName());
         assertEquals("Something hard", courseList.get(2).getCourseDescription());
+    }
+
+    @Test
+    void findCoursesByStudentIDShouldReturnListOfStudentCourseRelationEntity() {
+
+        StudentCourseRelation studentCourseRelation1 = StudentCourseRelation.builder()
+                .withStudentId(1)
+                .withCourseId(30)
+                .build();
+        StudentCourseRelation studentCourseRelation2 = StudentCourseRelation.builder()
+                .withStudentId(1)
+                .withCourseId(35)
+                .build();
+        StudentCourseRelation studentCourseRelation3 = StudentCourseRelation.builder()
+                .withStudentId(1)
+                .withCourseId(35)
+                .build();
+        StudentCourseRelation studentCourseRelation4 = StudentCourseRelation.builder()
+                .withStudentId(2)
+                .withCourseId(20)
+                .build();
+        StudentCourseRelation studentCourseRelation5 = StudentCourseRelation.builder()
+                .withStudentId(2)
+                .withCourseId(9)
+                .build();
+
+        courseDao.saveRelation(studentCourseRelation1);
+        courseDao.saveRelation(studentCourseRelation2);
+        courseDao.saveRelation(studentCourseRelation3);
+        courseDao.saveRelation(studentCourseRelation4);
+        courseDao.saveRelation(studentCourseRelation5);
+
+        List<StudentCourseRelation> resultList = courseDao.findCoursesByStudentID(1);
+
+        assertFalse(resultList.isEmpty());
+        assertEquals(3, resultList.size());
+        assertEquals(1, resultList.get(0).getStudentId());
+        assertEquals(1, resultList.get(1).getStudentId());
+        assertEquals(1, resultList.get(2).getStudentId());
+    }
+
+    @Test
+    void findStudentsByCourseIDShouldReturnListOfStudentCourseRelationEntity() {
+
+        StudentCourseRelation studentCourseRelation1 = StudentCourseRelation.builder()
+                .withStudentId(1)
+                .withCourseId(35)
+                .build();
+        StudentCourseRelation studentCourseRelation2 = StudentCourseRelation.builder()
+                .withStudentId(2)
+                .withCourseId(35)
+                .build();
+        StudentCourseRelation studentCourseRelation3 = StudentCourseRelation.builder()
+                .withStudentId(3)
+                .withCourseId(35)
+                .build();
+        StudentCourseRelation studentCourseRelation4 = StudentCourseRelation.builder()
+                .withStudentId(4)
+                .withCourseId(81)
+                .build();
+        StudentCourseRelation studentCourseRelation5 = StudentCourseRelation.builder()
+                .withStudentId(2)
+                .withCourseId(9)
+                .build();
+
+        courseDao.saveRelation(studentCourseRelation1);
+        courseDao.saveRelation(studentCourseRelation2);
+        courseDao.saveRelation(studentCourseRelation3);
+        courseDao.saveRelation(studentCourseRelation4);
+        courseDao.saveRelation(studentCourseRelation5);
+
+        List<StudentCourseRelation> resultList = courseDao.findStudentsByCourseID(35);
+
+        assertFalse(resultList.isEmpty());
+        assertEquals(3, resultList.size());
+        assertEquals(35, resultList.get(0).getCourseId());
+        assertEquals(35, resultList.get(1).getCourseId());
+        assertEquals(35, resultList.get(2).getCourseId());
+        assertEquals(1, resultList.get(0).getStudentId());
+        assertEquals(2, resultList.get(1).getStudentId());
+        assertEquals(3, resultList.get(2).getStudentId());
+    }
+
+    @Test
+    void deleteRelationByStudentIDShouldDeleteOneRelation() {
+
+        StudentCourseRelation studentCourseRelation1 = StudentCourseRelation.builder()
+                .withStudentId(1)
+                .withCourseId(35)
+                .build();
+        StudentCourseRelation studentCourseRelation2 = StudentCourseRelation.builder()
+                .withStudentId(3)
+                .withCourseId(35)
+                .build();
+        StudentCourseRelation studentCourseRelation3 = StudentCourseRelation.builder()
+                .withStudentId(3)
+                .withCourseId(39)
+                .build();
+        StudentCourseRelation studentCourseRelation4 = StudentCourseRelation.builder()
+                .withStudentId(4)
+                .withCourseId(81)
+                .build();
+        StudentCourseRelation studentCourseRelation5 = StudentCourseRelation.builder()
+                .withStudentId(2)
+                .withCourseId(9)
+                .build();
+
+        courseDao.saveRelation(studentCourseRelation1);
+        courseDao.saveRelation(studentCourseRelation2);
+        courseDao.saveRelation(studentCourseRelation3);
+        courseDao.saveRelation(studentCourseRelation4);
+        courseDao.saveRelation(studentCourseRelation5);
+
+        courseDao.deleteRelationByStudentID(3, 35);
+
+        List<StudentCourseRelation> studentCourseRelationList = courseDao.findCoursesByStudentID(3);
+
+        assertFalse(studentCourseRelationList.isEmpty());
+        assertEquals(1, studentCourseRelationList.size());
+        assertEquals(3, studentCourseRelationList.get(0).getStudentId());
+        assertEquals(39, studentCourseRelationList.get(0).getCourseId());
+
+    }
+
+    @Test
+    void deleteAllRelationsByStudentIDShouldDeleteAllRelationsRelatedToStudentID() {
+
+        StudentCourseRelation studentCourseRelation1 = StudentCourseRelation.builder()
+                .withStudentId(1)
+                .withCourseId(35)
+                .build();
+        StudentCourseRelation studentCourseRelation2 = StudentCourseRelation.builder()
+                .withStudentId(3)
+                .withCourseId(35)
+                .build();
+        StudentCourseRelation studentCourseRelation3 = StudentCourseRelation.builder()
+                .withStudentId(3)
+                .withCourseId(39)
+                .build();
+        StudentCourseRelation studentCourseRelation4 = StudentCourseRelation.builder()
+                .withStudentId(4)
+                .withCourseId(81)
+                .build();
+        StudentCourseRelation studentCourseRelation5 = StudentCourseRelation.builder()
+                .withStudentId(2)
+                .withCourseId(9)
+                .build();
+
+        courseDao.saveRelation(studentCourseRelation1);
+        courseDao.saveRelation(studentCourseRelation2);
+        courseDao.saveRelation(studentCourseRelation3);
+        courseDao.saveRelation(studentCourseRelation4);
+        courseDao.saveRelation(studentCourseRelation5);
+
+        courseDao.deleteAllRelationsByStudentID(3);
+
+        List<StudentCourseRelation> studentCourseRelationList = courseDao.findCoursesByStudentID(3);
+
+        assertTrue(studentCourseRelationList.isEmpty());
+    }
+
+    @Test
+    void deleteAllRelationsByCourseIDShouldDeleteAllRelationsRelatedToCourseID() {
+
+        StudentCourseRelation studentCourseRelation1 = StudentCourseRelation.builder()
+                .withStudentId(1)
+                .withCourseId(35)
+                .build();
+        StudentCourseRelation studentCourseRelation2 = StudentCourseRelation.builder()
+                .withStudentId(3)
+                .withCourseId(35)
+                .build();
+        StudentCourseRelation studentCourseRelation3 = StudentCourseRelation.builder()
+                .withStudentId(3)
+                .withCourseId(39)
+                .build();
+        StudentCourseRelation studentCourseRelation4 = StudentCourseRelation.builder()
+                .withStudentId(4)
+                .withCourseId(81)
+                .build();
+        StudentCourseRelation studentCourseRelation5 = StudentCourseRelation.builder()
+                .withStudentId(2)
+                .withCourseId(9)
+                .build();
+
+        courseDao.saveRelation(studentCourseRelation1);
+        courseDao.saveRelation(studentCourseRelation2);
+        courseDao.saveRelation(studentCourseRelation3);
+        courseDao.saveRelation(studentCourseRelation4);
+        courseDao.saveRelation(studentCourseRelation5);
+
+        courseDao.deleteAllRelationsByCourseID(35);
+
+        List<StudentCourseRelation> studentCourseRelationList = courseDao.findStudentsByCourseID(35);
+
+        assertTrue(studentCourseRelationList.isEmpty());
     }
 }

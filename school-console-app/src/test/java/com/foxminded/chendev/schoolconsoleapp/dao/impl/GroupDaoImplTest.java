@@ -19,11 +19,11 @@ import static com.foxminded.chendev.schoolconsoleapp.dao.impl.AbstractCrudDao.ST
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class GroupDaoImplTest {
+class GroupDaoImplTest {
 
     @Mock
     private DBConnector mockDBConnector;
@@ -43,7 +43,7 @@ public class GroupDaoImplTest {
     private final long mockParam = 123;
 
     @Test
-    public void saveShouldCatchSQLException() throws SQLException {
+    void saveShouldCatchSQLException() throws SQLException {
 
         when(mockDBConnector.getConnection()).thenReturn(mockConnection);
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
@@ -53,7 +53,7 @@ public class GroupDaoImplTest {
     }
 
     @Test
-    public void findByIdShouldCatchSQLException()  throws SQLException {
+    void findByIdShouldCatchSQLException() throws SQLException {
 
         when(mockDBConnector.getConnection()).thenReturn(mockConnection);
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
@@ -63,7 +63,7 @@ public class GroupDaoImplTest {
     }
 
     @Test
-    public void findAllShouldCatchSQLException()  throws SQLException {
+    void findAllShouldCatchSQLException() throws SQLException {
 
         when(mockDBConnector.getConnection()).thenReturn(mockConnection);
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
@@ -74,7 +74,7 @@ public class GroupDaoImplTest {
     }
 
     @Test
-    public void updateShouldCatchSQLException()  throws SQLException {
+    void updateShouldCatchSQLException() throws SQLException {
 
         when(mockDBConnector.getConnection()).thenReturn(mockConnection);
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
@@ -84,7 +84,7 @@ public class GroupDaoImplTest {
     }
 
     @Test
-    public void deleteByIdShouldCatchSQLException() throws SQLException {
+    void deleteByIdShouldCatchSQLException() throws SQLException {
 
         when(mockDBConnector.getConnection()).thenReturn(mockConnection);
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
@@ -94,7 +94,7 @@ public class GroupDaoImplTest {
     }
 
     @Test
-    public void testFindGroupsWithLessOrEqualStudentsShouldCatchSQLException() throws SQLException {
+    void testFindGroupsWithLessOrEqualStudentsShouldCatchSQLException() throws SQLException {
 
         when(mockDBConnector.getConnection()).thenReturn(mockConnection);
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
@@ -104,7 +104,7 @@ public class GroupDaoImplTest {
     }
 
     @Test
-    public void testStringConsumerShouldCatchSQLException()  throws SQLException {
+    void testStringConsumerShouldCatchSQLException() throws SQLException {
 
         doThrow(SQLException.class).when(mockStatement).setString(anyInt(), anyString());
 

@@ -1,18 +1,19 @@
 package com.foxminded.chendev.schoolconsoleapp.generator.datagenegator;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.impl.GroupDaoImpl;
+import com.foxminded.chendev.schoolconsoleapp.dao.GroupDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 
 import java.util.Random;
 
 public class GroupsGenerator implements DataGenerator {
+
     private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final int ALPHABET_SIZE = ALPHABET.length();
     private Random random = new Random();
-    private static GroupDaoImpl groupDao;
-    private static long amountOfGroups;
+    private final GroupDao groupDao;
+    private final long amountOfGroups;
 
-    public GroupsGenerator(GroupDaoImpl groupDao, long amountOfGroups) {
+    public GroupsGenerator(GroupDao groupDao, long amountOfGroups) {
         this.groupDao = groupDao;
         this.amountOfGroups = amountOfGroups;
     }

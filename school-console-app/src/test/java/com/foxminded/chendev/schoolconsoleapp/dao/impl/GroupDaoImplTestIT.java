@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class GroupDaoImplTestIT {
+class GroupDaoImplTestIT {
 
     private GroupDaoImpl groupDao;
     private Connection connection;
@@ -52,7 +52,7 @@ public class GroupDaoImplTestIT {
     }
 
     @Test
-    public void testSaveShouldObjectInDataBase() {
+    void testSaveShouldObjectInDataBase() {
 
         Group group = Group.builder()
                 .withGroupName("Test Group")
@@ -66,7 +66,7 @@ public class GroupDaoImplTestIT {
     }
 
     @Test
-    public void findAllShouldFindAllGroupsAndReturnListOfThem() {
+    void findAllShouldFindAllGroupsAndReturnListOfThem() {
 
         Group group1 = Group.builder()
                 .withGroupName("Test Group 1")
@@ -139,61 +139,61 @@ public class GroupDaoImplTestIT {
         Student student1 = Student.builder()
                 .withFirstName("John")
                 .withLastName("Studentsy")
-                .withGroupID(Group.builder().withGroupID(1).build())
+                .withGroupId(Group.builder().withGroupId(1).build())
                 .build();
 
         Student student2 = Student.builder()
                 .withFirstName("Jane")
                 .withLastName("Doe")
-                .withGroupID(Group.builder().withGroupID(1).build())
+                .withGroupId(Group.builder().withGroupId(1).build())
                 .build();
 
         Student student3 = Student.builder()
                 .withFirstName("Tom")
                 .withLastName("Smith")
-                .withGroupID(Group.builder().withGroupID(1).build())
+                .withGroupId(Group.builder().withGroupId(1).build())
                 .build();
 
         Student student4 = Student.builder()
                 .withFirstName("Alice")
                 .withLastName("Johnson")
-                .withGroupID(Group.builder().withGroupID(1).build())
+                .withGroupId(Group.builder().withGroupId(1).build())
                 .build();
 
         Student student5 = Student.builder()
                 .withFirstName("Bob")
                 .withLastName("Brown")
-                .withGroupID(Group.builder().withGroupID(1).build())
+                .withGroupId(Group.builder().withGroupId(1).build())
                 .build();
 
         Student student6 = Student.builder()
                 .withFirstName("Charlie")
                 .withLastName("Green")
-                .withGroupID(Group.builder().withGroupID(2).build())
+                .withGroupId(Group.builder().withGroupId(2).build())
                 .build();
 
         Student student7 = Student.builder()
                 .withFirstName("Emily")
                 .withLastName("White")
-                .withGroupID(Group.builder().withGroupID(2).build())
+                .withGroupId(Group.builder().withGroupId(2).build())
                 .build();
 
         Student student8 = Student.builder()
                 .withFirstName("Eva")
                 .withLastName("Black")
-                .withGroupID(Group.builder().withGroupID(2).build())
+                .withGroupId(Group.builder().withGroupId(2).build())
                 .build();
 
         Student student9 = Student.builder()
                 .withFirstName("Frank")
                 .withLastName("Gray")
-                .withGroupID(Group.builder().withGroupID(3).build())
+                .withGroupId(Group.builder().withGroupId(3).build())
                 .build();
 
         Student student10 = Student.builder()
                 .withFirstName("Grace")
                 .withLastName("Blue")
-                .withGroupID(Group.builder().withGroupID(3).build())
+                .withGroupId(Group.builder().withGroupId(3).build())
                 .build();
 
         groupDao.save(gerup1);
@@ -239,61 +239,61 @@ public class GroupDaoImplTestIT {
         Student student1 = Student.builder()
                 .withFirstName("John")
                 .withLastName("Studentsy")
-                .withGroupID(Group.builder().withGroupID(1).build())
+                .withGroupId(Group.builder().withGroupId(1).build())
                 .build();
 
         Student student2 = Student.builder()
                 .withFirstName("Jane")
                 .withLastName("Doe")
-                .withGroupID(Group.builder().withGroupID(1).build())
+                .withGroupId(Group.builder().withGroupId(1).build())
                 .build();
 
         Student student3 = Student.builder()
                 .withFirstName("Tom")
                 .withLastName("Smith")
-                .withGroupID(Group.builder().withGroupID(1).build())
+                .withGroupId(Group.builder().withGroupId(1).build())
                 .build();
 
         Student student4 = Student.builder()
                 .withFirstName("Alice")
                 .withLastName("Johnson")
-                .withGroupID(Group.builder().withGroupID(1).build())
+                .withGroupId(Group.builder().withGroupId(1).build())
                 .build();
 
         Student student5 = Student.builder()
                 .withFirstName("Bob")
                 .withLastName("Brown")
-                .withGroupID(Group.builder().withGroupID(1).build())
+                .withGroupId(Group.builder().withGroupId(1).build())
                 .build();
 
         Student student6 = Student.builder()
                 .withFirstName("Charlie")
                 .withLastName("Green")
-                .withGroupID(Group.builder().withGroupID(2).build())
+                .withGroupId(Group.builder().withGroupId(2).build())
                 .build();
 
         Student student7 = Student.builder()
                 .withFirstName("Emily")
                 .withLastName("White")
-                .withGroupID(Group.builder().withGroupID(2).build())
+                .withGroupId(Group.builder().withGroupId(2).build())
                 .build();
 
         Student student8 = Student.builder()
                 .withFirstName("Eva")
                 .withLastName("Black")
-                .withGroupID(Group.builder().withGroupID(2).build())
+                .withGroupId(Group.builder().withGroupId(2).build())
                 .build();
 
         Student student9 = Student.builder()
                 .withFirstName("Frank")
                 .withLastName("Gray")
-                .withGroupID(Group.builder().withGroupID(3).build())
+                .withGroupId(Group.builder().withGroupId(3).build())
                 .build();
 
         Student student10 = Student.builder()
                 .withFirstName("Grace")
                 .withLastName("Blue")
-                .withGroupID(Group.builder().withGroupID(3).build())
+                .withGroupId(Group.builder().withGroupId(3).build())
                 .build();
 
         groupDao.save(group1);
@@ -353,7 +353,7 @@ public class GroupDaoImplTestIT {
 
         Group foundGroup = groupDao.findByStringParam("Group1", sqlQuery).orElse(null);
 
-        assertEquals(1, foundGroup.getGroupID());
+        assertEquals(1, foundGroup.getGroupId());
         assertEquals("Group1", foundGroup.getGroupName());
     }
 }

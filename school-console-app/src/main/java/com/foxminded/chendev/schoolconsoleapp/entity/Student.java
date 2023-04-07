@@ -2,14 +2,14 @@ package com.foxminded.chendev.schoolconsoleapp.entity;
 
 public class Student {
 
-    private long studentID;
-    private long groupID;
+    private long studentId;
+    private long groupId;
     private String firstName;
     private String lastName;
 
     public Student(Builder builder) {
-        this.studentID = builder.studentID;
-        this.groupID = builder.groupID;
+        this.studentId = builder.studentId;
+        this.groupId = builder.groupId;
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
     }
@@ -17,13 +17,44 @@ public class Student {
     @Override
     public String toString() {
         return "Student{" +
-                "studentID=" + studentID +
-                ", groupID=" + groupID +
+                "studentID=" + studentId +
+                ", groupID=" + groupId +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 '}';
     }
 
+    public long getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(long studentId) {
+        this.studentId = studentId;
+    }
+
+    public long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Group groupId) {
+        this.groupId = groupId.getGroupId();
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
     public static Builder builder() {
         return new Builder();
@@ -31,18 +62,18 @@ public class Student {
 
     public static class Builder {
 
-        private long studentID;
-        private long groupID;
+        private long studentId;
+        private long groupId;
         private String firstName;
         private String lastName;
 
-        public Builder withStudentID(long studentID) {
-            this.studentID = studentID;
+        public Builder withStudentId(long studentID) {
+            this.studentId = studentID;
             return this;
         }
 
-        public Builder withGroupID(Group group) {
-            this.groupID = group.getGroupID();
+        public Builder withGroupId(Group group) {
+            this.groupId = group.getGroupId();
             return this;
         }
 
@@ -60,37 +91,5 @@ public class Student {
             return new Student(this);
         }
 
-    }
-
-    public long getStudentID() {
-        return studentID;
-    }
-
-    public void setStudentID(long studentID) {
-        this.studentID = studentID;
-    }
-
-    public long getGroupID() {
-        return groupID;
-    }
-
-    public void setGroupID(Group groupID) {
-        this.groupID = groupID.getGroupID();
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 }

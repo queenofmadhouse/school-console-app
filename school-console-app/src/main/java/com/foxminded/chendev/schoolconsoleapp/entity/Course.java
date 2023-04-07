@@ -2,12 +2,12 @@ package com.foxminded.chendev.schoolconsoleapp.entity;
 
 public class Course {
 
-    private long courseID;
+    private long courseId;
     private String courseName;
     private String courseDescription;
 
     private Course(Builder builder) {
-        this.courseID = builder.courseID;
+        this.courseId = builder.courseId;
         this.courseName = builder.courseName;
         this.courseDescription = builder.courseDescription;
     }
@@ -15,18 +15,18 @@ public class Course {
     @Override
     public String toString() {
         return "Course{" +
-                "courseID=" + courseID +
+                "courseID=" + courseId +
                 ", courseName='" + courseName + '\'' +
                 ", courseDescription='" + courseDescription + '\'' +
                 '}';
     }
 
-    public long getCourseID() {
-        return courseID;
+    public long getCourseId() {
+        return courseId;
     }
 
-    public void setCourseID(int courseID) {
-        this.courseID = courseID;
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
     }
 
     public String getCourseName() {
@@ -51,12 +51,12 @@ public class Course {
 
     public static class Builder {
 
-        private long courseID;
+        private long courseId;
         private String courseName;
         private String courseDescription;
 
-        public Builder withCourseID(long courseID) {
-            this.courseID = courseID;
+        public Builder withCourseId(long courseID) {
+            this.courseId = courseID;
             return this;
         }
 

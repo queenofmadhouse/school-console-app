@@ -7,7 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class TableGeneratorImpl implements TableGenerator{
+public class TableGeneratorImpl implements TableGenerator {
 
     private final DBConnector connector;
 
@@ -18,9 +18,9 @@ public class TableGeneratorImpl implements TableGenerator{
     @Override
     public void generateTable(String creationQuery) {
 
-        try(Connection connection = connector.getConnection();
-            PreparedStatement preparedStatement = connection
-                    .prepareStatement(creationQuery)) {
+        try (Connection connection = connector.getConnection();
+             PreparedStatement preparedStatement = connection
+                     .prepareStatement(creationQuery)) {
 
             preparedStatement.execute();
 

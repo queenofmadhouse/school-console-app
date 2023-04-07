@@ -1,24 +1,24 @@
 package com.foxminded.chendev.schoolconsoleapp.generator.datagenerator;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.foxminded.chendev.schoolconsoleapp.dao.impl.GroupDaoImpl;
 import com.foxminded.chendev.schoolconsoleapp.dao.impl.StudentDaoImpl;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import com.foxminded.chendev.schoolconsoleapp.generator.datagenegator.StudentsGenerator;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class StudentsGeneratorTest {
 
@@ -65,12 +65,12 @@ class StudentsGeneratorTest {
         for (Student student : generatedStudents) {
             String firstName = student.getFirstName();
             String lastName = student.getLastName();
-            long groupID = student.getGroupID();
+            long groupID = student.getGroupId();
             assertNotNull(firstName);
             assertNotNull(lastName);
             assertTrue(firstName.length() > 0);
             assertTrue(lastName.length() > 0);
-            assertTrue(groups.stream().anyMatch(g -> g.getGroupID() == groupID));
+            assertTrue(groups.stream().anyMatch(g -> g.getGroupId() == groupID));
         }
     }
 
@@ -78,7 +78,7 @@ class StudentsGeneratorTest {
         List<Group> groups = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
             Group group = mock(Group.class);
-            when(group.getGroupID()).thenReturn((long) i);
+            when(group.getGroupId()).thenReturn((long) i);
             groups.add(group);
         }
         return groups;

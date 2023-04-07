@@ -3,6 +3,7 @@ package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 import com.foxminded.chendev.schoolconsoleapp.dao.DBConnector;
 import com.foxminded.chendev.schoolconsoleapp.dao.DataBaseRuntimeException;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
+import com.foxminded.chendev.schoolconsoleapp.entity.StudentCourseRelation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,10 +18,10 @@ import java.sql.SQLException;
 import static com.foxminded.chendev.schoolconsoleapp.dao.impl.AbstractCrudDao.LONG_CONSUMER;
 import static com.foxminded.chendev.schoolconsoleapp.dao.impl.AbstractCrudDao.STING_CONSUMER;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CourseDaoImplTest {
@@ -41,7 +42,7 @@ class CourseDaoImplTest {
     private CourseDaoImpl mockCourseDao;
 
     @Test
-    public void save_throws_DataBaseRuntimeException() throws SQLException {
+    void save_throws_DataBaseRuntimeException() throws SQLException {
 
         when(mockDBConnector.getConnection()).thenReturn(mockConnection);
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
@@ -51,7 +52,7 @@ class CourseDaoImplTest {
     }
 
     @Test
-    public void findByIdShouldCatchSQLException() throws SQLException {
+    void findByIdShouldCatchSQLException() throws SQLException {
 
         when(mockDBConnector.getConnection()).thenReturn(mockConnection);
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
@@ -61,7 +62,7 @@ class CourseDaoImplTest {
     }
 
     @Test
-    public void findAllShouldCatchSQLException() throws SQLException {
+    void findAllShouldCatchSQLException() throws SQLException {
 
         when(mockDBConnector.getConnection()).thenReturn(mockConnection);
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
@@ -72,7 +73,7 @@ class CourseDaoImplTest {
     }
 
     @Test
-    public void updateShouldCatchSQLException() throws SQLException {
+    void updateShouldCatchSQLException() throws SQLException {
 
         when(mockDBConnector.getConnection()).thenReturn(mockConnection);
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
@@ -82,7 +83,7 @@ class CourseDaoImplTest {
     }
 
     @Test
-    public void deleteByIdShouldCatchSQLException() throws SQLException {
+    void deleteByIdShouldCatchSQLException() throws SQLException {
 
         when(mockDBConnector.getConnection()).thenReturn(mockConnection);
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
@@ -90,8 +91,9 @@ class CourseDaoImplTest {
 
         assertThrows(DataBaseRuntimeException.class, () -> mockCourseDao.deleteByID(1L));
     }
+
     @Test
-    public void testStringConsumerShouldCatchSQLException() throws SQLException {
+    void testStringConsumerShouldCatchSQLException() throws SQLException {
 
         doThrow(SQLException.class).when(mockStatement).setString(anyInt(), anyString());
 
@@ -106,5 +108,75 @@ class CourseDaoImplTest {
         doThrow(SQLException.class).when(mockStatement).setLong(1, mockParam);
 
         assertThrows(DataBaseRuntimeException.class, () -> LONG_CONSUMER.accept(mockStatement, mockParam));
+    }
+
+    @Test
+    void saveRelationShouldCatchSQLExceptionAndThrowsDataBaseRuntimeException() throws SQLException {
+
+        when(mockDBConnector.getConnection()).thenReturn(mockConnection);
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
+
+        doThrow(SQLException.class).when(mockStatement).executeUpdate();
+
+        assertThrows(DataBaseRuntimeException.class, () -> mockCourseDao.saveRelation(StudentCourseRelation.builder().build()));
+    }
+
+    @Test
+    void findCoursesByStudentIDShouldCatchSQLExceptionAndThrowsDataBaseRuntimeException() throws SQLException {
+
+        when(mockDBConnector.getConnection()).thenReturn(mockConnection);
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
+        when(mockStatement.executeQuery()).thenReturn(mockResultSet);
+
+        when(mockResultSet.next()).thenReturn(true).thenThrow(SQLException.class);
+
+        assertThrows(DataBaseRuntimeException.class, () -> mockCourseDao.findCoursesByStudentID(1L));
+    }
+
+    @Test
+    void findStudentsByCourseIDShouldCatchSQLExceptionAndThrowsDataBaseRuntimeException() throws SQLException {
+
+        when(mockDBConnector.getConnection()).thenReturn(mockConnection);
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
+        when(mockStatement.executeQuery()).thenReturn(mockResultSet);
+
+        when(mockResultSet.next()).thenReturn(true).thenThrow(SQLException.class);
+
+        assertThrows(DataBaseRuntimeException.class, () -> mockCourseDao.findStudentsByCourseID(1));
+    }
+
+    @Test
+    void deleteRelationByStudentIDShouldCatchSQLExceptionAndThrowsDataBaseRuntimeException() throws SQLException {
+
+        when(mockDBConnector.getConnection()).thenReturn(mockConnection);
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
+
+        doThrow(SQLException.class).when(mockStatement).execute();
+
+        assertThrows(DataBaseRuntimeException.class, () -> mockCourseDao.deleteRelationByStudentID(1L, 1L));
+    }
+
+    @Test
+    void deleteAllRelationsByStudentIDShouldCatchSQLExceptionAndThrowsDataBaseRuntimeException() throws SQLException {
+
+        when(mockDBConnector.getConnection()).thenReturn(mockConnection);
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
+
+        doThrow(SQLException.class).when(mockStatement).execute();
+
+        System.out.println("Mock statement: " + mockStatement);
+
+        assertThrows(DataBaseRuntimeException.class, () -> mockCourseDao.deleteAllRelationsByStudentID(1L));
+    }
+
+    @Test
+    void deleteAllRelationsByCourseIDShouldThrowsDataBaseRuntimeException() throws SQLException {
+
+        when(mockDBConnector.getConnection()).thenReturn(mockConnection);
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
+
+        doThrow(SQLException.class).when(mockStatement).execute();
+
+        assertThrows(DataBaseRuntimeException.class, () -> mockCourseDao.deleteAllRelationsByCourseID(1L));
     }
 }
