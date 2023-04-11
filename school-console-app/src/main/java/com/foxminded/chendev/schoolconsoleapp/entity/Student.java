@@ -72,8 +72,8 @@ public class Student {
             return this;
         }
 
-        public Builder withGroupId(Group group) {
-            this.groupId = group.getGroupId();
+        public Builder withGroupId(long groupId) {
+            this.groupId = groupId;
             return this;
         }
 

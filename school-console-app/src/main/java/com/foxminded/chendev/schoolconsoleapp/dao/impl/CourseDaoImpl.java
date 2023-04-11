@@ -1,20 +1,18 @@
 package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
-
 import com.foxminded.chendev.schoolconsoleapp.dao.CourseDao;
-import com.foxminded.chendev.schoolconsoleapp.dao.DBConnector;
-import com.foxminded.chendev.schoolconsoleapp.dao.DataBaseRuntimeException;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import com.foxminded.chendev.schoolconsoleapp.entity.StudentCourseRelation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao {
 
     private static final String INSERT_COURSE = "INSERT INTO school.courses (course_name, course_description) " +
@@ -38,66 +36,102 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
             " WHERE student_id = ?";
     private static final String DELETE_ALL_RELATIONS_BY_COURSE_ID = "DELETE FROM school.students_courses_relation" +
             " WHERE course_id = ?";
-    private final DBConnector connector;
 
-    public CourseDaoImpl(DBConnector connector) {
-        super(connector, INSERT_COURSE, SELECT_COURSE_BY_ID, SELECT_ALL_COURSES, UPDATE_COURSE, DELETE_COURSE_BY_ID);
-        this.connector = connector;
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public CourseDaoImpl(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate, INSERT_COURSE, SELECT_COURSE_BY_ID, SELECT_ALL_COURSES, UPDATE_COURSE, DELETE_COURSE_BY_ID);
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    protected Course mapResultSetToEntity(ResultSet resultSet) throws SQLException {
-        return Course.builder()
+    public void saveRelation(StudentCourseRelation studentCourseRelation) {
+        jdbcTemplate.update(INSERT_COURSE_RELATION, studentCourseRelation.getStudentId(), studentCourseRelation.getCourseId());
+    }
+
+    @Override
+    public List<StudentCourseRelation> findCoursesByStudentID(long studentID) {
+        return jdbcTemplate.query(SELECT_ALL_COURSES_BY_STUDENT_ID, studentCourseRelationRowMapper(), studentID);
+    }
+
+    @Override
+    public List<StudentCourseRelation> findStudentsByCourseID(long courseID) {
+        return jdbcTemplate.query(SELECT_ALL_STUDENTS_BY_COURSE_ID, studentCourseRelationRowMapper(), courseID);
+    }
+
+    @Override
+    public void deleteRelationByStudentID(long studentID, long courseID) {
+        jdbcTemplate.update(DELETE_RELATION_BY_STUDENT_ID, studentID, courseID);
+    }
+
+    @Override
+    public void deleteAllRelationsByStudentID(long studentID) {
+        jdbcTemplate.update(DELETE_ALL_RELATIONS_BY_STUDENT_ID, studentID);
+    }
+
+    @Override
+    public void deleteAllRelationsByCourseID(long courseID) {
+        jdbcTemplate.update(DELETE_ALL_RELATIONS_BY_COURSE_ID, courseID);
+    }
+
+    @Override
+    protected RowMapper<Course> getRowMapper() {
+        return (resultSet, rowNum) -> {
+
+            return Course.builder()
+                    .withCourseId(resultSet.getLong("course_id"))
+                    .withCourseName(resultSet.getString("course_name"))
+                    .withCourseDescription(resultSet.getString("course_description"))
+                    .build();
+        };
+    }
+
+    @Override
+    protected Object[] getSaveParameters(Course course) {
+        return new Object[]{course.getCourseName(), course.getCourseDescription()};
+    }
+
+    @Override
+    protected Object[] getUpdateParameters(Course course) {
+        return new Object[]{course.getCourseName(), course.getCourseDescription(), course.getCourseId()};
+    }
+
+    public RowMapper<StudentCourseRelation> studentCourseRelationRowMapper() {
+        return (resultSet, rowNum) -> {
+
+            return StudentCourseRelation.builder()
+                .withStudentId(resultSet.getInt("student_id"))
                 .withCourseId(resultSet.getLong("course_id"))
-                .withCourseName(resultSet.getString("course_name"))
-                .withCourseDescription(resultSet.getString("course_description"))
                 .build();
-    }
-
-    @Override
-    protected void insert(PreparedStatement preparedStatement, Course entity) throws SQLException {
-        preparedStatement.setString(1, entity.getCourseName());
-        preparedStatement.setString(2, entity.getCourseDescription());
-    }
-
-    @Override
-    protected void updateValues(PreparedStatement preparedStatement, Course entity) throws SQLException {
-        preparedStatement.setString(1, entity.getCourseName());
-        preparedStatement.setString(2, entity.getCourseDescription());
-        preparedStatement.setLong(3, entity.getCourseId());
+        };
     }
 
     @Override
     public Course findCourseByCourseName(String courseName) {
-        return super.findByStringParam(courseName, SELECT_COURSE_BY_NAME).orElseThrow(DataBaseRuntimeException::new);
+        return jdbcTemplate.queryForObject(SELECT_COURSE_BY_NAME, new Object[]{courseName}, getRowMapper());
     }
 
     @Override
     public void addStudentToCourse(Student student, long courseID) {
-        StudentCourseRelation studentCourseRelation = StudentCourseRelation.builder()
-                .withStudentId(student.getStudentId())
-                .withCourseId(courseID)
-                .build();
-
-        saveRelation(studentCourseRelation);
+        jdbcTemplate.update(INSERT_COURSE_RELATION, student.getStudentId(), courseID);
     }
 
     @Override
     public void removeStudentFromCourse(long studentID, long courseID) {
-        deleteRelationByStudentID(studentID, courseID);
+        jdbcTemplate.update(DELETE_RELATION_BY_STUDENT_ID, studentID, courseID);
     }
 
     @Override
     public List<Student> findAllStudentsByCourseName(String courseName) {
-
         List<Student> students = new ArrayList<>();
         long courseID = findCourseByCourseName(courseName).getCourseId();
         List<StudentCourseRelation> studentCourseRelation = findStudentsByCourseID(courseID);
 
-        StudentDaoImpl studentDao = new StudentDaoImpl(connector);
+        StudentDaoImpl studentDao = new StudentDaoImpl(jdbcTemplate);
 
         for (StudentCourseRelation courseRelation : studentCourseRelation) {
-            Student tempStudent = studentDao.findById(courseRelation.getStudentId()).orElseThrow(DataBaseRuntimeException::new);
+            Student tempStudent = studentDao.findById(courseRelation.getStudentId());
             students.add(tempStudent);
         }
 
@@ -105,114 +139,7 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
     }
 
     @Override
-    public void deleteByID(long id) {
-        super.deleteByID(id);
-        deleteAllRelationsByCourseID(id);
-    }
-
-    @Override
-    public StudentCourseRelation mapResultSetToRelationEntity(ResultSet resultSet) throws SQLException {
-        return StudentCourseRelation.builder()
-                .withStudentId(resultSet.getInt("student_id"))
-                .withCourseId(resultSet.getLong("course_id"))
-                .build();
-    }
-
-    @Override
-    public void insertRelation(PreparedStatement preparedStatement, StudentCourseRelation entity) throws SQLException {
-        preparedStatement.setLong(1, entity.getStudentId());
-        preparedStatement.setLong(2, entity.getCourseId());
-    }
-
-    @Override
-    public void saveRelation(StudentCourseRelation studentCourseRelation) {
-        try (Connection connection = connector.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_COURSE_RELATION)) {
-            insertRelation(preparedStatement, studentCourseRelation);
-
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataBaseRuntimeException("Insertion is failed", e);
-        }
-    }
-
-    @Override
-    public List<StudentCourseRelation> findCoursesByStudentID(long studentID) {
-        List<StudentCourseRelation> studentCourseRelations = new ArrayList<>();
-        try (Connection connection = connector.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_COURSES_BY_STUDENT_ID)) {
-
-            preparedStatement.setLong(1, studentID);
-            final ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                studentCourseRelations.add(mapResultSetToRelationEntity(resultSet));
-            }
-
-
-        } catch (SQLException e) {
-            throw new DataBaseRuntimeException(e);
-        }
-        return studentCourseRelations;
-    }
-
-    @Override
-    public List<StudentCourseRelation> findStudentsByCourseID(long courseID) {
-        List<StudentCourseRelation> studentCourseRelations = new ArrayList<>();
-        try (Connection connection = connector.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_STUDENTS_BY_COURSE_ID)) {
-
-            preparedStatement.setLong(1, courseID);
-            final ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                studentCourseRelations.add(mapResultSetToRelationEntity(resultSet));
-            }
-
-
-        } catch (SQLException e) {
-            throw new DataBaseRuntimeException(e);
-        }
-        return studentCourseRelations;
-    }
-
-    @Override
-    public void deleteRelationByStudentID(long studentID, long courseID) {
-        try (Connection connection = connector.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_RELATION_BY_STUDENT_ID)) {
-
-            preparedStatement.setLong(1, studentID);
-            preparedStatement.setLong(2, courseID);
-
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            throw new DataBaseRuntimeException(e);
-        }
-    }
-
-    @Override
-    public void deleteAllRelationsByStudentID(long studentID) {
-        try (Connection connection = connector.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ALL_RELATIONS_BY_STUDENT_ID)) {
-
-            preparedStatement.setLong(1, studentID);
-
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            throw new DataBaseRuntimeException(e);
-        }
-    }
-
-    @Override
-    public void deleteAllRelationsByCourseID(long courseID) {
-        try (Connection connection = connector.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ALL_RELATIONS_BY_COURSE_ID)) {
-
-            preparedStatement.setLong(1, courseID);
-
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            throw new DataBaseRuntimeException(e);
-        }
+    public void insertRelation(StudentCourseRelation studentCourseRelation) {
+        jdbcTemplate.update(INSERT_COURSE_RELATION, studentCourseRelation.getStudentId(), studentCourseRelation.getCourseId());
     }
 }

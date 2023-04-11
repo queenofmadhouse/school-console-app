@@ -7,7 +7,7 @@ public interface CrudDao<E> {
 
     void save(E entity);
 
-    Optional<E> findById(long id);
+    E findById(long id);
 
     List<E> findAll();
 

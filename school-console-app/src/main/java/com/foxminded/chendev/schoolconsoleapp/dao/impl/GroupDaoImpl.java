@@ -1,17 +1,15 @@
 package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.DBConnector;
-import com.foxminded.chendev.schoolconsoleapp.dao.DataBaseRuntimeException;
 import com.foxminded.chendev.schoolconsoleapp.dao.GroupDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class GroupDaoImpl extends AbstractCrudDao<Group> implements GroupDao {
 
     private static final String INSERT_GROUP = "INSERT INTO school.groups (group_name) VALUES (?)";
@@ -25,51 +23,37 @@ public class GroupDaoImpl extends AbstractCrudDao<Group> implements GroupDao {
             "GROUP BY g.group_id, g.group_name " +
             "HAVING COUNT(s.student_id) <= ?";
 
-    private final DBConnector connector;
+    private final JdbcTemplate jdbcTemplate;
 
-    public GroupDaoImpl(DBConnector connector) {
-        super(connector, INSERT_GROUP, SELECT_GROUP_BY_ID, SELECT_ALL_GROUPS, UPDATE_GROUP, DELETE_GROUP_BY_ID);
-        this.connector = connector;
+    @Autowired
+    public GroupDaoImpl(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate, INSERT_GROUP, SELECT_GROUP_BY_ID, SELECT_ALL_GROUPS, UPDATE_GROUP, DELETE_GROUP_BY_ID);
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
-    protected Group mapResultSetToEntity(ResultSet resultSet) throws SQLException {
-        return Group.builder()
-                .withGroupId(resultSet.getLong("group_id"))
-                .withGroupName(resultSet.getString("group_name"))
-                .build();
-    }
-
-    @Override
-    protected void insert(PreparedStatement preparedStatement, Group entity) throws SQLException {
-        preparedStatement.setString(1, entity.getGroupName());
-    }
-
-    @Override
-    protected void updateValues(PreparedStatement preparedStatement, Group entity) throws SQLException {
-        preparedStatement.setString(1, entity.getGroupName());
-        preparedStatement.setLong(2, entity.getGroupId());
-    }
-
-    @Override
     public List<Group> findGroupsWithLessOrEqualStudents(long value) {
-        List<Group> groups = new ArrayList<>();
+        return jdbcTemplate.query(SELECT_GROUPS_WITH_LESS_OR_EQUALS_STUDENTS, new Object[]{value}, getRowMapper());
+    }
 
-        try (Connection connection = connector.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_GROUPS_WITH_LESS_OR_EQUALS_STUDENTS)) {
-            preparedStatement.setLong(1, value);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    Group group = Group.builder()
-                            .withGroupId(resultSet.getLong("group_id"))
-                            .withGroupName(resultSet.getString("group_name"))
-                            .build();
-                    groups.add(group);
-                }
-            }
-        } catch (SQLException e) {
-            throw new DataBaseRuntimeException("Failed to find groups with less or equal students", e);
-        }
-        return groups;
+    @Override
+    protected RowMapper<Group> getRowMapper() {
+        return (resultSet, rowNum) -> {
+
+            return Group.builder()
+                    .withGroupId(resultSet.getLong("group_id"))
+                    .withGroupName(resultSet.getString("group_name"))
+                    .build();
+
+        };
+    }
+
+    @Override
+    protected Object[] getUpdateParameters(Group entity) {
+        return new Object[]{entity.getGroupName(), entity.getGroupId()};
+    }
+
+    @Override
+    protected Object[] getSaveParameters(Group entity) {
+        return new Object[]{entity.getGroupName()};
     }
 }
