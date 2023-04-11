@@ -19,9 +19,7 @@ public interface CourseDao extends CrudDao<Course> {
 
     List<Student> findAllStudentsByCourseName(String name);
 
-    StudentCourseRelation mapResultSetToRelationEntity(ResultSet resultSet) throws SQLException;
-
-    void insertRelation(PreparedStatement preparedStatement, StudentCourseRelation entity) throws SQLException;
+    void insertRelation(StudentCourseRelation entity) throws SQLException;
 
     void saveRelation(StudentCourseRelation studentCourseRelation);
 
