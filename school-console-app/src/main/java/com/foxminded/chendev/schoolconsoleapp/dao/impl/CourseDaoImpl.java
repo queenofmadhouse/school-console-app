@@ -4,7 +4,6 @@ import com.foxminded.chendev.schoolconsoleapp.dao.CourseDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import com.foxminded.chendev.schoolconsoleapp.entity.StudentCourseRelation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -39,7 +38,6 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
 
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
     public CourseDaoImpl(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate, INSERT_COURSE, SELECT_COURSE_BY_ID, SELECT_ALL_COURSES, UPDATE_COURSE, DELETE_COURSE_BY_ID);
         this.jdbcTemplate = jdbcTemplate;
@@ -101,9 +99,9 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
         return (resultSet, rowNum) -> {
 
             return StudentCourseRelation.builder()
-                .withStudentId(resultSet.getInt("student_id"))
-                .withCourseId(resultSet.getLong("course_id"))
-                .build();
+                    .withStudentId(resultSet.getInt("student_id"))
+                    .withCourseId(resultSet.getLong("course_id"))
+                    .build();
         };
     }
 
@@ -139,7 +137,8 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
     }
 
     @Override
-    public void insertRelation(StudentCourseRelation studentCourseRelation) {
-        jdbcTemplate.update(INSERT_COURSE_RELATION, studentCourseRelation.getStudentId(), studentCourseRelation.getCourseId());
+    public void deleteByID(long id) {
+        super.deleteByID(id);
+        deleteAllRelationsByCourseID(id);
     }
 }

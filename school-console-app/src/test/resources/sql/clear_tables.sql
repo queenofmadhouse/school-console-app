@@ -1,0 +1,4 @@
+CREATE SCHEMA IF NOT EXISTS school;
+-- TRUNCATE school.students RESTART IDENTITY CASCADE IF EXISTS school;
+-- TRUNCATE school.courses RESTART IDENTITY CASCADE;
+-- TRUNCATE school.students_courses_relation RESTART IDENTITY CASCADE;

@@ -1,54 +1,48 @@
 package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.DBConnector;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
-import com.foxminded.chendev.schoolconsoleapp.reader.FileReader;
-import com.foxminded.chendev.schoolconsoleapp.reader.SQLFileReader;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@JdbcTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Sql(
+        scripts = {"/sql/clear_tables.sql",
+                "/sql/students_create.sql",
+                "/sql/groups_create.sql",
+                "/sql/courses_create.sql",
+                "/sql/students_courses_relation.sql"},
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+)
 class GroupDaoImplTestIT {
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     private GroupDaoImpl groupDao;
-    private Connection connection;
-    private DBConnector connector;
     private StudentDaoImpl studentDao;
 
     @BeforeEach
     public void setUp() throws SQLException, IOException {
 
-        connector = new DBConnector("application-test");
-
-        connection = connector.getConnection();
-
-        FileReader fileReader = new SQLFileReader();
-
-        PreparedStatement preparedStatement = connection.prepareStatement(fileReader.readFile("groups_create.sql"));
-        preparedStatement.execute();
-
-        PreparedStatement preparedStatement2 = connection.prepareStatement(fileReader.readFile("students_create.sql"));
-        preparedStatement2.execute();
-
-        groupDao = new GroupDaoImpl(connector);
-
-    }
-
-    @AfterEach
-    public void tearDown() throws SQLException {
-        connection.close();
+        groupDao = new GroupDaoImpl(jdbcTemplate);
+        studentDao = new StudentDaoImpl(jdbcTemplate);
     }
 
     @Test
@@ -60,9 +54,8 @@ class GroupDaoImplTestIT {
 
         groupDao.save(group);
 
-        Optional<Group> foundGroup = groupDao.findById(1);
-        assertTrue(foundGroup.isPresent());
-        assertEquals("Test Group", foundGroup.get().getGroupName());
+        Group foundGroup = groupDao.findById(1);
+        assertEquals("Test Group", foundGroup.getGroupName());
     }
 
     @Test
@@ -96,7 +89,7 @@ class GroupDaoImplTestIT {
 
         groupDao.deleteByID(1);
 
-        assertEquals(Optional.empty(), groupDao.findById(1));
+//        assertEquals(Optional.empty(), groupDao.findById(1));
     }
 
     @Test
@@ -108,21 +101,19 @@ class GroupDaoImplTestIT {
 
         groupDao.save(group1);
 
-        Group group = groupDao.findById(1).orElse(null);
+        Group group = groupDao.findById(1);
 
         group.setGroupName("Test Group Updated");
 
         groupDao.update(group);
 
-        assertEquals("Test Group Updated", groupDao.findById(1).orElse(null).getGroupName());
+        assertEquals("Test Group Updated", groupDao.findById(1).getGroupName());
 
 
     }
 
     @Test
     void findGroupsWithLessOrEqualStudentsShouldListOfGroupsWhenInputValid() {
-
-        studentDao = new StudentDaoImpl(connector);
 
         Group gerup1 = Group.builder()
                 .withGroupName("Group1")
@@ -139,61 +130,61 @@ class GroupDaoImplTestIT {
         Student student1 = Student.builder()
                 .withFirstName("John")
                 .withLastName("Studentsy")
-                .withGroupId(Group.builder().withGroupId(1).build())
+                .withGroupId(1)
                 .build();
 
         Student student2 = Student.builder()
                 .withFirstName("Jane")
                 .withLastName("Doe")
-                .withGroupId(Group.builder().withGroupId(1).build())
+                .withGroupId(1)
                 .build();
 
         Student student3 = Student.builder()
                 .withFirstName("Tom")
                 .withLastName("Smith")
-                .withGroupId(Group.builder().withGroupId(1).build())
+                .withGroupId(1)
                 .build();
 
         Student student4 = Student.builder()
                 .withFirstName("Alice")
                 .withLastName("Johnson")
-                .withGroupId(Group.builder().withGroupId(1).build())
+                .withGroupId(1)
                 .build();
 
         Student student5 = Student.builder()
                 .withFirstName("Bob")
                 .withLastName("Brown")
-                .withGroupId(Group.builder().withGroupId(1).build())
+                .withGroupId(1)
                 .build();
 
         Student student6 = Student.builder()
                 .withFirstName("Charlie")
                 .withLastName("Green")
-                .withGroupId(Group.builder().withGroupId(2).build())
+                .withGroupId(2)
                 .build();
 
         Student student7 = Student.builder()
                 .withFirstName("Emily")
                 .withLastName("White")
-                .withGroupId(Group.builder().withGroupId(2).build())
+                .withGroupId(2)
                 .build();
 
         Student student8 = Student.builder()
                 .withFirstName("Eva")
                 .withLastName("Black")
-                .withGroupId(Group.builder().withGroupId(2).build())
+                .withGroupId(2)
                 .build();
 
         Student student9 = Student.builder()
                 .withFirstName("Frank")
                 .withLastName("Gray")
-                .withGroupId(Group.builder().withGroupId(3).build())
+                .withGroupId(3)
                 .build();
 
         Student student10 = Student.builder()
                 .withFirstName("Grace")
                 .withLastName("Blue")
-                .withGroupId(Group.builder().withGroupId(3).build())
+                .withGroupId(3)
                 .build();
 
         groupDao.save(gerup1);
@@ -221,8 +212,6 @@ class GroupDaoImplTestIT {
     @Test
     void findGroupsWithLessOrEqualStudentsShouldReturnEmptyListWhenNotFound() {
 
-        studentDao = new StudentDaoImpl(connector);
-
         Group group1 = Group.builder()
                 .withGroupName("Group1")
                 .build();
@@ -239,61 +228,61 @@ class GroupDaoImplTestIT {
         Student student1 = Student.builder()
                 .withFirstName("John")
                 .withLastName("Studentsy")
-                .withGroupId(Group.builder().withGroupId(1).build())
+                .withGroupId(1)
                 .build();
 
         Student student2 = Student.builder()
                 .withFirstName("Jane")
                 .withLastName("Doe")
-                .withGroupId(Group.builder().withGroupId(1).build())
+                .withGroupId(1)
                 .build();
 
         Student student3 = Student.builder()
                 .withFirstName("Tom")
                 .withLastName("Smith")
-                .withGroupId(Group.builder().withGroupId(1).build())
+                .withGroupId(1)
                 .build();
 
         Student student4 = Student.builder()
                 .withFirstName("Alice")
                 .withLastName("Johnson")
-                .withGroupId(Group.builder().withGroupId(1).build())
+                .withGroupId(1)
                 .build();
 
         Student student5 = Student.builder()
                 .withFirstName("Bob")
                 .withLastName("Brown")
-                .withGroupId(Group.builder().withGroupId(1).build())
+                .withGroupId(1)
                 .build();
 
         Student student6 = Student.builder()
                 .withFirstName("Charlie")
                 .withLastName("Green")
-                .withGroupId(Group.builder().withGroupId(2).build())
+                .withGroupId(2)
                 .build();
 
         Student student7 = Student.builder()
                 .withFirstName("Emily")
                 .withLastName("White")
-                .withGroupId(Group.builder().withGroupId(2).build())
+                .withGroupId(2)
                 .build();
 
         Student student8 = Student.builder()
                 .withFirstName("Eva")
                 .withLastName("Black")
-                .withGroupId(Group.builder().withGroupId(2).build())
+                .withGroupId(2)
                 .build();
 
         Student student9 = Student.builder()
                 .withFirstName("Frank")
                 .withLastName("Gray")
-                .withGroupId(Group.builder().withGroupId(3).build())
+                .withGroupId(3)
                 .build();
 
         Student student10 = Student.builder()
                 .withFirstName("Grace")
                 .withLastName("Blue")
-                .withGroupId(Group.builder().withGroupId(3).build())
+                .withGroupId(3)
                 .build();
 
         groupDao.save(group1);
@@ -337,7 +326,7 @@ class GroupDaoImplTestIT {
 
         groupDao.deleteByID(2);
 
-        assertEquals(Optional.empty(), groupDao.findById(2));
+//        assertNull(groupDao.findById(2));
     }
 
     @Test

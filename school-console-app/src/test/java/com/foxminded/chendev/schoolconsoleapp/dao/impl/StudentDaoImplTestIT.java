@@ -1,19 +1,16 @@
 package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.DBConnector;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import com.foxminded.chendev.schoolconsoleapp.entity.StudentCourseRelation;
-import com.foxminded.chendev.schoolconsoleapp.reader.FileReader;
-import com.foxminded.chendev.schoolconsoleapp.reader.SQLFileReader;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,37 +19,30 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@JdbcTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Sql(
+        scripts = {"/sql/clear_tables.sql", "/sql/students_create.sql", "/sql/courses_create.sql",
+        "/sql/students_courses_relation.sql"},
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+)
 class StudentDaoImplTestIT {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private StudentDaoImpl studentDao;
     private CourseDaoImpl courseDao;
-    private Connection connection;
-    private DBConnector connector;
-
     private final String sqlQuery = "SELECT * FROM school.students WHERE first_name = ?";
-    private final FileReader fileReader = new SQLFileReader();
+
 
     @BeforeEach
-    public void setUp() throws SQLException, IOException {
+    void setUp() {
 
-        connector = new DBConnector("application-test");
-
-        connection = connector.getConnection();
-
-        PreparedStatement preparedStatement = connection.prepareStatement(fileReader.readFile("students_create.sql"));
-        preparedStatement.execute();
-
-        preparedStatement = connection.prepareStatement(fileReader.readFile("students_courses_relation.sql"));
-        preparedStatement.execute();
-
-        studentDao = new StudentDaoImpl(connector);
-        courseDao = new CourseDaoImpl(connector);
+        studentDao = new StudentDaoImpl(jdbcTemplate);
+        courseDao = new CourseDaoImpl(jdbcTemplate);
     }
 
-    @AfterEach
-    public void tearDown() throws SQLException {
-        connection.close();
-    }
 
     @Test
     void saveShouldSaveInEntityInDataBase() {
@@ -64,12 +54,12 @@ class StudentDaoImplTestIT {
         Student student = Student.builder()
                 .withFirstName("Alex")
                 .withLastName("Kapranos")
-                .withGroupId(group)
+                .withGroupId(1)
                 .build();
 
         studentDao.save(student);
 
-        Student findedStudent = studentDao.findById(1).orElse(null);
+        Student findedStudent = studentDao.findById(1);
 
         assertEquals("Alex", findedStudent.getFirstName());
         assertEquals("Kapranos", findedStudent.getLastName());
@@ -87,12 +77,12 @@ class StudentDaoImplTestIT {
         Student student1 = Student.builder()
                 .withFirstName("Alex")
                 .withLastName("Kapranos")
-                .withGroupId(group)
+                .withGroupId(1)
                 .build();
         Student student2 = Student.builder()
                 .withFirstName("Nikol")
                 .withLastName("Smith")
-                .withGroupId(group)
+                .withGroupId(1)
                 .build();
 
         studentDao.save(student1);
@@ -115,19 +105,19 @@ class StudentDaoImplTestIT {
         Student student = Student.builder()
                 .withFirstName("Alex")
                 .withLastName("Kapranos")
-                .withGroupId(group)
+                .withGroupId(1)
                 .build();
 
         studentDao.save(student);
 
-        Student foundStudent = studentDao.findById(1).orElse(null);
+        Student foundStudent = studentDao.findById(1);
 
         foundStudent.setFirstName("Alexandr");
         foundStudent.setLastName("Kirieshkin");
 
         studentDao.update(foundStudent);
 
-        Student updatedStudent = studentDao.findById(1).orElse(null);
+        Student updatedStudent = studentDao.findById(1);
 
         assertNotNull(updatedStudent);
         assertEquals("Alexandr", updatedStudent.getFirstName());
@@ -166,7 +156,7 @@ class StudentDaoImplTestIT {
         Student student = Student.builder()
                 .withFirstName("Alex")
                 .withLastName("Smith")
-                .withGroupId(group)
+                .withGroupId(1)
                 .build();
 
         courseDao.saveRelation(studentCourseRelation1);

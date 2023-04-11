@@ -2,7 +2,6 @@ package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
 import com.foxminded.chendev.schoolconsoleapp.dao.StudentDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -17,7 +16,6 @@ public class StudentDaoImpl extends AbstractCrudDao<Student> implements StudentD
     private static final String DELETE_STUDENT_BY_ID = "DELETE FROM school.students WHERE student_id = ?";
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
     public StudentDaoImpl(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate, INSERT_STUDENT, SELECT_STUDENT_BY_ID, SELECT_ALL_STUDENTS, UPDATE_STUDENT, DELETE_STUDENT_BY_ID);
         this.jdbcTemplate = jdbcTemplate;
