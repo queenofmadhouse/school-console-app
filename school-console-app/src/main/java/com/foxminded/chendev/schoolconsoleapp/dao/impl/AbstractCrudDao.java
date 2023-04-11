@@ -35,12 +35,12 @@ public abstract class AbstractCrudDao<E> implements CrudDao<E> {
 
     @Override
     public E findById(long id) {
-            return jdbcTemplate.queryForObject(findByIdQuery, getRowMapper(), id);
+        return jdbcTemplate.queryForObject(findByIdQuery, getRowMapper(), id);
     }
 
     @Override
     public List<E> findAll() {
-       return jdbcTemplate.query(findAllQuery, getRowMapper());
+        return jdbcTemplate.query(findAllQuery, getRowMapper());
     }
 
     @Override
@@ -51,10 +51,6 @@ public abstract class AbstractCrudDao<E> implements CrudDao<E> {
     @Override
     public void deleteByID(long id) {
         jdbcTemplate.update(deleteByIdQuery, id);
-    }
-
-    protected Optional<E> findByLongParam(long param, String query) {
-        return jdbcTemplate.query(query, getRowMapper(), param).stream().findFirst();
     }
 
     protected Optional<E> findByStringParam(String param, String query) {

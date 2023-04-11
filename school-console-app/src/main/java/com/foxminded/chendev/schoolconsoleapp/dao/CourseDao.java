@@ -4,9 +4,6 @@ import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import com.foxminded.chendev.schoolconsoleapp.entity.StudentCourseRelation;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 public interface CourseDao extends CrudDao<Course> {
@@ -19,7 +16,7 @@ public interface CourseDao extends CrudDao<Course> {
 
     List<Student> findAllStudentsByCourseName(String name);
 
-    void insertRelation(StudentCourseRelation entity) throws SQLException;
+//    void insertRelation(StudentCourseRelation entity) throws SQLException;
 
     void saveRelation(StudentCourseRelation studentCourseRelation);
 

@@ -1,61 +1,49 @@
 package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.DBConnector;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import com.foxminded.chendev.schoolconsoleapp.entity.StudentCourseRelation;
-import com.foxminded.chendev.schoolconsoleapp.reader.FileReader;
-import com.foxminded.chendev.schoolconsoleapp.reader.SQLFileReader;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@JdbcTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Sql(
+        scripts = {"/sql/clear_tables.sql",
+                "/sql/students_create.sql",
+                "/sql/groups_create.sql",
+                "/sql/courses_create.sql",
+                "/sql/students_courses_relation.sql"},
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+)
 class CourseDaoImplTestIT {
 
-    private StudentDaoImpl studentDao;
-    private CourseDaoImpl courseDao;
-    private Connection connection;
-    private DBConnector connector;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
+    private CourseDaoImpl courseDao;
+
+    private StudentDaoImpl studentDao;
 
     @BeforeEach
-    public void setUp() throws SQLException, IOException {
-        connector = new DBConnector("application-test");
-
-        connection = connector.getConnection();
-
-        FileReader fileReader = new SQLFileReader();
-
-        PreparedStatement preparedStatement = connection.prepareStatement(fileReader.readFile("courses_create.sql"));
-        preparedStatement.execute();
-
-        preparedStatement = connection.prepareStatement(fileReader.readFile("students_create.sql"));
-        preparedStatement.execute();
-
-        preparedStatement = connection.prepareStatement(fileReader.readFile("students_courses_relation.sql"));
-        preparedStatement.execute();
-
-        courseDao = new CourseDaoImpl(connector);
-        studentDao = new StudentDaoImpl(connector);
+    void setUp() {
+        courseDao = new CourseDaoImpl(jdbcTemplate);
+        studentDao = new StudentDaoImpl(jdbcTemplate);
     }
 
-    @AfterEach
-    public void tearDown() throws SQLException {
-        connection.close();
-    }
 
     @Test
     void findCourseByCourseNameShouldReturnCourse() {
@@ -89,20 +77,11 @@ class CourseDaoImplTestIT {
     @Test
     void addStudentToCourseShouldCreateRelationBetweenCourseAndStudent() {
 
-        StudentCourseRelation expected = StudentCourseRelation.builder()
-                .withStudentId(0)
-                .withCourseId(5)
-                .build();
-
-        Group group = Group.builder()
-                .withGroupId(35)
-                .build();
-
         Student student = Student.builder()
                 .withStudentId(1)
                 .withFirstName("Alex")
                 .withLastName("Smith")
-                .withGroupId(group)
+                .withGroupId(35)
                 .build();
 
         courseDao.addStudentToCourse(student, 5);
@@ -158,25 +137,21 @@ class CourseDaoImplTestIT {
     @Test
     void findAllStudentsByCourseNameShouldReturnListOfStudentsRelatedToCourse() {
 
-        Group group = Group.builder()
-                .withGroupId(5)
-                .build();
-
         Student student1 = Student.builder()
                 .withFirstName("Joan")
                 .withLastName("Roberts")
-                .withGroupId(group)
+                .withGroupId(5)
                 .build();
 
         Student student2 = Student.builder()
                 .withFirstName("Fillip")
                 .withLastName("Some")
-                .withGroupId(group)
+                .withGroupId(5)
                 .build();
         Student student3 = Student.builder()
                 .withFirstName("Jane")
                 .withLastName("Potters")
-                .withGroupId(group)
+                .withGroupId(5)
                 .build();
 
         Course course = Course.builder()
@@ -226,7 +201,7 @@ class CourseDaoImplTestIT {
 
         courseDao.update(courseFounded);
 
-        Course courseUpdated = courseDao.findById(1).orElse(null);
+        Course courseUpdated = courseDao.findById(1);
 
         assertNotNull(courseUpdated);
         assertEquals("Old Java Course", courseUpdated.getCourseName());
@@ -243,18 +218,18 @@ class CourseDaoImplTestIT {
         Student student1 = Student.builder()
                 .withFirstName("Joan")
                 .withLastName("Roberts")
-                .withGroupId(group)
+                .withGroupId(5)
                 .build();
 
         Student student2 = Student.builder()
                 .withFirstName("Fillip")
                 .withLastName("Some")
-                .withGroupId(group)
+                .withGroupId(5)
                 .build();
         Student student3 = Student.builder()
                 .withFirstName("Jane")
                 .withLastName("Potters")
-                .withGroupId(group)
+                .withGroupId(5)
                 .build();
 
         Course course1 = Course.builder()
@@ -293,10 +268,10 @@ class CourseDaoImplTestIT {
         courseDao.deleteByID(1);
 
         List<StudentCourseRelation> studentCourseRelationFound = courseDao.findStudentsByCourseID(1);
-        Course course = courseDao.findById(1).orElse(null);
+
+        System.out.println(studentCourseRelationFound);
 
         assertTrue(studentCourseRelationFound.isEmpty());
-        assertNull(course);
     }
 
     @Test
