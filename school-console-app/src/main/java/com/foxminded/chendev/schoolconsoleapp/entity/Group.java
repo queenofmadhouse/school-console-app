@@ -10,6 +10,10 @@ public class Group {
         this.groupName = builder.groupName;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @Override
     public String toString() {
         return "Group{" +
@@ -32,10 +36,6 @@ public class Group {
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
-    }
-
-    public static Builder builder() {
-        return new Builder();
     }
 
     public static class Builder {

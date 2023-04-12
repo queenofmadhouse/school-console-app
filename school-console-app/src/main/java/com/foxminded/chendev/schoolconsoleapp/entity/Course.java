@@ -12,6 +12,10 @@ public class Course {
         this.courseDescription = builder.courseDescription;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @Override
     public String toString() {
         return "Course{" +
@@ -43,10 +47,6 @@ public class Course {
 
     public void setCourseDescription(String courseDescription) {
         this.courseDescription = courseDescription;
-    }
-
-    public static Builder builder() {
-        return new Builder();
     }
 
     public static class Builder {

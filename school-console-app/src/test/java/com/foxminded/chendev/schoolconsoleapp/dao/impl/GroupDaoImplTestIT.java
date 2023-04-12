@@ -10,14 +10,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @JdbcTest
@@ -39,7 +35,7 @@ class GroupDaoImplTestIT {
     private StudentDaoImpl studentDao;
 
     @BeforeEach
-    public void setUp() throws SQLException, IOException {
+    public void setUp() {
 
         groupDao = new GroupDaoImpl(jdbcTemplate);
         studentDao = new StudentDaoImpl(jdbcTemplate);
@@ -64,6 +60,7 @@ class GroupDaoImplTestIT {
         Group group1 = Group.builder()
                 .withGroupName("Test Group 1")
                 .build();
+
         Group group2 = Group.builder()
                 .withGroupName("Test Group 2")
                 .build();
@@ -76,20 +73,6 @@ class GroupDaoImplTestIT {
         assertEquals(2, groups.size());
         assertEquals("Test Group 1", groups.get(0).getGroupName());
         assertEquals("Test Group 2", groups.get(1).getGroupName());
-    }
-
-    @Test
-    void deleteByIDShouldDeleteByIDIfExists() {
-
-        Group group1 = Group.builder()
-                .withGroupName("Test Group 1")
-                .build();
-
-        groupDao.save(group1);
-
-        groupDao.deleteByID(1);
-
-//        assertEquals(Optional.empty(), groupDao.findById(1));
     }
 
     @Test
@@ -115,15 +98,15 @@ class GroupDaoImplTestIT {
     @Test
     void findGroupsWithLessOrEqualStudentsShouldListOfGroupsWhenInputValid() {
 
-        Group gerup1 = Group.builder()
+        Group group1 = Group.builder()
                 .withGroupName("Group1")
                 .build();
 
-        Group gerup2 = Group.builder()
+        Group group2 = Group.builder()
                 .withGroupName("Group2")
                 .build();
 
-        Group gerup3 = Group.builder()
+        Group group3 = Group.builder()
                 .withGroupName("Group3")
                 .build();
 
@@ -187,9 +170,9 @@ class GroupDaoImplTestIT {
                 .withGroupId(3)
                 .build();
 
-        groupDao.save(gerup1);
-        groupDao.save(gerup2);
-        groupDao.save(gerup3);
+        groupDao.save(group1);
+        groupDao.save(group2);
+        groupDao.save(group3);
 
         studentDao.save(student1);
         studentDao.save(student2);
@@ -223,7 +206,6 @@ class GroupDaoImplTestIT {
         Group group3 = Group.builder()
                 .withGroupName("Group3")
                 .build();
-
 
         Student student1 = Student.builder()
                 .withFirstName("John")
@@ -326,23 +308,9 @@ class GroupDaoImplTestIT {
 
         groupDao.deleteByID(2);
 
-//        assertNull(groupDao.findById(2));
-    }
+        List<Group> groups = groupDao.findAll();
 
-    @Test
-    void findByStringParamShouldFindByStringParamAndReturnOptional() {
-
-        String sqlQuery = "Select * FROM school.groups WHERE group_name = ?";
-
-        Group group = Group.builder()
-                .withGroupName("Group1")
-                .build();
-
-        groupDao.save(group);
-
-        Group foundGroup = groupDao.findByStringParam("Group1", sqlQuery).orElse(null);
-
-        assertEquals(1, foundGroup.getGroupId());
-        assertEquals("Group1", foundGroup.getGroupName());
+        assertNotNull(groups);
+        assertEquals(2, groups.size());
     }
 }

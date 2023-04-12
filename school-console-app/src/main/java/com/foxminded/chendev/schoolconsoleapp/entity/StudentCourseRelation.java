@@ -10,6 +10,10 @@ public class StudentCourseRelation {
         this.courseId = builder.courseId;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @Override
     public String toString() {
         return "StudentCourseRelation{" +
@@ -32,10 +36,6 @@ public class StudentCourseRelation {
 
     public void setCourseId(long courseId) {
         this.courseId = courseId;
-    }
-
-    public static Builder builder() {
-        return new Builder();
     }
 
     public static class Builder {
