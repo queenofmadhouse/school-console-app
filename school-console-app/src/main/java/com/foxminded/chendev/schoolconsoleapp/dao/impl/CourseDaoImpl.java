@@ -28,14 +28,12 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
             " WHERE student_id = ?";
     private static final String SELECT_ALL_STUDENTS_BY_COURSE_ID = "SELECT * FROM school.students_courses_relation" +
             " WHERE course_id = ?";
-
     private static final String DELETE_RELATION_BY_STUDENT_ID = "DELETE FROM school.students_courses_relation" +
             " WHERE student_id = ? AND course_id = ?";
     private static final String DELETE_ALL_RELATIONS_BY_STUDENT_ID = "DELETE FROM school.students_courses_relation" +
             " WHERE student_id = ?";
     private static final String DELETE_ALL_RELATIONS_BY_COURSE_ID = "DELETE FROM school.students_courses_relation" +
             " WHERE course_id = ?";
-
     private JdbcTemplate jdbcTemplate;
 
     public CourseDaoImpl(JdbcTemplate jdbcTemplate) {
