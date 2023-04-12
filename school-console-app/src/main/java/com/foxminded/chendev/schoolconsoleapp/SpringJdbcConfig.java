@@ -8,6 +8,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 @Configuration
 @ComponentScan("com.foxminded.chendev.schoolconsoleapp.dao")
 public class SpringJdbcConfig {
+
     @Bean
     public DriverManagerDataSource postgresqlDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();

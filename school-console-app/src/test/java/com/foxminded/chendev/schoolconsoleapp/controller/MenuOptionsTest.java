@@ -18,7 +18,6 @@ import org.mockito.quality.Strictness;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
@@ -34,14 +33,11 @@ import static org.mockito.Mockito.when;
 class MenuOptionsTest {
 
     @Mock
+    CourseDao courseDaoMock;
+    @Mock
     private StudentDao studentDaoMock;
-
     @Mock
     private GroupDao groupDaoMock;
-
-    @Mock
-    CourseDao courseDaoMock;
-
     @Mock
     private Validator validatorMock;
 
@@ -109,7 +105,7 @@ class MenuOptionsTest {
     @Test
     void shouldExecuteAddStudentToCourse() {
         when(consoleHandlerMock.readUserInputNumber()).thenReturn(1L, 1L);
-        when(studentDaoMock.findById(1L)).thenReturn(Optional.ofNullable(Student.builder().build()));
+        when(studentDaoMock.findById(1L)).thenReturn(Student.builder().build());
 
         List<Course> courses = new ArrayList<>();
         courses.add(Course.builder().withCourseId(1).withCourseName("Math").build());

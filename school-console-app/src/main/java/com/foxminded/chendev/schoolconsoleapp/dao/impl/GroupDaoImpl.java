@@ -2,7 +2,6 @@ package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
 import com.foxminded.chendev.schoolconsoleapp.dao.GroupDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -25,7 +24,6 @@ public class GroupDaoImpl extends AbstractCrudDao<Group> implements GroupDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
     public GroupDaoImpl(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate, INSERT_GROUP, SELECT_GROUP_BY_ID, SELECT_ALL_GROUPS, UPDATE_GROUP, DELETE_GROUP_BY_ID);
         this.jdbcTemplate = jdbcTemplate;

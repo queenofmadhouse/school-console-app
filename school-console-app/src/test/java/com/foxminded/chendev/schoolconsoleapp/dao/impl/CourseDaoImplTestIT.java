@@ -1,7 +1,6 @@
 package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
-import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import com.foxminded.chendev.schoolconsoleapp.entity.StudentCourseRelation;
 import org.junit.jupiter.api.BeforeEach;
@@ -210,10 +209,6 @@ class CourseDaoImplTestIT {
 
     @Test
     void deleteByIDShouldDeleteAllRelations() {
-
-        Group group = Group.builder()
-                .withGroupId(5)
-                .build();
 
         Student student1 = Student.builder()
                 .withFirstName("Joan")

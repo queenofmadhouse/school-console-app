@@ -9,8 +9,6 @@ import com.foxminded.chendev.schoolconsoleapp.dao.StudentDao;
 import com.foxminded.chendev.schoolconsoleapp.dao.impl.CourseDaoImpl;
 import com.foxminded.chendev.schoolconsoleapp.dao.impl.GroupDaoImpl;
 import com.foxminded.chendev.schoolconsoleapp.dao.impl.StudentDaoImpl;
-import com.foxminded.chendev.schoolconsoleapp.entity.Group;
-import com.foxminded.chendev.schoolconsoleapp.reader.SQLFileReader;
 import com.foxminded.chendev.schoolconsoleapp.view.ConsoleHandler;
 import com.foxminded.chendev.schoolconsoleapp.view.ConsoleHandlerImpl;
 import org.springframework.boot.SpringApplication;

@@ -14,6 +14,10 @@ public class Student {
         this.lastName = builder.lastName;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @Override
     public String toString() {
         return "Student{" +
@@ -54,10 +58,6 @@ public class Student {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public static Builder builder() {
-        return new Builder();
     }
 
     public static class Builder {

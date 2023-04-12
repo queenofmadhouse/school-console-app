@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public abstract class AbstractCrudDao<E> implements CrudDao<E> {
@@ -51,10 +50,6 @@ public abstract class AbstractCrudDao<E> implements CrudDao<E> {
     @Override
     public void deleteByID(long id) {
         jdbcTemplate.update(deleteByIdQuery, id);
-    }
-
-    protected Optional<E> findByStringParam(String param, String query) {
-        return jdbcTemplate.query(query, getRowMapper(), param).stream().findFirst();
     }
 
     protected abstract RowMapper<E> getRowMapper();

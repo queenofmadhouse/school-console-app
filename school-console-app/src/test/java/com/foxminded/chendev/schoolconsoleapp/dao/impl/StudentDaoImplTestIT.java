@@ -1,6 +1,5 @@
 package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import com.foxminded.chendev.schoolconsoleapp.entity.StudentCourseRelation;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,14 +15,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(
         scripts = {"/sql/clear_tables.sql", "/sql/students_create.sql", "/sql/courses_create.sql",
-        "/sql/students_courses_relation.sql"},
+                "/sql/students_courses_relation.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
 class StudentDaoImplTestIT {
@@ -33,8 +31,6 @@ class StudentDaoImplTestIT {
 
     private StudentDaoImpl studentDao;
     private CourseDaoImpl courseDao;
-    private final String sqlQuery = "SELECT * FROM school.students WHERE first_name = ?";
-
 
     @BeforeEach
     void setUp() {
@@ -46,10 +42,6 @@ class StudentDaoImplTestIT {
 
     @Test
     void saveShouldSaveInEntityInDataBase() {
-
-        Group group = Group.builder()
-                .withGroupId(1)
-                .build();
 
         Student student = Student.builder()
                 .withFirstName("Alex")
@@ -70,10 +62,6 @@ class StudentDaoImplTestIT {
     @Test
     void findAllShouldReturnListOfStudentWhenFound() {
 
-        Group group = Group.builder()
-                .withGroupId(1)
-                .build();
-
         Student student1 = Student.builder()
                 .withFirstName("Alex")
                 .withLastName("Kapranos")
@@ -92,15 +80,10 @@ class StudentDaoImplTestIT {
 
         assertFalse(resultList.isEmpty());
         assertEquals(2, resultList.size());
-        ;
     }
 
     @Test
     void updateShouldUpdateValues() {
-
-        Group group = Group.builder()
-                .withGroupId(1)
-                .build();
 
         Student student = Student.builder()
                 .withFirstName("Alex")
@@ -122,15 +105,10 @@ class StudentDaoImplTestIT {
         assertNotNull(updatedStudent);
         assertEquals("Alexandr", updatedStudent.getFirstName());
         assertEquals("Kirieshkin", updatedStudent.getLastName());
-
     }
 
     @Test
     void deleteByIDShouldDeleteAllRelations() {
-
-        Group group = Group.builder()
-                .withGroupId(1)
-                .build();
 
         StudentCourseRelation studentCourseRelation1 = StudentCourseRelation.builder()
                 .withStudentId(1)
@@ -172,37 +150,5 @@ class StudentDaoImplTestIT {
         List<StudentCourseRelation> resultList = courseDao.findCoursesByStudentID(1);
 
         assertTrue(resultList.isEmpty());
-    }
-
-    @Test
-    void findByStringParamShouldFindByStringParam() {
-
-        Student student = Student.builder()
-                .withFirstName("Vasil")
-                .withLastName("Summer")
-                .build();
-        studentDao.save(student);
-
-        Student studentFound = studentDao.findByStringParam("Vasil", sqlQuery).orElse(null);
-
-        assertNotNull(studentFound);
-        assertEquals("Vasil", studentFound.getFirstName());
-        assertEquals("Summer", studentFound.getLastName());
-    }
-
-    @Test
-    void findByStringParamShouldThrowExceptionWhenNotFound() {
-
-        Student student = Student.builder()
-                .withFirstName("Vasil")
-                .withLastName("Summer")
-                .build();
-
-        studentDao.save(student);
-
-        Student studentFound = studentDao.findByStringParam("Vasilisa", sqlQuery).orElse(null);
-
-        assertNull(studentFound);
-
     }
 }

@@ -34,7 +34,7 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
             " WHERE student_id = ?";
     private static final String DELETE_ALL_RELATIONS_BY_COURSE_ID = "DELETE FROM school.students_courses_relation" +
             " WHERE course_id = ?";
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public CourseDaoImpl(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate, INSERT_COURSE, SELECT_COURSE_BY_ID, SELECT_ALL_COURSES, UPDATE_COURSE, DELETE_COURSE_BY_ID);

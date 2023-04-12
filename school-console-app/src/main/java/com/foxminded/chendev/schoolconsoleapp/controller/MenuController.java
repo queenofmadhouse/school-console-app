@@ -13,6 +13,7 @@ public class MenuController {
     private final CourseDao courseDao;
     private final Validator validator;
     private final ConsoleHandler consoleHandler;
+    int i = 0;
 
     public MenuController(StudentDao studentDao, GroupDao groupDao, CourseDao courseDao,
                           Validator validator, ConsoleHandler consoleHandler) {
@@ -23,8 +24,6 @@ public class MenuController {
         this.validator = validator;
         this.consoleHandler = consoleHandler;
     }
-
-    int i = 0;
 
     public void provideMenu() {
 

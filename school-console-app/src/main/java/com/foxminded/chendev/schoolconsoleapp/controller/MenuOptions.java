@@ -100,7 +100,7 @@ public enum MenuOptions {
             long courseID = consoleHandler.readUserInputNumber();
             validator.validate(courseID);
 
-            Student student = studentDao.findById(studentID).orElse(null);
+            Student student = studentDao.findById(studentID);
 
             courseDao.addStudentToCourse(student, courseID);
         }
