@@ -1,9 +1,7 @@
 package com.foxminded.chendev.schoolconsoleapp.service;
 
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface StudentService {
@@ -12,10 +10,9 @@ public interface StudentService {
 
     Optional<Student> findById(long id);
 
-    List<Student> findAll();
+    void deleteById(long id);
 
-    void update(Student entity);
+    void addStudentToCourse(long studentId, long courseId);
 
-    @Transactional
-    void deleteByID(long id);
+    void removeStudentFromCourse(long studentId, long courseId);
 }
