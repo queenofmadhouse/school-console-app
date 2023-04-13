@@ -14,17 +14,9 @@ public class StudentDaoImpl extends AbstractCrudDao<Student> implements StudentD
     private static final String SELECT_ALL_STUDENTS = "SELECT * FROM school.students";
     private static final String UPDATE_STUDENT = "UPDATE school.students SET group_id = ?, first_name = ?, last_name = ? WHERE student_id = ?";
     private static final String DELETE_STUDENT_BY_ID = "DELETE FROM school.students WHERE student_id = ?";
-    private final JdbcTemplate jdbcTemplate;
 
     public StudentDaoImpl(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate, INSERT_STUDENT, SELECT_STUDENT_BY_ID, SELECT_ALL_STUDENTS, UPDATE_STUDENT, DELETE_STUDENT_BY_ID);
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
-    @Override
-    public void deleteByID(long id) {
-        super.deleteByID(id);
-        new CourseDaoImpl(jdbcTemplate).deleteAllRelationsByStudentID(id);
     }
 
     @Override

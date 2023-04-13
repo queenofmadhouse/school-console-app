@@ -1,11 +1,13 @@
 package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
 import com.foxminded.chendev.schoolconsoleapp.dao.CrudDao;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public abstract class AbstractCrudDao<E> implements CrudDao<E> {
@@ -33,8 +35,12 @@ public abstract class AbstractCrudDao<E> implements CrudDao<E> {
     }
 
     @Override
-    public E findById(long id) {
-        return jdbcTemplate.queryForObject(findByIdQuery, getRowMapper(), id);
+    public Optional<E> findById(long id) {
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(findByIdQuery, getRowMapper(), id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
