@@ -7,12 +7,7 @@ import java.util.List;
 
 public interface CourseService {
 
-    void addStudentToCourse(Student student, long courseID); //
+    List<Student> findAllStudentsByCourseName(String courseName);
 
-    void removeStudentFromCourse(long studentID, long courseID); //
-
-    List<Student> findAllStudentsByCourseName(String courseName); //
-
-    List<Course> findAll();
-
+    List<Course> findAllCourses();
 }

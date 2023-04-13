@@ -4,12 +4,12 @@ import com.foxminded.chendev.schoolconsoleapp.dao.impl.CourseDaoImpl;
 import com.foxminded.chendev.schoolconsoleapp.dao.impl.StudentDaoImpl;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
-import com.foxminded.chendev.schoolconsoleapp.entity.StudentCourseRelation;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,11 +17,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest
-@ComponentScan(basePackages = "com.foxminded.chendev.schoolconsoleapp")
+@ActiveProfiles("test")
 @Sql(
         scripts = {"/sql/clear_tables.sql",
                 "/sql/students_create.sql",
-                "/sql/groups_create.sql",
                 "/sql/courses_create.sql",
                 "/sql/students_courses_relation.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
@@ -36,26 +35,6 @@ class CourseServiceTestIT {
 
     @Autowired
     StudentDaoImpl studentDao;
-
-    @Test
-    void addStudentToCourseShouldAddStudentToCourseWhenInputValid() {
-
-        Student student = Student.builder()
-                .withStudentId(1)
-                .withFirstName("Alex")
-                .withLastName("Smith")
-                .withGroupId(35)
-                .build();
-
-        courseService.addStudentToCourse(student, 5);
-
-        List<StudentCourseRelation> studentCourseRelationList = courseDao.findStudentsByCourseID(5);
-
-        assertFalse(studentCourseRelationList.isEmpty());
-        assertEquals(1, studentCourseRelationList.size());
-        assertEquals(1, studentCourseRelationList.get(0).getStudentId());
-        assertEquals(5, studentCourseRelationList.get(0).getCourseId());
-    }
 
     @Test
     void findAllShouldReturnListWithAllCoursesWhenInputValid() {
@@ -79,7 +58,7 @@ class CourseServiceTestIT {
         courseDao.save(course2);
         courseDao.save(course3);
 
-        List<Course> foundCourses = courseService.findAll();
+        List<Course> foundCourses = courseService.findAllCourses();
 
         assertFalse(foundCourses.isEmpty());
         assertEquals(3, foundCourses.size());
@@ -92,50 +71,7 @@ class CourseServiceTestIT {
     }
 
     @Test
-    void removeStudentFromCourseShouldRemoveAllRelationsById() {
-
-        StudentCourseRelation studentCourseRelation1 = StudentCourseRelation.builder()
-                .withStudentId(1)
-                .withCourseId(35)
-                .build();
-
-        StudentCourseRelation studentCourseRelation2 = StudentCourseRelation.builder()
-                .withStudentId(3)
-                .withCourseId(35)
-                .build();
-
-        StudentCourseRelation studentCourseRelation3 = StudentCourseRelation.builder()
-                .withStudentId(3)
-                .withCourseId(39)
-                .build();
-
-        StudentCourseRelation studentCourseRelation4 = StudentCourseRelation.builder()
-                .withStudentId(4)
-                .withCourseId(81)
-                .build();
-
-        StudentCourseRelation studentCourseRelation5 = StudentCourseRelation.builder()
-                .withStudentId(2)
-                .withCourseId(9)
-                .build();
-
-        courseDao.saveRelation(studentCourseRelation1);
-        courseDao.saveRelation(studentCourseRelation2);
-        courseDao.saveRelation(studentCourseRelation3);
-        courseDao.saveRelation(studentCourseRelation4);
-        courseDao.saveRelation(studentCourseRelation5);
-
-        courseService.removeStudentFromCourse(3, 35);
-
-        List<StudentCourseRelation> studentCourseRelationList = courseDao.findCoursesByStudentID(3);
-
-        assertFalse(studentCourseRelationList.isEmpty());
-        assertEquals(1, studentCourseRelationList.size());
-        assertEquals(3, studentCourseRelationList.get(0).getStudentId());
-        assertEquals(39, studentCourseRelationList.get(0).getCourseId());
-    }
-
-    @Test
+    @Transactional
     void findAllStudentsByCourseNameShouldReturnListOfStudentsFoundByCourseName() {
 
         Student student1 = Student.builder()
@@ -177,9 +113,9 @@ class CourseServiceTestIT {
         student2.setStudentId(2);
         student3.setStudentId(3);
 
-        courseDao.addStudentToCourse(student1, 1);
-        courseDao.addStudentToCourse(student2, 1);
-        courseDao.addStudentToCourse(student3, 2);
+        studentDao.addStudentToCourse(1, 1);
+        studentDao.addStudentToCourse(2, 1);
+        studentDao.addStudentToCourse(3, 2);
 
         List<Student> studentList = courseService.findAllStudentsByCourseName("Math");
 
