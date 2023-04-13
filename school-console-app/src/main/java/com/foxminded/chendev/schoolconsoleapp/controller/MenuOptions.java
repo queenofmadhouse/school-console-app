@@ -1,12 +1,12 @@
 package com.foxminded.chendev.schoolconsoleapp.controller;
 
 import com.foxminded.chendev.schoolconsoleapp.controller.validator.Validator;
-import com.foxminded.chendev.schoolconsoleapp.dao.CourseDao;
-import com.foxminded.chendev.schoolconsoleapp.dao.GroupDao;
-import com.foxminded.chendev.schoolconsoleapp.dao.StudentDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
+import com.foxminded.chendev.schoolconsoleapp.service.CourseService;
+import com.foxminded.chendev.schoolconsoleapp.service.GroupService;
+import com.foxminded.chendev.schoolconsoleapp.service.StudentService;
 import com.foxminded.chendev.schoolconsoleapp.view.ConsoleHandler;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public enum MenuOptions {
 
     FIND_GROUPS_WITH_LESS_OR_EQUAL_STUDENTS("a", "Find all groups with less or equal students’ number") {
         @Override
-        public void execute(StudentDao studentDao, GroupDao groupDao, CourseDao courseDao,
+        public void execute(StudentService studentService, GroupService groupService, CourseService courseService,
                             Validator validator, ConsoleHandler consoleHandler) {
 
             consoleHandler.printMessage("Enter value: ");
@@ -23,7 +23,7 @@ public enum MenuOptions {
             long value = consoleHandler.readUserInputNumber();
             validator.validate(value);
 
-            List<Group> groupsList = groupDao.findGroupsWithLessOrEqualStudents(value);
+            List<Group> groupsList = groupService.findGroupsWithLessOrEqualStudents(value);
 
             for (Group group : groupsList) {
                 consoleHandler.printMessage(group.toString());
@@ -32,7 +32,7 @@ public enum MenuOptions {
     },
     FIND_STUDENTS_BY_COURSE("b", "Find all students related to the course with the given name") {
         @Override
-        public void execute(StudentDao studentDao, GroupDao groupDao, CourseDao courseDao,
+        public void execute(StudentService studentService, GroupService groupService, CourseService courseService,
                             Validator validator, ConsoleHandler consoleHandler) {
 
             consoleHandler.printMessage("Enter course name: ");
@@ -40,7 +40,7 @@ public enum MenuOptions {
             String courseName = consoleHandler.readUserInputString();
             validator.validate(courseName);
 
-            List<Student> studentList = courseDao.findAllStudentsByCourseName(courseName);
+            List<Student> studentList = courseService.findAllStudentsByCourseName(courseName);
 
             for (Student student : studentList) {
                 consoleHandler.printMessage(student.toString());
@@ -48,7 +48,7 @@ public enum MenuOptions {
         }
     },
     ADD_NEW_STUDENT("c", "Add a new student") {
-        public void execute(StudentDao studentDao, GroupDao groupDao, CourseDao courseDao,
+        public void execute(StudentService studentService, GroupService groupService, CourseService courseService,
                             Validator validator, ConsoleHandler consoleHandler) {
 
             consoleHandler.printMessage("Enter student name: ");
@@ -61,12 +61,12 @@ public enum MenuOptions {
             String studentSurname = consoleHandler.readUserInputString();
             validator.validate(studentSurname);
 
-            studentDao.save(Student.builder().withFirstName(studentName).withLastName(studentSurname).build());
+            studentService.save(Student.builder().withFirstName(studentName).withLastName(studentSurname).build());
         }
     },
     DELETE_STUDENT_BY_ID("d", "Delete a student by the STUDENT_ID") {
         @Override
-        public void execute(StudentDao studentDao, GroupDao groupDao, CourseDao courseDao,
+        public void execute(StudentService studentService, GroupService groupService, CourseService courseService,
                             Validator validator, ConsoleHandler consoleHandler) {
 
             consoleHandler.printMessage("Enter student ID: ");
@@ -74,12 +74,12 @@ public enum MenuOptions {
             long studentID = Long.parseLong(consoleHandler.readUserInputString());
             validator.validate(studentID);
 
-            studentDao.deleteByID(studentID);
+            studentService.deleteByID(studentID);
         }
     },
     ADD_STUDENT_TO_COURSE("e", "Add a student to the course (from a list)") {
         @Override
-        public void execute(StudentDao studentDao, GroupDao groupDao, CourseDao courseDao,
+        public void execute(StudentService studentService, GroupService groupService, CourseService courseService,
                             Validator validator, ConsoleHandler consoleHandler) {
 
             consoleHandler.printMessage("Enter student ID: ");
@@ -87,7 +87,7 @@ public enum MenuOptions {
             long studentID = consoleHandler.readUserInputNumber();
             validator.validate(studentID);
 
-            List<Course> courses = courseDao.findAll();
+            List<Course> courses = courseService.findAll();
 
             consoleHandler.printMessage("Available courses: ");
 
@@ -100,14 +100,14 @@ public enum MenuOptions {
             long courseID = consoleHandler.readUserInputNumber();
             validator.validate(courseID);
 
-            Student student = studentDao.findById(studentID);
+            Student student = studentService.findById(studentID).orElse(null);
 
-            courseDao.addStudentToCourse(student, courseID);
+            courseService.addStudentToCourse(student, courseID);
         }
     },
     REMOVE_STUDENT_FROM_COURSE("f", "Remove the student from one of their courses") {
         @Override
-        public void execute(StudentDao studentDao, GroupDao groupDao, CourseDao courseDao,
+        public void execute(StudentService studentService, GroupService groupService, CourseService courseService,
                             Validator validator, ConsoleHandler consoleHandler) {
 
             consoleHandler.printMessage("Enter student ID: ");
@@ -120,7 +120,7 @@ public enum MenuOptions {
             long courseID = consoleHandler.readUserInputNumber();
             validator.validate(courseID);
 
-            courseDao.removeStudentFromCourse(studentID, courseID);
+            courseService.removeStudentFromCourse(studentID, courseID);
         }
     };
 
@@ -132,7 +132,7 @@ public enum MenuOptions {
         this.description = description;
     }
 
-    public abstract void execute(StudentDao studentDao, GroupDao groupDao, CourseDao courseDao,
+    public abstract void execute(StudentService studentService, GroupService groupService, CourseService courseService,
                                  Validator validator, ConsoleHandler consoleHandler);
 
     public String getCode() {

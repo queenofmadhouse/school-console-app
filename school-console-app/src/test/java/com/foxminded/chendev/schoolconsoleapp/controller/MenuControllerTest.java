@@ -1,9 +1,9 @@
 package com.foxminded.chendev.schoolconsoleapp.controller;
 
 import com.foxminded.chendev.schoolconsoleapp.controller.validator.Validator;
-import com.foxminded.chendev.schoolconsoleapp.dao.CourseDao;
-import com.foxminded.chendev.schoolconsoleapp.dao.GroupDao;
-import com.foxminded.chendev.schoolconsoleapp.dao.StudentDao;
+import com.foxminded.chendev.schoolconsoleapp.service.CourseService;
+import com.foxminded.chendev.schoolconsoleapp.service.GroupService;
+import com.foxminded.chendev.schoolconsoleapp.service.StudentService;
 import com.foxminded.chendev.schoolconsoleapp.view.ConsoleHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,13 +19,13 @@ import static org.mockito.Mockito.when;
 class MenuControllerTest {
 
     @Mock
-    private StudentDao studentDao;
+    private StudentService studentService;
 
     @Mock
-    private GroupDao groupDao;
+    private GroupService groupService;
 
     @Mock
-    private CourseDao courseDao;
+    private CourseService courseService;
 
     @Mock
     private Validator validator;
