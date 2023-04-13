@@ -15,7 +15,6 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <junit.jupiter.engine.version>5.9.1</junit.jupiter.engine.version>
         <org.mockito.version>3.12.4</org.mockito.version>
         <org.postgresql.version>42.6.0</org.postgresql.version>
         <com.h2database.version>2.1.214</com.h2database.version>
@@ -38,7 +37,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.foxminded.formulaonequalification.FormulaOneApplication.class</mainClass>
+                            <mainClass>com.foxminded.chendev.schoolconsoleapp.ApplicationRunner</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -134,19 +133,6 @@
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.jupiter.engine.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.jupiter.engine.version}</version>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
@@ -185,26 +171,15 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
 
