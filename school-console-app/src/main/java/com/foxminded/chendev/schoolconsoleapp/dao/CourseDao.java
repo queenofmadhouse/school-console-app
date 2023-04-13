@@ -3,18 +3,11 @@ package com.foxminded.chendev.schoolconsoleapp.dao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import com.foxminded.chendev.schoolconsoleapp.entity.StudentCourseRelation;
+import org.springframework.jdbc.core.RowMapper;
 
 import java.util.List;
 
-public interface CourseDao extends CrudDao<Course> {
-
-    Course findCourseByCourseName(String courseName);
-
-    void addStudentToCourse(Student student, long courseID);
-
-    void removeStudentFromCourse(long studentID, long courseID);
-
-    List<Student> findAllStudentsByCourseName(String name);
+public interface CourseDao {
 
     void saveRelation(StudentCourseRelation studentCourseRelation);
 
@@ -27,4 +20,12 @@ public interface CourseDao extends CrudDao<Course> {
     void deleteAllRelationsByStudentID(long studentID);
 
     void deleteAllRelationsByCourseID(long courseID);
+
+    RowMapper<StudentCourseRelation> studentCourseRelationRowMapper();
+
+    Course findCourseByCourseName(String courseName);
+
+    void addStudentToCourse(Student student, long courseID);
+
+    void removeStudentFromCourse(long studentID, long courseID);
 }

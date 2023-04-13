@@ -1,24 +1,22 @@
 package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
+import com.foxminded.chendev.schoolconsoleapp.dao.StudentDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
-import com.foxminded.chendev.schoolconsoleapp.entity.StudentCourseRelation;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@JdbcTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@SpringBootTest
+@ComponentScan(basePackages = "com.foxminded.chendev.schoolconsoleapp")
 @Sql(
         scripts = {"/sql/clear_tables.sql", "/sql/students_create.sql", "/sql/courses_create.sql",
                 "/sql/students_courses_relation.sql"},
@@ -27,18 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class StudentDaoImplTestIT {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    private StudentDaoImpl studentDao;
-    private CourseDaoImpl courseDao;
-
-    @BeforeEach
-    void setUp() {
-
-        studentDao = new StudentDaoImpl(jdbcTemplate);
-        courseDao = new CourseDaoImpl(jdbcTemplate);
-    }
-
+    private StudentDao studentDao;
 
     @Test
     void saveShouldSaveInEntityInDataBase() {
@@ -51,8 +38,9 @@ class StudentDaoImplTestIT {
 
         studentDao.save(student);
 
-        Student findedStudent = studentDao.findById(1);
+        Student findedStudent = studentDao.findById(1).orElse(null);
 
+        assertNotNull(findedStudent);
         assertEquals("Alex", findedStudent.getFirstName());
         assertEquals("Kapranos", findedStudent.getLastName());
         assertEquals(1, findedStudent.getStudentId());
@@ -93,14 +81,14 @@ class StudentDaoImplTestIT {
 
         studentDao.save(student);
 
-        Student foundStudent = studentDao.findById(1);
+        Student findedStudent = studentDao.findById(1).orElse(null);
 
-        foundStudent.setFirstName("Alexandr");
-        foundStudent.setLastName("Kirieshkin");
+        findedStudent.setFirstName("Alexandr");
+        findedStudent.setLastName("Kirieshkin");
 
-        studentDao.update(foundStudent);
+        studentDao.update(findedStudent);
 
-        Student updatedStudent = studentDao.findById(1);
+        Student updatedStudent = studentDao.findById(1).orElse(null);
 
         assertNotNull(updatedStudent);
         assertEquals("Alexandr", updatedStudent.getFirstName());
@@ -108,28 +96,7 @@ class StudentDaoImplTestIT {
     }
 
     @Test
-    void deleteByIDShouldDeleteAllRelations() {
-
-        StudentCourseRelation studentCourseRelation1 = StudentCourseRelation.builder()
-                .withStudentId(1)
-                .withCourseId(30)
-                .build();
-        StudentCourseRelation studentCourseRelation2 = StudentCourseRelation.builder()
-                .withStudentId(1)
-                .withCourseId(35)
-                .build();
-        StudentCourseRelation studentCourseRelation3 = StudentCourseRelation.builder()
-                .withStudentId(1)
-                .withCourseId(38)
-                .build();
-        StudentCourseRelation studentCourseRelation4 = StudentCourseRelation.builder()
-                .withStudentId(2)
-                .withCourseId(20)
-                .build();
-        StudentCourseRelation studentCourseRelation5 = StudentCourseRelation.builder()
-                .withStudentId(2)
-                .withCourseId(9)
-                .build();
+    void deleteByIDShouldDelete() {
 
         Student student = Student.builder()
                 .withFirstName("Alex")
@@ -137,18 +104,12 @@ class StudentDaoImplTestIT {
                 .withGroupId(1)
                 .build();
 
-        courseDao.saveRelation(studentCourseRelation1);
-        courseDao.saveRelation(studentCourseRelation2);
-        courseDao.saveRelation(studentCourseRelation3);
-        courseDao.saveRelation(studentCourseRelation4);
-        courseDao.saveRelation(studentCourseRelation5);
-
         studentDao.save(student);
 
         studentDao.deleteByID(1);
 
-        List<StudentCourseRelation> resultList = courseDao.findCoursesByStudentID(1);
+        Optional<Student> optionalStudent = studentDao.findById(1);
 
-        assertTrue(resultList.isEmpty());
+        assertFalse(optionalStudent.isPresent());
     }
 }

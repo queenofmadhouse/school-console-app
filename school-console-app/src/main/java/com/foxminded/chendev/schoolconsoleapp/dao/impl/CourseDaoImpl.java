@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -93,6 +92,7 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
         return new Object[]{course.getCourseName(), course.getCourseDescription(), course.getCourseId()};
     }
 
+    @Override
     public RowMapper<StudentCourseRelation> studentCourseRelationRowMapper() {
         return (resultSet, rowNum) -> {
 
@@ -116,27 +116,5 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
     @Override
     public void removeStudentFromCourse(long studentID, long courseID) {
         jdbcTemplate.update(DELETE_RELATION_BY_STUDENT_ID, studentID, courseID);
-    }
-
-    @Override
-    public List<Student> findAllStudentsByCourseName(String courseName) {
-        List<Student> students = new ArrayList<>();
-        long courseID = findCourseByCourseName(courseName).getCourseId();
-        List<StudentCourseRelation> studentCourseRelation = findStudentsByCourseID(courseID);
-
-        StudentDaoImpl studentDao = new StudentDaoImpl(jdbcTemplate);
-
-        for (StudentCourseRelation courseRelation : studentCourseRelation) {
-            Student tempStudent = studentDao.findById(courseRelation.getStudentId());
-            students.add(tempStudent);
-        }
-
-        return students;
-    }
-
-    @Override
-    public void deleteByID(long id) {
-        super.deleteByID(id);
-        deleteAllRelationsByCourseID(id);
     }
 }

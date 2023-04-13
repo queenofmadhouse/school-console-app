@@ -2,22 +2,22 @@ package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@JdbcTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@SpringBootTest
+@ComponentScan(basePackages = "com.foxminded.chendev.schoolconsoleapp")
 @Sql(
         scripts = {"/sql/clear_tables.sql",
                 "/sql/students_create.sql",
@@ -29,17 +29,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class GroupDaoImplTestIT {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     private GroupDaoImpl groupDao;
+
+    @Autowired
     private StudentDaoImpl studentDao;
-
-    @BeforeEach
-    public void setUp() {
-
-        groupDao = new GroupDaoImpl(jdbcTemplate);
-        studentDao = new StudentDaoImpl(jdbcTemplate);
-    }
 
     @Test
     void testSaveShouldObjectInDataBase() {
@@ -50,7 +43,9 @@ class GroupDaoImplTestIT {
 
         groupDao.save(group);
 
-        Group foundGroup = groupDao.findById(1);
+        Group foundGroup = groupDao.findById(1).orElse(null);
+
+        assertNotNull(foundGroup);
         assertEquals("Test Group", foundGroup.getGroupName());
     }
 
@@ -84,13 +79,14 @@ class GroupDaoImplTestIT {
 
         groupDao.save(group1);
 
-        Group group = groupDao.findById(1);
+        Group group = groupDao.findById(1).orElse(null);
 
         group.setGroupName("Test Group Updated");
 
+
         groupDao.update(group);
 
-        assertEquals("Test Group Updated", groupDao.findById(1).getGroupName());
+        assertEquals("Test Group Updated", groupDao.findById(1).orElse(null).getGroupName());
 
 
     }
@@ -290,27 +286,16 @@ class GroupDaoImplTestIT {
     @Test
     void deleteByIDShouldDeleteByID() {
 
-        Group group1 = Group.builder()
+        Group group = Group.builder()
                 .withGroupName("Group1")
                 .build();
 
-        Group group2 = Group.builder()
-                .withGroupName("Group2")
-                .build();
+        groupDao.save(group);
 
-        Group group3 = Group.builder()
-                .withGroupName("Group3")
-                .build();
+        groupDao.deleteByID(1);
 
-        groupDao.save(group1);
-        groupDao.save(group2);
-        groupDao.save(group3);
+        Optional <Group> optionalGroup = groupDao.findById(1);
 
-        groupDao.deleteByID(2);
-
-        List<Group> groups = groupDao.findAll();
-
-        assertNotNull(groups);
-        assertEquals(2, groups.size());
+        assertFalse(optionalGroup.isPresent());
     }
 }

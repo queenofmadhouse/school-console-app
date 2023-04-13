@@ -3,23 +3,22 @@ package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import com.foxminded.chendev.schoolconsoleapp.entity.StudentCourseRelation;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@JdbcTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@SpringBootTest
+@ComponentScan(basePackages = "com.foxminded.chendev.schoolconsoleapp")
 @Sql(
         scripts = {"/sql/clear_tables.sql",
                 "/sql/students_create.sql",
@@ -31,18 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CourseDaoImplTestIT {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     private CourseDaoImpl courseDao;
-
-    private StudentDaoImpl studentDao;
-
-    @BeforeEach
-    void setUp() {
-        courseDao = new CourseDaoImpl(jdbcTemplate);
-        studentDao = new StudentDaoImpl(jdbcTemplate);
-    }
-
 
     @Test
     void findCourseByCourseNameShouldReturnCourse() {
@@ -71,6 +59,23 @@ class CourseDaoImplTestIT {
         assertEquals(3, course.getCourseId());
         assertEquals("Java", course.getCourseName());
         assertEquals("Super hard level", course.getCourseDescription());
+    }
+
+    @Test
+    void deleteByIdShouldDelete() {
+
+        Course course = Course.builder()
+                .withCourseName("Math")
+                .withCourseDescription("Something hard")
+                .build();
+
+        courseDao.save(course);
+
+        courseDao.deleteByID(1);
+
+        Optional<Course> optionalCourse = courseDao.findById(1);
+
+        assertFalse(optionalCourse.isPresent());
     }
 
     @Test
@@ -134,57 +139,6 @@ class CourseDaoImplTestIT {
     }
 
     @Test
-    void findAllStudentsByCourseNameShouldReturnListOfStudentsRelatedToCourse() {
-
-        Student student1 = Student.builder()
-                .withFirstName("Joan")
-                .withLastName("Roberts")
-                .withGroupId(5)
-                .build();
-
-        Student student2 = Student.builder()
-                .withFirstName("Fillip")
-                .withLastName("Some")
-                .withGroupId(5)
-                .build();
-        Student student3 = Student.builder()
-                .withFirstName("Jane")
-                .withLastName("Potters")
-                .withGroupId(5)
-                .build();
-
-        Course course = Course.builder()
-                .withCourseName("Math")
-                .withCourseDescription("Something hard")
-                .build();
-
-        courseDao.save(course);
-
-        studentDao.save(student1);
-        studentDao.save(student2);
-        studentDao.save(student3);
-
-        student1.setStudentId(1);
-        student2.setStudentId(2);
-        student3.setStudentId(3);
-
-        courseDao.addStudentToCourse(student1, 1);
-        courseDao.addStudentToCourse(student2, 2);
-        courseDao.addStudentToCourse(student3, 3);
-
-        studentDao.save(student1);
-        studentDao.save(student2);
-        studentDao.save(student3);
-
-        List<Student> studentList = courseDao.findAllStudentsByCourseName("Math");
-
-        assertEquals(student1.getStudentId(), studentList.get(0).getStudentId());
-        assertEquals(student1.getFirstName(), studentList.get(0).getFirstName());
-        assertEquals(student1.getLastName(), studentList.get(0).getLastName());
-        assertEquals(student1.getGroupId(), studentList.get(0).getGroupId());
-    }
-
-    @Test
     void updateShouldUpdateValues() {
 
         Course course = Course.builder()
@@ -200,73 +154,11 @@ class CourseDaoImplTestIT {
 
         courseDao.update(courseFounded);
 
-        Course courseUpdated = courseDao.findById(1);
+        Course courseUpdated = courseDao.findById(1).orElse(null);
 
         assertNotNull(courseUpdated);
         assertEquals("Old Java Course", courseUpdated.getCourseName());
         assertEquals("Without info at all", courseUpdated.getCourseDescription());
-    }
-
-    @Test
-    void deleteByIDShouldDeleteAllRelations() {
-
-        Student student1 = Student.builder()
-                .withFirstName("Joan")
-                .withLastName("Roberts")
-                .withGroupId(5)
-                .build();
-
-        Student student2 = Student.builder()
-                .withFirstName("Fillip")
-                .withLastName("Some")
-                .withGroupId(5)
-                .build();
-        Student student3 = Student.builder()
-                .withFirstName("Jane")
-                .withLastName("Potters")
-                .withGroupId(5)
-                .build();
-
-        Course course1 = Course.builder()
-                .withCourseName("Math")
-                .withCourseDescription("Something hard")
-                .build();
-        Course course2 = Course.builder()
-                .withCourseName("Biology")
-                .withCourseDescription("Something hard")
-                .build();
-        Course course3 = Course.builder()
-                .withCourseName("Art")
-                .withCourseDescription("Something hard")
-                .build();
-
-        courseDao.save(course1);
-        courseDao.save(course2);
-        courseDao.save(course3);
-
-        studentDao.save(student1);
-        studentDao.save(student2);
-        studentDao.save(student3);
-
-        student1.setStudentId(1);
-        student2.setStudentId(2);
-        student3.setStudentId(3);
-
-        courseDao.addStudentToCourse(student1, 1);
-        courseDao.addStudentToCourse(student2, 2);
-        courseDao.addStudentToCourse(student3, 3);
-
-        studentDao.save(student1);
-        studentDao.save(student2);
-        studentDao.save(student3);
-
-        courseDao.deleteByID(1);
-
-        List<StudentCourseRelation> studentCourseRelationFound = courseDao.findStudentsByCourseID(1);
-
-        System.out.println(studentCourseRelationFound);
-
-        assertTrue(studentCourseRelationFound.isEmpty());
     }
 
     @Test
