@@ -1,26 +1,26 @@
 package com.foxminded.chendev.schoolconsoleapp.controller;
 
 import com.foxminded.chendev.schoolconsoleapp.controller.validator.Validator;
-import com.foxminded.chendev.schoolconsoleapp.dao.CourseDao;
-import com.foxminded.chendev.schoolconsoleapp.dao.GroupDao;
-import com.foxminded.chendev.schoolconsoleapp.dao.StudentDao;
+import com.foxminded.chendev.schoolconsoleapp.service.GroupService;
+import com.foxminded.chendev.schoolconsoleapp.service.StudentService;
+import com.foxminded.chendev.schoolconsoleapp.service.impl.CourseServiceImpl;
 import com.foxminded.chendev.schoolconsoleapp.view.ConsoleHandler;
 
 public class MenuController {
 
-    private final StudentDao studentDao;
-    private final GroupDao groupDao;
-    private final CourseDao courseDao;
+    private final StudentService studentService;
+    private final GroupService groupService;
+    private final CourseServiceImpl courseService;
     private final Validator validator;
     private final ConsoleHandler consoleHandler;
     int i = 0;
 
-    public MenuController(StudentDao studentDao, GroupDao groupDao, CourseDao courseDao,
+    public MenuController(StudentService studentService, GroupService groupService, CourseServiceImpl courseService,
                           Validator validator, ConsoleHandler consoleHandler) {
 
-        this.studentDao = studentDao;
-        this.groupDao = groupDao;
-        this.courseDao = courseDao;
+        this.studentService = studentService;
+        this.groupService = groupService;
+        this.courseService = courseService;
         this.validator = validator;
         this.consoleHandler = consoleHandler;
     }
@@ -42,7 +42,7 @@ public class MenuController {
                 }
 
 
-                findOption(code).execute(studentDao, groupDao, courseDao, validator, consoleHandler);
+                findOption(code).execute(studentService, groupService, courseService, validator, consoleHandler);
 
                 consoleHandler.printMessage("done!");
             } catch (IllegalArgumentException e) {

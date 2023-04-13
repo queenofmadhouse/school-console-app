@@ -1,12 +1,12 @@
 package com.foxminded.chendev.schoolconsoleapp.controller;
 
 import com.foxminded.chendev.schoolconsoleapp.controller.validator.Validator;
-import com.foxminded.chendev.schoolconsoleapp.dao.CourseDao;
-import com.foxminded.chendev.schoolconsoleapp.dao.GroupDao;
-import com.foxminded.chendev.schoolconsoleapp.dao.StudentDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
+import com.foxminded.chendev.schoolconsoleapp.service.CourseService;
+import com.foxminded.chendev.schoolconsoleapp.service.GroupService;
+import com.foxminded.chendev.schoolconsoleapp.service.StudentService;
 import com.foxminded.chendev.schoolconsoleapp.view.ConsoleHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +18,7 @@ import org.mockito.quality.Strictness;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
@@ -33,11 +34,14 @@ import static org.mockito.Mockito.when;
 class MenuOptionsTest {
 
     @Mock
-    CourseDao courseDaoMock;
+    private StudentService studentServiceMock;
+
     @Mock
-    private StudentDao studentDaoMock;
+    private GroupService groupServiceMock;
+
     @Mock
-    private GroupDao groupDaoMock;
+    private CourseService courseServiceMock;
+
     @Mock
     private Validator validatorMock;
 
@@ -66,9 +70,9 @@ class MenuOptionsTest {
                 .withLastName("Smith")
                 .build());
 
-        when(courseDaoMock.findAllStudentsByCourseName("Math")).thenReturn(students);
+        when(courseServiceMock.findAllStudentsByCourseName("Math")).thenReturn(students);
 
-        MenuOptions.FIND_STUDENTS_BY_COURSE.execute(studentDaoMock, groupDaoMock, courseDaoMock,
+        MenuOptions.FIND_STUDENTS_BY_COURSE.execute(studentServiceMock, groupServiceMock, courseServiceMock,
                 validatorMock, consoleHandlerMock);
 
         InOrder inOrder = inOrder(consoleHandlerMock);
@@ -83,10 +87,10 @@ class MenuOptionsTest {
 
         when(consoleHandlerMock.readUserInputString()).thenReturn("John", "Doe");
 
-        MenuOptions.ADD_NEW_STUDENT.execute(studentDaoMock, groupDaoMock, courseDaoMock,
+        MenuOptions.ADD_NEW_STUDENT.execute(studentServiceMock, groupServiceMock, courseServiceMock,
                 validatorMock, consoleHandlerMock);
 
-        verify(studentDaoMock).save(any(Student.class));
+        verify(studentServiceMock).save(any(Student.class));
         verify(consoleHandlerMock, times(2)).printMessage(anyString());
     }
 
@@ -95,26 +99,26 @@ class MenuOptionsTest {
 
         when(consoleHandlerMock.readUserInputString()).thenReturn("1");
 
-        MenuOptions.DELETE_STUDENT_BY_ID.execute(studentDaoMock, groupDaoMock, courseDaoMock,
+        MenuOptions.DELETE_STUDENT_BY_ID.execute(studentServiceMock, groupServiceMock, courseServiceMock,
                 validatorMock, consoleHandlerMock);
 
-        verify(studentDaoMock).deleteByID(1L);
+        verify(studentServiceMock).deleteByID(1L);
         verify(consoleHandlerMock).printMessage(anyString());
     }
 
     @Test
     void shouldExecuteAddStudentToCourse() {
         when(consoleHandlerMock.readUserInputNumber()).thenReturn(1L, 1L);
-        when(studentDaoMock.findById(1L)).thenReturn(Student.builder().build());
+        when(studentServiceMock.findById(1L)).thenReturn(Optional.ofNullable(Student.builder().build()));
 
         List<Course> courses = new ArrayList<>();
         courses.add(Course.builder().withCourseId(1).withCourseName("Math").build());
         courses.add(Course.builder().withCourseId(2).withCourseName("Physics").build());
         courses.add(Course.builder().withCourseId(3).withCourseName("Chemistry").build());
 
-        when(courseDaoMock.findAll()).thenReturn(courses);
+        when(courseServiceMock.findAll()).thenReturn(courses);
 
-        MenuOptions.ADD_STUDENT_TO_COURSE.execute(studentDaoMock, groupDaoMock, courseDaoMock,
+        MenuOptions.ADD_STUDENT_TO_COURSE.execute(studentServiceMock, groupServiceMock, courseServiceMock,
                 validatorMock, consoleHandlerMock);
 
         InOrder inOrder = inOrder(consoleHandlerMock);
@@ -125,7 +129,7 @@ class MenuOptionsTest {
         }
         inOrder.verify(consoleHandlerMock).printMessage("\nEnter course ID: ");
 
-        verify(courseDaoMock).addStudentToCourse(any(Student.class), eq(1L));
+        verify(courseServiceMock).addStudentToCourse(any(Student.class), eq(1L));
     }
 
     @Test
@@ -133,10 +137,10 @@ class MenuOptionsTest {
 
         when(consoleHandlerMock.readUserInputNumber()).thenReturn(1L, 1L);
 
-        MenuOptions.REMOVE_STUDENT_FROM_COURSE.execute(studentDaoMock, groupDaoMock, courseDaoMock,
+        MenuOptions.REMOVE_STUDENT_FROM_COURSE.execute(studentServiceMock, groupServiceMock, courseServiceMock,
                 validatorMock, consoleHandlerMock);
 
-        verify(courseDaoMock).removeStudentFromCourse(1L, 1L);
+        verify(courseServiceMock).removeStudentFromCourse(1L, 1L);
         verify(consoleHandlerMock, times(2)).printMessage(anyString());
     }
 
@@ -159,9 +163,9 @@ class MenuOptionsTest {
                 .withGroupName("C1")
                 .build());
 
-        when(groupDaoMock.findGroupsWithLessOrEqualStudents(10)).thenReturn(groups);
+        when(groupServiceMock.findGroupsWithLessOrEqualStudents(10)).thenReturn(groups);
 
-        MenuOptions.FIND_GROUPS_WITH_LESS_OR_EQUAL_STUDENTS.execute(studentDaoMock, groupDaoMock, courseDaoMock,
+        MenuOptions.FIND_GROUPS_WITH_LESS_OR_EQUAL_STUDENTS.execute(studentServiceMock, groupServiceMock, courseServiceMock,
                 validatorMock, consoleHandlerMock);
 
         InOrder inOrder = inOrder(consoleHandlerMock);
