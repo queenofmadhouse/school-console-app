@@ -1,10 +1,13 @@
 package com.foxminded.chendev.schoolconsoleapp.view;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Scanner;
 
+@Component
 public class ConsoleHandlerImpl implements ConsoleHandler {
 
-    private Scanner scanner;
+    private final Scanner scanner;
 
     public ConsoleHandlerImpl(Scanner scanner) {
         this.scanner = scanner;

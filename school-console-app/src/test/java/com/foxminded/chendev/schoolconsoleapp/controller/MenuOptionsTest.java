@@ -21,9 +21,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -102,12 +103,13 @@ class MenuOptionsTest {
         MenuOptions.DELETE_STUDENT_BY_ID.execute(studentServiceMock, groupServiceMock, courseServiceMock,
                 validatorMock, consoleHandlerMock);
 
-        verify(studentServiceMock).deleteByID(1L);
+        verify(studentServiceMock).deleteById(1);
         verify(consoleHandlerMock).printMessage(anyString());
     }
 
     @Test
     void shouldExecuteAddStudentToCourse() {
+
         when(consoleHandlerMock.readUserInputNumber()).thenReturn(1L, 1L);
         when(studentServiceMock.findById(1L)).thenReturn(Optional.ofNullable(Student.builder().build()));
 
@@ -116,7 +118,7 @@ class MenuOptionsTest {
         courses.add(Course.builder().withCourseId(2).withCourseName("Physics").build());
         courses.add(Course.builder().withCourseId(3).withCourseName("Chemistry").build());
 
-        when(courseServiceMock.findAll()).thenReturn(courses);
+        when(courseServiceMock.findAllCourses()).thenReturn(courses);
 
         MenuOptions.ADD_STUDENT_TO_COURSE.execute(studentServiceMock, groupServiceMock, courseServiceMock,
                 validatorMock, consoleHandlerMock);
@@ -129,7 +131,7 @@ class MenuOptionsTest {
         }
         inOrder.verify(consoleHandlerMock).printMessage("\nEnter course ID: ");
 
-        verify(courseServiceMock).addStudentToCourse(any(Student.class), eq(1L));
+        verify(studentServiceMock).addStudentToCourse(anyLong(), eq(1L));
     }
 
     @Test
@@ -140,7 +142,7 @@ class MenuOptionsTest {
         MenuOptions.REMOVE_STUDENT_FROM_COURSE.execute(studentServiceMock, groupServiceMock, courseServiceMock,
                 validatorMock, consoleHandlerMock);
 
-        verify(courseServiceMock).removeStudentFromCourse(1L, 1L);
+        verify(studentServiceMock).removeStudentFromCourse(1L, 1L);
         verify(consoleHandlerMock, times(2)).printMessage(anyString());
     }
 
@@ -149,7 +151,7 @@ class MenuOptionsTest {
 
         when(consoleHandlerMock.readUserInputNumber()).thenReturn(10L);
 
-        List<Group> groups = new ArrayList<>();// = List.of(
+        List<Group> groups = new ArrayList<>();
         groups.add(Group.builder()
                 .withGroupId(1)
                 .withGroupName("A1")
