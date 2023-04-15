@@ -54,7 +54,7 @@ public abstract class AbstractCrudDao<E> implements CrudDao<E> {
     }
 
     @Override
-    public void deleteByID(long id) {
+    public void deleteById(long id) {
         jdbcTemplate.update(deleteByIdQuery, id);
     }
 

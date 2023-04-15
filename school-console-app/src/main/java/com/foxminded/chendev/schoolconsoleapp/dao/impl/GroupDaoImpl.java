@@ -21,7 +21,6 @@ public class GroupDaoImpl extends AbstractCrudDao<Group> implements GroupDao {
             "LEFT JOIN school.students s ON g.group_id = s.group_id " +
             "GROUP BY g.group_id, g.group_name " +
             "HAVING COUNT(s.student_id) <= ?";
-
     private final JdbcTemplate jdbcTemplate;
 
     public GroupDaoImpl(JdbcTemplate jdbcTemplate) {

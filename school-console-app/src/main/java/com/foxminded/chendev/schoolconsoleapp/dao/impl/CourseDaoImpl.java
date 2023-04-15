@@ -2,8 +2,6 @@ package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
 import com.foxminded.chendev.schoolconsoleapp.dao.CourseDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
-import com.foxminded.chendev.schoolconsoleapp.entity.Student;
-import com.foxminded.chendev.schoolconsoleapp.entity.StudentCourseRelation;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -21,16 +19,10 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
             ", course_description = ? WHERE course_id = ?";
     private static final String DELETE_COURSE_BY_ID = "DELETE FROM school.courses WHERE course_id = ?";
     private static final String SELECT_COURSE_BY_NAME = "SELECT * FROM school.courses WHERE course_name = ?";
-    private static final String INSERT_COURSE_RELATION = "INSERT INTO school.students_courses_relation (student_id, course_id)" +
-            " VALUES (?, ?)";
-    private static final String SELECT_ALL_COURSES_BY_STUDENT_ID = "SELECT * FROM school.students_courses_relation" +
-            " WHERE student_id = ?";
-    private static final String SELECT_ALL_STUDENTS_BY_COURSE_ID = "SELECT * FROM school.students_courses_relation" +
-            " WHERE course_id = ?";
-    private static final String DELETE_RELATION_BY_STUDENT_ID = "DELETE FROM school.students_courses_relation" +
-            " WHERE student_id = ? AND course_id = ?";
-    private static final String DELETE_ALL_RELATIONS_BY_STUDENT_ID = "DELETE FROM school.students_courses_relation" +
-            " WHERE student_id = ?";
+    private static final String SELECT_ALL_COURSES_BY_STUDENT_ID = "SELECT school.courses.*, school.students_courses_relation.student_id " +
+            "FROM school.courses " +
+            "INNER JOIN school.students_courses_relation ON school.courses.course_id = school.students_courses_relation.course_id " +
+            "WHERE school.students_courses_relation.student_id = ?";
     private static final String DELETE_ALL_RELATIONS_BY_COURSE_ID = "DELETE FROM school.students_courses_relation" +
             " WHERE course_id = ?";
     private final JdbcTemplate jdbcTemplate;
@@ -41,33 +33,23 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
     }
 
     @Override
-    public void saveRelation(StudentCourseRelation studentCourseRelation) {
-        jdbcTemplate.update(INSERT_COURSE_RELATION, studentCourseRelation.getStudentId(), studentCourseRelation.getCourseId());
+    public List<Course> findAllCourses() {
+        return super.findAll();
     }
 
     @Override
-    public List<StudentCourseRelation> findCoursesByStudentID(long studentID) {
-        return jdbcTemplate.query(SELECT_ALL_COURSES_BY_STUDENT_ID, studentCourseRelationRowMapper(), studentID);
+    public List<Course> findCoursesByStudentId(long studentId) {
+        return jdbcTemplate.query(SELECT_ALL_COURSES_BY_STUDENT_ID, getRowMapper(), studentId);
     }
 
     @Override
-    public List<StudentCourseRelation> findStudentsByCourseID(long courseID) {
-        return jdbcTemplate.query(SELECT_ALL_STUDENTS_BY_COURSE_ID, studentCourseRelationRowMapper(), courseID);
+    public void deleteAllRelationsByCourseId(long courseId) {
+        jdbcTemplate.update(DELETE_ALL_RELATIONS_BY_COURSE_ID, courseId);
     }
 
     @Override
-    public void deleteRelationByStudentID(long studentID, long courseID) {
-        jdbcTemplate.update(DELETE_RELATION_BY_STUDENT_ID, studentID, courseID);
-    }
-
-    @Override
-    public void deleteAllRelationsByStudentID(long studentID) {
-        jdbcTemplate.update(DELETE_ALL_RELATIONS_BY_STUDENT_ID, studentID);
-    }
-
-    @Override
-    public void deleteAllRelationsByCourseID(long courseID) {
-        jdbcTemplate.update(DELETE_ALL_RELATIONS_BY_COURSE_ID, courseID);
+    public Course findCourseByCourseName(String courseName) {
+        return jdbcTemplate.queryForObject(SELECT_COURSE_BY_NAME, new Object[]{courseName}, getRowMapper());
     }
 
     @Override
@@ -90,31 +72,5 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
     @Override
     protected Object[] getUpdateParameters(Course course) {
         return new Object[]{course.getCourseName(), course.getCourseDescription(), course.getCourseId()};
-    }
-
-    @Override
-    public RowMapper<StudentCourseRelation> studentCourseRelationRowMapper() {
-        return (resultSet, rowNum) -> {
-
-            return StudentCourseRelation.builder()
-                    .withStudentId(resultSet.getInt("student_id"))
-                    .withCourseId(resultSet.getLong("course_id"))
-                    .build();
-        };
-    }
-
-    @Override
-    public Course findCourseByCourseName(String courseName) {
-        return jdbcTemplate.queryForObject(SELECT_COURSE_BY_NAME, new Object[]{courseName}, getRowMapper());
-    }
-
-    @Override
-    public void addStudentToCourse(Student student, long courseID) {
-        jdbcTemplate.update(INSERT_COURSE_RELATION, student.getStudentId(), courseID);
-    }
-
-    @Override
-    public void removeStudentFromCourse(long studentID, long courseID) {
-        jdbcTemplate.update(DELETE_RELATION_BY_STUDENT_ID, studentID, courseID);
     }
 }
