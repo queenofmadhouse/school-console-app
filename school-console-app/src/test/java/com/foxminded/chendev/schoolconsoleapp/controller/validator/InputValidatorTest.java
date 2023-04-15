@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 class InputValidatorTest {
 
-    private InputValidator validator;
+    private Validator validator;
 
     @BeforeEach
     void setUp() {
@@ -15,7 +15,9 @@ class InputValidatorTest {
 
     @Test
     void validateValueShouldThrowIllegalArgumentExceptionWhenNumberSmallerThenZero() {
+
         long value = -1;
+
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             validator.validate(value);
         });
@@ -23,7 +25,9 @@ class InputValidatorTest {
 
     @Test
     void validateValueShouldIllegalArgumentExceptionWhenNumberIsZero() {
+
         long value = 0;
+
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             validator.validate(value);
         });
@@ -31,7 +35,9 @@ class InputValidatorTest {
 
     @Test
     void validateShouldNotThrowExceptionWhenInputValidNumber() {
+
         long value = 1;
+
         Assertions.assertDoesNotThrow(() -> {
             validator.validate(value);
         });
@@ -39,7 +45,9 @@ class InputValidatorTest {
 
     @Test
     void validateShouldThrowIllegalArgumentExceptionWhenInputEmpty() {
+
         String value = "";
+
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             validator.validate(value);
         });
@@ -47,7 +55,9 @@ class InputValidatorTest {
 
     @Test
     void validateShouldThrowIllegalArgumentExceptionWhenInputNull() {
+
         String value = null;
+
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             validator.validate(value);
         });
@@ -55,11 +65,11 @@ class InputValidatorTest {
 
     @Test
     void validateShouldNotThrowIllegalArgumentWhenInputValidString() {
+
         String value = "String";
+
         Assertions.assertDoesNotThrow(() -> {
             validator.validate(value);
         });
     }
-
-
 }

@@ -1,21 +1,22 @@
 package com.foxminded.chendev.schoolconsoleapp.controller;
 
 import com.foxminded.chendev.schoolconsoleapp.controller.validator.Validator;
+import com.foxminded.chendev.schoolconsoleapp.service.CourseService;
 import com.foxminded.chendev.schoolconsoleapp.service.GroupService;
 import com.foxminded.chendev.schoolconsoleapp.service.StudentService;
-import com.foxminded.chendev.schoolconsoleapp.service.impl.CourseServiceImpl;
 import com.foxminded.chendev.schoolconsoleapp.view.ConsoleHandler;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MenuController {
 
     private final StudentService studentService;
     private final GroupService groupService;
-    private final CourseServiceImpl courseService;
+    private final CourseService courseService;
     private final Validator validator;
     private final ConsoleHandler consoleHandler;
-    int i = 0;
 
-    public MenuController(StudentService studentService, GroupService groupService, CourseServiceImpl courseService,
+    public MenuController(StudentService studentService, GroupService groupService, CourseService courseService,
                           Validator validator, ConsoleHandler consoleHandler) {
 
         this.studentService = studentService;

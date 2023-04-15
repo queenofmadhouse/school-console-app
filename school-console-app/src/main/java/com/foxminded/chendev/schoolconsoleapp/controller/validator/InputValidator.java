@@ -1,5 +1,8 @@
 package com.foxminded.chendev.schoolconsoleapp.controller.validator;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class InputValidator implements Validator {
 
     @Override

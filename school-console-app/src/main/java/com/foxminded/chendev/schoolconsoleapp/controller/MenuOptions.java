@@ -48,6 +48,7 @@ public enum MenuOptions {
         }
     },
     ADD_NEW_STUDENT("c", "Add a new student") {
+        @Override
         public void execute(StudentService studentService, GroupService groupService, CourseService courseService,
                             Validator validator, ConsoleHandler consoleHandler) {
 
@@ -71,10 +72,10 @@ public enum MenuOptions {
 
             consoleHandler.printMessage("Enter student ID: ");
 
-            long studentID = Long.parseLong(consoleHandler.readUserInputString());
-            validator.validate(studentID);
+            long studentId = Long.parseLong(consoleHandler.readUserInputString());
+            validator.validate(studentId);
 
-            studentService.deleteByID(studentID);
+            studentService.deleteById(studentId);
         }
     },
     ADD_STUDENT_TO_COURSE("e", "Add a student to the course (from a list)") {
@@ -84,10 +85,10 @@ public enum MenuOptions {
 
             consoleHandler.printMessage("Enter student ID: ");
 
-            long studentID = consoleHandler.readUserInputNumber();
-            validator.validate(studentID);
+            long studentId = consoleHandler.readUserInputNumber();
+            validator.validate(studentId);
 
-            List<Course> courses = courseService.findAll();
+            List<Course> courses = courseService.findAllCourses();
 
             consoleHandler.printMessage("Available courses: ");
 
@@ -97,12 +98,10 @@ public enum MenuOptions {
 
             consoleHandler.printMessage("\nEnter course ID: ");
 
-            long courseID = consoleHandler.readUserInputNumber();
-            validator.validate(courseID);
+            long courseId = consoleHandler.readUserInputNumber();
+            validator.validate(courseId);
 
-            Student student = studentService.findById(studentID).orElse(null);
-
-            courseService.addStudentToCourse(student, courseID);
+            studentService.addStudentToCourse(studentId, courseId);
         }
     },
     REMOVE_STUDENT_FROM_COURSE("f", "Remove the student from one of their courses") {
@@ -112,15 +111,15 @@ public enum MenuOptions {
 
             consoleHandler.printMessage("Enter student ID: ");
 
-            long studentID = consoleHandler.readUserInputNumber();
-            validator.validate(studentID);
+            long studentId = consoleHandler.readUserInputNumber();
+            validator.validate(studentId);
 
             consoleHandler.printMessage("Enter course ID: ");
 
-            long courseID = consoleHandler.readUserInputNumber();
-            validator.validate(courseID);
+            long courseId = consoleHandler.readUserInputNumber();
+            validator.validate(courseId);
 
-            courseService.removeStudentFromCourse(studentID, courseID);
+            studentService.removeStudentFromCourse(studentId, courseId);
         }
     };
 

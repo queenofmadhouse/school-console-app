@@ -29,7 +29,9 @@ class ConsoleHandlerImplTest {
 
     @Test
     void readUserInputString_shouldReturnCorrectString() {
+
         String input = "Hello, world!\n";
+
         Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
         consoleHandler = new ConsoleHandlerImpl(scanner);
 
@@ -40,8 +42,10 @@ class ConsoleHandlerImplTest {
 
     @Test
     void readUserInputNumber_shouldReturnCorrectNumber() {
+
         long expected = 42;
         String input = expected + "\n";
+
         Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
         consoleHandler = new ConsoleHandlerImpl(scanner);
 
@@ -52,7 +56,9 @@ class ConsoleHandlerImplTest {
 
     @Test
     void printMessage_shouldPrintCorrectMessage() {
+
         String input = "Hello, world!";
+
         Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
         consoleHandler = new ConsoleHandlerImpl(scanner);
 
