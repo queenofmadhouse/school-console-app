@@ -5,7 +5,7 @@ import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
@@ -17,13 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-@ComponentScan(basePackages = "com.foxminded.chendev.schoolconsoleapp")
+@ActiveProfiles("test")
 @Sql(
         scripts = {"/sql/clear_tables.sql",
                 "/sql/students_create.sql",
-                "/sql/groups_create.sql",
-                "/sql/courses_create.sql",
-                "/sql/students_courses_relation.sql"},
+                "/sql/groups_create.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
 class GroupDaoImplTestIT {
@@ -292,7 +290,7 @@ class GroupDaoImplTestIT {
 
         groupDao.save(group);
 
-        groupDao.deleteByID(1);
+        groupDao.deleteById(1);
 
         Optional <Group> optionalGroup = groupDao.findById(1);
 
