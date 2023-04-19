@@ -1,39 +1,27 @@
 package com.foxminded.chendev.schoolconsoleapp.entity;
 
-public class Student {
+public class Student extends User{
 
-    private long studentId;
     private long groupId;
-    private String firstName;
-    private String lastName;
 
-    public Student(Builder builder) {
-        this.studentId = builder.studentId;
-        this.groupId = builder.groupId;
-        this.firstName = builder.firstName;
-        this.lastName = builder.lastName;
+
+    public Student(StudentBuilder userStudentBuilder) {
+        super(userStudentBuilder);
+        this.groupId = userStudentBuilder.groupId;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public static StudentBuilder builder() {
+        return new StudentBuilder();
     }
 
     @Override
     public String toString() {
         return "Student{" +
-                "studentID=" + studentId +
+                "userID=" + getUserId() +
                 ", groupID=" + groupId +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", firstName='" + super.getFirstName() + '\'' +
+                ", lastName='" + super.getLastName() + '\'' +
                 '}';
-    }
-
-    public long getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(long studentId) {
-        this.studentId = studentId;
     }
 
     public long getGroupId() {
@@ -44,52 +32,22 @@ public class Student {
         this.groupId = groupId.getGroupId();
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
+    public static class StudentBuilder extends UserBuilder<StudentBuilder> {
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public static class Builder {
-
-        private long studentId;
         private long groupId;
-        private String firstName;
-        private String lastName;
 
-        public Builder withStudentId(long studentID) {
-            this.studentId = studentID;
-            return this;
-        }
-
-        public Builder withGroupId(long groupId) {
-            this.groupId = groupId;
-            return this;
-        }
-
-        public Builder withFirstName(String firstName) {
-            this.firstName = firstName;
-            return this;
-        }
-
-        public Builder withLastName(String lastName) {
-            this.lastName = lastName;
+        @Override
+        public StudentBuilder self() {
             return this;
         }
 
         public Student build() {
-            return new Student(this);
+            return new Student(self());
         }
 
+        public StudentBuilder withGroupId(long groupId) {
+            this.groupId = groupId;
+            return this;
+        }
     }
 }

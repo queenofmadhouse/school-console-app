@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,10 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
+@Testcontainers
 @ActiveProfiles("test")
 @Sql(
         scripts = {"/sql/clear_tables.sql",
+                "/sql/users_create.sql",
                 "/sql/students_create.sql",
+                "/sql/groups_create.sql",
                 "/sql/courses_create.sql",
                 "/sql/students_courses_relation.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
@@ -32,6 +36,7 @@ class StudentDaoImplTestIT {
 
     @Autowired
     private CourseDaoImpl courseDao;
+
 
     @Test
     void saveShouldSaveInEntityInDataBase() {
@@ -49,7 +54,7 @@ class StudentDaoImplTestIT {
         assertNotNull(findedStudent);
         assertEquals("Alex", findedStudent.getFirstName());
         assertEquals("Kapranos", findedStudent.getLastName());
-        assertEquals(1, findedStudent.getStudentId());
+        assertEquals(1, findedStudent.getUserId());
 
     }
 
@@ -143,7 +148,7 @@ class StudentDaoImplTestIT {
 
         assertFalse(studentList.isEmpty());
         assertEquals(1, studentList.size());
-        assertEquals(1, studentList.get(0).getStudentId());
+        assertEquals(1, studentList.get(0).getUserId());
         assertEquals("Alex", studentList.get(0).getFirstName());
     }
 
@@ -192,9 +197,9 @@ class StudentDaoImplTestIT {
 
         assertFalse(studentList.isEmpty());
         assertEquals(2, studentList.size());
-        assertEquals(1, studentList.get(0).getStudentId());
+        assertEquals(1, studentList.get(0).getUserId());
         assertEquals("Alex", studentList.get(0).getFirstName());
-        assertEquals(2, studentList.get(1).getStudentId());
+        assertEquals(2, studentList.get(1).getUserId());
         assertEquals("Boyana", studentList.get(1).getFirstName());
     }
 

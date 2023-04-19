@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,9 +21,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
+@Testcontainers
 @ActiveProfiles("test")
 @Sql(
         scripts = {"/sql/clear_tables.sql",
+                "/sql/users_create.sql",
                 "/sql/students_create.sql",
                 "/sql/courses_create.sql",
                 "/sql/students_courses_relation.sql"},
@@ -97,7 +100,7 @@ class StudentServiceImplTesIT {
     void addStudentToCourseShouldAddStudentToCourseWhenInputValid() {
 
         Student student = Student.builder()
-                .withStudentId(1)
+                .withUserId(1)
                 .withFirstName("Alex")
                 .withLastName("Smith")
                 .withGroupId(35)
@@ -126,7 +129,7 @@ class StudentServiceImplTesIT {
     void removeStudentFromCourseShouldRemoveAllRelationsById() {
 
         Student student = Student.builder()
-                .withStudentId(1)
+                .withUserId(1)
                 .withFirstName("Alex")
                 .withLastName("Smith")
                 .withGroupId(35)

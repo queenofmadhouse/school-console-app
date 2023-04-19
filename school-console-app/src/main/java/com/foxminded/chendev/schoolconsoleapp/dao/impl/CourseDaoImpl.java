@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao {
@@ -19,17 +20,15 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
             ", course_description = ? WHERE course_id = ?";
     private static final String DELETE_COURSE_BY_ID = "DELETE FROM school.courses WHERE course_id = ?";
     private static final String SELECT_COURSE_BY_NAME = "SELECT * FROM school.courses WHERE course_name = ?";
-    private static final String SELECT_ALL_COURSES_BY_STUDENT_ID = "SELECT school.courses.*, school.students_courses_relation.student_id " +
+    private static final String SELECT_ALL_COURSES_BY_STUDENT_ID = "SELECT school.courses.*, school.students_courses_relation.user_id " +
             "FROM school.courses " +
             "INNER JOIN school.students_courses_relation ON school.courses.course_id = school.students_courses_relation.course_id " +
-            "WHERE school.students_courses_relation.student_id = ?";
+            "WHERE school.students_courses_relation.user_id = ?";
     private static final String DELETE_ALL_RELATIONS_BY_COURSE_ID = "DELETE FROM school.students_courses_relation" +
             " WHERE course_id = ?";
-    private final JdbcTemplate jdbcTemplate;
 
     public CourseDaoImpl(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate, INSERT_COURSE, SELECT_COURSE_BY_ID, SELECT_ALL_COURSES, UPDATE_COURSE, DELETE_COURSE_BY_ID);
-        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
@@ -48,8 +47,9 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
     }
 
     @Override
-    public Course findCourseByCourseName(String courseName) {
-        return jdbcTemplate.queryForObject(SELECT_COURSE_BY_NAME, new Object[]{courseName}, getRowMapper());
+    public Optional<Course> findCourseByCourseName(String courseName) {
+        return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_COURSE_BY_NAME,
+                new Object[]{courseName}, getRowMapper()));
     }
 
     @Override

@@ -17,15 +17,13 @@ public class GroupDaoImpl extends AbstractCrudDao<Group> implements GroupDao {
     private static final String UPDATE_GROUP = "UPDATE school.groups SET group_name = ? WHERE group_id = ?";
     private static final String DELETE_GROUP_BY_ID = "DELETE FROM school.groups WHERE group_id = ?";
     private static final String SELECT_GROUPS_WITH_LESS_OR_EQUALS_STUDENTS = "SELECT g.group_id, g.group_name," +
-            "COUNT(s.student_id) as student_count FROM school.groups g " +
+            "COUNT(s.user_id) as student_count FROM school.groups g " +
             "LEFT JOIN school.students s ON g.group_id = s.group_id " +
             "GROUP BY g.group_id, g.group_name " +
-            "HAVING COUNT(s.student_id) <= ?";
-    private final JdbcTemplate jdbcTemplate;
+            "HAVING COUNT(s.user_id) <= ?";
 
     public GroupDaoImpl(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate, INSERT_GROUP, SELECT_GROUP_BY_ID, SELECT_ALL_GROUPS, UPDATE_GROUP, DELETE_GROUP_BY_ID);
-        this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<Group> findGroupsWithLessOrEqualStudents(long value) {

@@ -56,17 +56,17 @@ class MenuOptionsTest {
 
         List<Student> students = new ArrayList<>();
         students.add(Student.builder()
-                .withStudentId(1)
+                .withUserId(1)
                 .withFirstName("John")
                 .withLastName("Doe")
                 .build());
         students.add(Student.builder()
-                .withStudentId(2)
+                .withUserId(2)
                 .withFirstName("Jane")
                 .withLastName("Doe")
                 .build());
         students.add(Student.builder()
-                .withStudentId(3)
+                .withUserId(3)
                 .withFirstName("Bob")
                 .withLastName("Smith")
                 .build());
