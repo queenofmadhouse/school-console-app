@@ -3,6 +3,7 @@ package com.foxminded.chendev.schoolconsoleapp.dao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CourseDao {
 
@@ -11,5 +12,5 @@ public interface CourseDao {
 
     void deleteAllRelationsByCourseId(long courseId);
 
-    Course findCourseByCourseName(String courseName);
+    Optional<Course> findCourseByCourseName(String courseName);
 }

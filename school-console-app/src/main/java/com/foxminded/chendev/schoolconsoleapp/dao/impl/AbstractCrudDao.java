@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public abstract class AbstractCrudDao<E> implements CrudDao<E> {
 
-    private final JdbcTemplate jdbcTemplate;
+    final JdbcTemplate jdbcTemplate;
     private final String saveQuery;
     private final String findByIdQuery;
     private final String findAllQuery;

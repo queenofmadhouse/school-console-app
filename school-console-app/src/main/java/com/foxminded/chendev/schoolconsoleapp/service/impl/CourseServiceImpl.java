@@ -26,7 +26,7 @@ public class CourseServiceImpl implements CourseService {
     @Transactional
     public List<Student> findAllStudentsByCourseName(String courseName) {
 
-        long courseID = courseDao.findCourseByCourseName(courseName).getCourseId();
+        long courseID = courseDao.findCourseByCourseName(courseName).orElse(null).getCourseId();
 
         return studentDao.findStudentsByCourseId(courseID);
     }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,10 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
+@Testcontainers
 @ActiveProfiles("test")
 @Sql(
         scripts = {"/sql/clear_tables.sql",
+                "/sql/users_create.sql",
                 "/sql/students_create.sql",
+                "/sql/groups_create.sql",
                 "/sql/courses_create.sql",
                 "/sql/students_courses_relation.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
@@ -32,7 +36,6 @@ class CourseDaoImplTestIT {
 
     @Autowired
     private StudentDaoImpl studentDao;
-
 
     @Test
     void findCourseByCourseNameShouldReturnCourse() {
@@ -56,8 +59,9 @@ class CourseDaoImplTestIT {
         courseDao.save(course2);
         courseDao.save(course3);
 
-        Course course = courseDao.findCourseByCourseName("Java");
+        Course course = courseDao.findCourseByCourseName("Java").orElse(null);
 
+        assertNotNull(course);
         assertEquals(3, course.getCourseId());
         assertEquals("Java", course.getCourseName());
         assertEquals("Super hard level", course.getCourseDescription());
@@ -90,7 +94,7 @@ class CourseDaoImplTestIT {
 
         courseDao.save(course);
 
-        Course courseFounded = courseDao.findCourseByCourseName("New Java Course");
+        Course courseFounded = courseDao.findCourseByCourseName("New Java Course").orElse(null);
         courseFounded.setCourseName("Old Java Course");
         courseFounded.setCourseDescription("Without info at all");
 
