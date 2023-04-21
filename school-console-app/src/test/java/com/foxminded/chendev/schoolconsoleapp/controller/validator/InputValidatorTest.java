@@ -1,8 +1,10 @@
 package com.foxminded.chendev.schoolconsoleapp.controller.validator;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class InputValidatorTest {
 
@@ -18,7 +20,7 @@ class InputValidatorTest {
 
         long value = -1;
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             validator.validate(value);
         });
     }
@@ -28,7 +30,7 @@ class InputValidatorTest {
 
         long value = 0;
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             validator.validate(value);
         });
     }
@@ -38,7 +40,7 @@ class InputValidatorTest {
 
         long value = 1;
 
-        Assertions.assertDoesNotThrow(() -> {
+        assertDoesNotThrow(() -> {
             validator.validate(value);
         });
     }
@@ -48,7 +50,7 @@ class InputValidatorTest {
 
         String value = "";
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             validator.validate(value);
         });
     }
@@ -58,7 +60,7 @@ class InputValidatorTest {
 
         String value = null;
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             validator.validate(value);
         });
     }
@@ -68,7 +70,7 @@ class InputValidatorTest {
 
         String value = "String";
 
-        Assertions.assertDoesNotThrow(() -> {
+        assertDoesNotThrow(() -> {
             validator.validate(value);
         });
     }

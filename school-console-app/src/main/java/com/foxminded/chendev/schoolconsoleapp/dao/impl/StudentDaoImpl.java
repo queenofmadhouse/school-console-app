@@ -1,7 +1,9 @@
 package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
+import com.foxminded.chendev.schoolconsoleapp.dao.DataBaseRuntimeException;
 import com.foxminded.chendev.schoolconsoleapp.dao.StudentDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -47,28 +49,51 @@ public class StudentDaoImpl extends AbstractCrudDao<Student> implements StudentD
     }
 
     @Override
-    public void removeStudentFromCourse(long studentId, long courseId) { //
-        jdbcTemplate.update(DELETE_RELATION_BY_STUDENT_ID, studentId, courseId);
+    public void removeStudentFromCourse(long studentId, long courseId) {
+        try {
+            jdbcTemplate.update(DELETE_RELATION_BY_STUDENT_ID, studentId, courseId);
+        } catch (DataAccessException e) {
+            throw new DataBaseRuntimeException("Can't remove from student with id: " + studentId +
+                    ", from course with id: " + courseId, e);
+        }
     }
 
     @Override
-    public void addStudentToCourse(long studentId, long courseId) { //
-        jdbcTemplate.update(INSERT_COURSE_RELATION, studentId, courseId);
+    public void addStudentToCourse(long studentId, long courseId) {
+        try {
+            jdbcTemplate.update(INSERT_COURSE_RELATION, studentId, courseId);
+        } catch (DataAccessException e) {
+            throw new DataBaseRuntimeException("Can't add student with id: " + studentId +
+                    ", to course with id: " + courseId, e);
+        }
     }
 
     @Override
     public List<Student> findStudentsByCourseId(long courseId) {
-        return jdbcTemplate.query(SELECT_ALL_STUDENTS_BY_COURSE_ID, getRowMapper(), courseId);
+        try {
+            return jdbcTemplate.query(SELECT_ALL_STUDENTS_BY_COURSE_ID, getRowMapper(), courseId);
+        } catch (DataAccessException e) {
+            throw new DataBaseRuntimeException("Can't find students by course id: " + courseId, e);
+        }
     }
 
     @Override
-    public void deleteAllRelationsByStudentId(long studentId) { //
-        jdbcTemplate.update(DELETE_ALL_RELATIONS_BY_STUDENT_ID, studentId);
+    public void deleteAllRelationsByStudentId(long studentId) {
+        try {
+            jdbcTemplate.update(DELETE_ALL_RELATIONS_BY_STUDENT_ID, studentId);
+        } catch (DataAccessException e) {
+            throw new DataBaseRuntimeException("Can't delete all relations by student id" + studentId, e);
+        }
     }
 
     @Override
     public void deleteRelationByStudentId(long studentId, long courseId) {
-        jdbcTemplate.update(DELETE_RELATION_BY_STUDENT_ID, studentId, courseId);
+        try {
+            jdbcTemplate.update(DELETE_RELATION_BY_STUDENT_ID, studentId, courseId);
+        } catch (DataAccessException e) {
+            throw new DataBaseRuntimeException("Can't delete relation by student id: " + studentId +
+                    ", and course id: " + courseId, e);
+        }
     }
 
     @Override
