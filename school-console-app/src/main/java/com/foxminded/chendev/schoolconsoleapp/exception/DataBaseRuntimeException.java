@@ -1,4 +1,4 @@
-package com.foxminded.chendev.schoolconsoleapp.dao;
+package com.foxminded.chendev.schoolconsoleapp.exception;
 
 public class DataBaseRuntimeException extends RuntimeException {
 
