@@ -12,5 +12,5 @@ public interface CourseDao {
 
     void deleteAllRelationsByCourseId(long courseId);
 
-    Optional<Course> findCourseByCourseName(String courseName);
+    Optional<Course> findCourseByName(String courseName);
 }

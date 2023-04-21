@@ -56,6 +56,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*IT.java</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -113,6 +118,7 @@
                         <exclude>com/foxminded/chendev/schoolconsoleapp/ApplicationRunner.class/</exclude>
                         <exclude>com/foxminded/chendev/schoolconsoleapp/entity/**</exclude>
                         <exclude>com/foxminded/chendev/schoolconsoleapp/reader/FileReaderException.class</exclude>
+                        <exclude>com/foxminded/chendev/schoolconsoleapp/dao/DataBaseRuntimeException.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>

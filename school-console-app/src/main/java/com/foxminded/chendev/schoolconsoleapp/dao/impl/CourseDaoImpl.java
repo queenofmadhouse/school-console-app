@@ -1,7 +1,9 @@
 package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
 import com.foxminded.chendev.schoolconsoleapp.dao.CourseDao;
+import com.foxminded.chendev.schoolconsoleapp.dao.DataBaseRuntimeException;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -38,18 +40,30 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
 
     @Override
     public List<Course> findCoursesByStudentId(long studentId) {
-        return jdbcTemplate.query(SELECT_ALL_COURSES_BY_STUDENT_ID, getRowMapper(), studentId);
+        try {
+            return jdbcTemplate.query(SELECT_ALL_COURSES_BY_STUDENT_ID, getRowMapper(), studentId);
+        } catch (DataAccessException e) {
+            throw new DataBaseRuntimeException("Can't find course by student id: " + studentId, e);
+        }
     }
 
     @Override
     public void deleteAllRelationsByCourseId(long courseId) {
-        jdbcTemplate.update(DELETE_ALL_RELATIONS_BY_COURSE_ID, courseId);
+        try {
+            jdbcTemplate.update(DELETE_ALL_RELATIONS_BY_COURSE_ID, courseId);
+        } catch (DataAccessException e) {
+            throw new DataBaseRuntimeException("Can't delete all relations by course id: " + courseId, e);
+        }
     }
 
     @Override
-    public Optional<Course> findCourseByCourseName(String courseName) {
-        return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_COURSE_BY_NAME,
-                new Object[]{courseName}, getRowMapper()));
+    public Optional<Course> findCourseByName(String courseName) {
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_COURSE_BY_NAME,
+                    new Object[]{courseName}, getRowMapper()));
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

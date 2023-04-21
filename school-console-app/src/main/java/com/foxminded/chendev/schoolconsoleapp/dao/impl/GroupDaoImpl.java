@@ -1,7 +1,9 @@
 package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
+import com.foxminded.chendev.schoolconsoleapp.dao.DataBaseRuntimeException;
 import com.foxminded.chendev.schoolconsoleapp.dao.GroupDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -27,7 +29,11 @@ public class GroupDaoImpl extends AbstractCrudDao<Group> implements GroupDao {
     }
 
     public List<Group> findGroupsWithLessOrEqualStudents(long value) {
-        return jdbcTemplate.query(SELECT_GROUPS_WITH_LESS_OR_EQUALS_STUDENTS, new Object[]{value}, getRowMapper());
+        try {
+            return jdbcTemplate.query(SELECT_GROUPS_WITH_LESS_OR_EQUALS_STUDENTS, new Object[]{value}, getRowMapper());
+        } catch (DataAccessException e) {
+            throw new DataBaseRuntimeException("Can't find groups with less or equals students: " + value, e);
+        }
     }
 
     @Override

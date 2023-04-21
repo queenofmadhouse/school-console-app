@@ -1,5 +1,6 @@
 package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
+import com.foxminded.chendev.schoolconsoleapp.dao.DataBaseRuntimeException;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -66,6 +68,7 @@ class StudentDaoImplTestIT {
                 .withLastName("Kapranos")
                 .withGroupId(1)
                 .build();
+
         Student student2 = Student.builder()
                 .withFirstName("Nikol")
                 .withLastName("Smith")

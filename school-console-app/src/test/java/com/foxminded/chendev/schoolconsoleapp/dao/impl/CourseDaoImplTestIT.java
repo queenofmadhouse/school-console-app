@@ -59,7 +59,7 @@ class CourseDaoImplTestIT {
         courseDao.save(course2);
         courseDao.save(course3);
 
-        Course course = courseDao.findCourseByCourseName("Java").orElse(null);
+        Course course = courseDao.findCourseByName("Java").orElse(null);
 
         assertNotNull(course);
         assertEquals(3, course.getCourseId());
@@ -94,7 +94,7 @@ class CourseDaoImplTestIT {
 
         courseDao.save(course);
 
-        Course courseFounded = courseDao.findCourseByCourseName("New Java Course").orElse(null);
+        Course courseFounded = courseDao.findCourseByName("New Java Course").orElse(null);
         courseFounded.setCourseName("Old Java Course");
         courseFounded.setCourseDescription("Without info at all");
 
@@ -106,9 +106,9 @@ class CourseDaoImplTestIT {
         assertEquals("Old Java Course", courseUpdated.getCourseName());
         assertEquals("Without info at all", courseUpdated.getCourseDescription());
     }
-//
+
     @Test
-    void findAllShouldFindAllCoursesAndReturnList() {
+    void findAllCoursesShouldFindAllCoursesAndReturnList() {
 
         Course course1 = Course.builder()
                 .withCourseName("Math")
@@ -129,7 +129,7 @@ class CourseDaoImplTestIT {
         courseDao.save(course2);
         courseDao.save(course3);
 
-        List<Course> courseList = courseDao.findAll();
+        List<Course> courseList = courseDao.findAllCourses();
 
         assertNotNull(courseList);
         assertEquals(3, courseList.size());
@@ -206,5 +206,13 @@ class CourseDaoImplTestIT {
         List<Student> studentList = studentDao.findStudentsByCourseId(8);
 
         assertTrue(studentList.isEmpty());
+    }
+
+    @Test
+    void findCourseByCourseNameShouldReturnEmptyOptionalWhenNotPresent() {
+
+        Optional<Course> course = courseDao.findCourseByName("Not Present");
+
+        assertFalse(course.isPresent());
     }
 }
