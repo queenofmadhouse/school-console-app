@@ -1,6 +1,6 @@
 package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.DataBaseRuntimeException;
+import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
 import com.foxminded.chendev.schoolconsoleapp.dao.StudentDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import org.springframework.dao.DataAccessException;

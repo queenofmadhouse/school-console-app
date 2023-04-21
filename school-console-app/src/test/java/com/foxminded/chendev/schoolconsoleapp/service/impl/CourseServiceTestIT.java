@@ -16,6 +16,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Testcontainers
@@ -128,5 +129,14 @@ class CourseServiceTestIT {
         assertEquals("Roberts", studentList.get(0).getLastName());
         assertEquals("Fillip", studentList.get(1).getFirstName());
         assertEquals("Some", studentList.get(1).getLastName());
+    }
+
+    @Test
+    @Transactional
+    void findAllStudentsByCourseNameShouldReturnEmptyListIfNotFoundByCourseName() {
+
+        List<Student> studentList = courseService.findAllStudentsByCourseName("Math");
+
+        assertTrue(studentList.isEmpty());
     }
 }

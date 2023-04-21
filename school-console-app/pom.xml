@@ -118,7 +118,7 @@
                         <exclude>com/foxminded/chendev/schoolconsoleapp/ApplicationRunner.class/</exclude>
                         <exclude>com/foxminded/chendev/schoolconsoleapp/entity/**</exclude>
                         <exclude>com/foxminded/chendev/schoolconsoleapp/reader/FileReaderException.class</exclude>
-                        <exclude>com/foxminded/chendev/schoolconsoleapp/dao/DataBaseRuntimeException.class</exclude>
+                        <exclude>com/foxminded/chendev/schoolconsoleapp/exception/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>
