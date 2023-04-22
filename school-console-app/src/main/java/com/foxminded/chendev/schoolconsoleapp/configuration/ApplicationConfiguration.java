@@ -28,3 +28,4 @@ public class ApplicationConfiguration {
         return 10;
     }
 }
+
