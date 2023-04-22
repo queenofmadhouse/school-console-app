@@ -12,4 +12,19 @@ public class ApplicationConfiguration {
     public Scanner scanner() {
         return new Scanner(System.in);
     }
+
+    @Bean
+    public int amountOfStudents() {
+        return 200;
+    }
+
+    @Bean
+    public int amountOfGroups() {
+        return 10;
+    }
+
+    @Bean
+    public int amountOfCourses() {
+        return 10;
+    }
 }
