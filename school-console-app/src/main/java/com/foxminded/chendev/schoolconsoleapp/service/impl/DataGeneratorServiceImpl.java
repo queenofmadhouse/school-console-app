@@ -2,7 +2,9 @@ package com.foxminded.chendev.schoolconsoleapp.service.impl;
 
 import com.foxminded.chendev.schoolconsoleapp.datagenerator.DataGenerator;
 import com.foxminded.chendev.schoolconsoleapp.service.DataGeneratorService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DataGeneratorServiceImpl implements DataGeneratorService {
 
     private final DataGenerator studentDataGenerator;
