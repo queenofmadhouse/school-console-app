@@ -137,8 +137,8 @@ class CourseDaoImplTestIT {
         assertEquals(courseMath.getCourseDescription(), courseList.get(0).getCourseDescription());
         assertEquals(courseBiology.getCourseName(), courseList.get(1).getCourseName());
         assertEquals(courseBiology.getCourseDescription(), courseList.get(1).getCourseDescription());
-        assertEquals(courseBiology.getCourseName(), courseList.get(2).getCourseName());
-        assertEquals(courseBiology.getCourseDescription(), courseList.get(2).getCourseDescription());
+        assertEquals(courseArt.getCourseName(), courseList.get(2).getCourseName());
+        assertEquals(courseArt.getCourseDescription(), courseList.get(2).getCourseDescription());
     }
 
     @Test

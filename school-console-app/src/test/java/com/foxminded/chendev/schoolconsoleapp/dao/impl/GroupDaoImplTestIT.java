@@ -86,9 +86,9 @@ class GroupDaoImplTestIT {
 
         foundFgroup.setGroupName("Test Group Updated");
 
-        Group foundUpdatedGroup = groupDao.findById(1).orElse(null);
-
         groupDao.update(foundFgroup);
+
+        Group foundUpdatedGroup = groupDao.findById(1).orElse(null);
 
         assertEquals(foundFgroup.getGroupName(), foundUpdatedGroup.getGroupName());
 

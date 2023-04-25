@@ -28,8 +28,8 @@ public class Student extends User{
         return groupId;
     }
 
-    public void setGroupId(Group groupId) {
-        this.groupId = groupId.getGroupId();
+    public void setGroupId(long groupId) {
+        this.groupId = groupId;
     }
 
     public static class StudentBuilder extends UserBuilder<StudentBuilder> {
