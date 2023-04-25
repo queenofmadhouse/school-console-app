@@ -35,113 +35,126 @@ class StudentServiceImplTest {
     @Test
     void deleteByIDShouldDeleteAllRelations() {
 
-        doNothing().when(studentDao).deleteById(1);
+        int studentId = 1;
 
-        studentService.deleteById(1);
+        doNothing().when(studentDao).deleteById(studentId);
 
-        verify(studentDao).deleteById(1);
+        studentService.deleteById(studentId);
+
+        verify(studentDao).deleteById(studentId);
     }
 
     @Test
     void saveShouldSaveObjectInDataBase() {
 
-        Student student = Student.builder()
+        Student studentAlex = Student.builder()
                 .withFirstName("Alex")
                 .withLastName("Kapranos")
                 .withGroupId(1)
                 .build();
 
-        doNothing().when(studentDao).save(student);
+        doNothing().when(studentDao).save(studentAlex);
 
-        studentService.save(student);
+        studentService.save(studentAlex);
 
-        verify(studentDao).save(student);
+        verify(studentDao).save(studentAlex);
     }
 
     @Test
     void addStudentToCourseShouldAddStudentToCourseWhenInputValid() {
 
-        doNothing().when(studentDao).addStudentToCourse(1, 1);
+        int studentId = 1;
+        int courseId = 1;
 
-        studentService.addStudentToCourse(1, 1);
+        doNothing().when(studentDao).addStudentToCourse(studentId, courseId);
 
-        verify(studentDao).addStudentToCourse(1, 1);
+        studentService.addStudentToCourse(studentId, courseId);
+
+        verify(studentDao).addStudentToCourse(studentId, courseId);
     }
 
     @Test
     void removeStudentFromCourseShouldRemoveAllRelationsById() {
 
-        doNothing().when(studentDao).removeStudentFromCourse(1, 2);
+        int studentId = 1;
+        int courseId = 2;
 
-        studentService.removeStudentFromCourse(1, 2);
+        doNothing().when(studentDao).removeStudentFromCourse(studentId, courseId);
 
-        verify(studentDao).removeStudentFromCourse(1, 2);
+        studentService.removeStudentFromCourse(studentId, courseId);
+
+        verify(studentDao).removeStudentFromCourse(studentId, courseId);
     }
 
     @Test
     void findAllStudentsByCourseNameShouldReturnListOfStudentsFoundByCourseName() {
 
-        Student student1 = Student.builder()
+        Student studentJoan = Student.builder()
                 .withFirstName("Joan")
                 .withLastName("Roberts")
                 .withGroupId(5)
                 .build();
 
-        Student student2 = Student.builder()
+        Student studentFillip = Student.builder()
                 .withFirstName("Fillip")
                 .withLastName("Some")
                 .withGroupId(5)
                 .build();
 
-        Student student3 = Student.builder()
+        Student studentJane = Student.builder()
                 .withFirstName("Jane")
                 .withLastName("Potters")
                 .withGroupId(5)
                 .build();
 
+        String courseName = "Math";
+        int courseId = 1;
+
         List<Student> studentList = new ArrayList<>();
 
-        studentList.add(student1);
-        studentList.add(student2);
-        studentList.add(student3);
+        studentList.add(studentJoan);
+        studentList.add(studentFillip);
+        studentList.add(studentJane);
 
-        Optional<Course> course = Optional.ofNullable(Course.builder().withCourseId(1).build());
+        Optional<Course> optionalCourse = Optional.ofNullable(Course.builder().withCourseId(courseId).build());
 
-        when(courseDao.findCourseByName("Math")).thenReturn(course);
-        when(studentDao.findStudentsByCourseId(1)).thenReturn(studentList);
+        when(courseDao.findCourseByName(courseName)).thenReturn(optionalCourse);
+        when(studentDao.findStudentsByCourseId(courseId)).thenReturn(studentList);
 
-        List<Student> studentList1 = studentService.findAllStudentsByCourseName("Math");
+        List<Student> foundStudentList = studentService.findAllStudentsByCourseName(courseName);
 
-        assertFalse(studentList1.isEmpty());
-        assertEquals(3, studentList1.size());
+        assertFalse(foundStudentList.isEmpty());
+        assertEquals(3, foundStudentList.size());
 
-        verify(courseDao).findCourseByName("Math");
-        verify(studentDao).findStudentsByCourseId(1);
+        verify(courseDao).findCourseByName(courseName);
+        verify(studentDao).findStudentsByCourseId(courseId);
     }
 
     @Test
     void findAllStudentsByCourseNameShouldReturnEmptyListIfNotFoundByCourseName() {
 
-        Optional<Course> course = Optional.empty();
+        Optional<Course> emptyCourse = Optional.empty();
+        String courseName = "Math";
 
-        when(courseDao.findCourseByName("Math")).thenReturn(course);
+        when(courseDao.findCourseByName(courseName)).thenReturn(emptyCourse);
 
-        List<Student> studentList1 = studentService.findAllStudentsByCourseName("Math");
+        List<Student> emptyStudentList = studentService.findAllStudentsByCourseName(courseName);
 
-        assertTrue(studentList1.isEmpty());
+        assertTrue(emptyStudentList.isEmpty());
 
-        verify(courseDao).findCourseByName("Math");
+        verify(courseDao).findCourseByName(courseName);
     }
 
     @Test
     void findByIdShouldReturnOptionalOfStudent() {
 
-        Optional<Student> student = Optional.ofNullable(Student.builder().build());
+        Optional<Student> optionalStudent = Optional.ofNullable(Student.builder().build());
+        int studentId = 1;
 
-        when(studentDao.findById(1)).thenReturn(student);
+        when(studentDao.findById(studentId)).thenReturn(optionalStudent);
 
-        studentService.findById(1);
+        studentService.findById(studentId);
 
-        verify(studentDao).findById(1);
+        verify(studentDao).findById(studentId);
     }
 }

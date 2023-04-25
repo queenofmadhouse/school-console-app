@@ -40,42 +40,42 @@ class CourseDaoImplTestIT {
     @Test
     void findCourseByCourseNameShouldReturnCourse() {
 
-        Course course1 = Course.builder()
+        Course courseMath = Course.builder()
                 .withCourseName("Math")
                 .withCourseDescription("Hard level")
                 .build();
 
-        Course course2 = Course.builder()
+        Course courseBiology = Course.builder()
                 .withCourseName("Biology")
                 .withCourseDescription("Middle level")
                 .build();
 
-        Course course3 = Course.builder()
+        Course courseJava = Course.builder()
                 .withCourseName("Java")
                 .withCourseDescription("Super hard level")
                 .build();
 
-        courseDao.save(course1);
-        courseDao.save(course2);
-        courseDao.save(course3);
+        courseDao.save(courseMath);
+        courseDao.save(courseBiology);
+        courseDao.save(courseJava);
 
-        Course course = courseDao.findCourseByName("Java").orElse(null);
+        Course foundCourse = courseDao.findCourseByName("Java").orElse(null);
 
-        assertNotNull(course);
-        assertEquals(3, course.getCourseId());
-        assertEquals("Java", course.getCourseName());
-        assertEquals("Super hard level", course.getCourseDescription());
+        assertNotNull(foundCourse);
+        assertEquals(3, foundCourse.getCourseId());
+        assertEquals(courseJava.getCourseName(), foundCourse.getCourseName());
+        assertEquals(courseJava.getCourseDescription(), foundCourse.getCourseDescription());
     }
 
     @Test
     void deleteByIdShouldDelete() {
 
-        Course course = Course.builder()
+        Course courseMath = Course.builder()
                 .withCourseName("Math")
                 .withCourseDescription("Something hard")
                 .build();
 
-        courseDao.save(course);
+        courseDao.save(courseMath);
 
         courseDao.deleteById(1);
 
@@ -87,96 +87,96 @@ class CourseDaoImplTestIT {
     @Test
     void updateShouldUpdateValues() {
 
-        Course course = Course.builder()
+        Course courseNewJavaCourse = Course.builder()
                 .withCourseName("New Java Course")
                 .withCourseDescription("With old information")
                 .build();
 
-        courseDao.save(course);
+        courseDao.save(courseNewJavaCourse);
 
-        Course courseFounded = courseDao.findCourseByName("New Java Course").orElse(null);
-        courseFounded.setCourseName("Old Java Course");
-        courseFounded.setCourseDescription("Without info at all");
+        Course foundCourse = courseDao.findCourseByName("New Java Course").orElse(null);
+        foundCourse.setCourseName("Old Java Course");
+        foundCourse.setCourseDescription("Without info at all");
 
-        courseDao.update(courseFounded);
+        courseDao.update(foundCourse);
 
-        Course courseUpdated = courseDao.findById(1).orElse(null);
+        Course foundUpdatedCourse = courseDao.findById(1).orElse(null);
 
-        assertNotNull(courseUpdated);
-        assertEquals("Old Java Course", courseUpdated.getCourseName());
-        assertEquals("Without info at all", courseUpdated.getCourseDescription());
+        assertNotNull(foundUpdatedCourse);
+        assertEquals(foundCourse.getCourseName(), foundUpdatedCourse.getCourseName());
+        assertEquals(foundCourse.getCourseDescription(), foundUpdatedCourse.getCourseDescription());
     }
 
     @Test
     void findAllCoursesShouldFindAllCoursesAndReturnList() {
 
-        Course course1 = Course.builder()
+        Course courseMath = Course.builder()
                 .withCourseName("Math")
                 .withCourseDescription("Something hard")
                 .build();
 
-        Course course2 = Course.builder()
+        Course courseBiology = Course.builder()
                 .withCourseName("Biology")
                 .withCourseDescription("Something hard")
                 .build();
 
-        Course course3 = Course.builder()
+        Course courseArt = Course.builder()
                 .withCourseName("Art")
                 .withCourseDescription("Something hard")
                 .build();
 
-        courseDao.save(course1);
-        courseDao.save(course2);
-        courseDao.save(course3);
+        courseDao.save(courseMath);
+        courseDao.save(courseBiology);
+        courseDao.save(courseArt);
 
         List<Course> courseList = courseDao.findAllCourses();
 
         assertNotNull(courseList);
         assertEquals(3, courseList.size());
-        assertEquals("Math", courseList.get(0).getCourseName());
-        assertEquals("Something hard", courseList.get(0).getCourseDescription());
-        assertEquals("Biology", courseList.get(1).getCourseName());
-        assertEquals("Something hard", courseList.get(1).getCourseDescription());
-        assertEquals("Art", courseList.get(2).getCourseName());
-        assertEquals("Something hard", courseList.get(2).getCourseDescription());
+        assertEquals(courseMath.getCourseName(), courseList.get(0).getCourseName());
+        assertEquals(courseMath.getCourseDescription(), courseList.get(0).getCourseDescription());
+        assertEquals(courseBiology.getCourseName(), courseList.get(1).getCourseName());
+        assertEquals(courseBiology.getCourseDescription(), courseList.get(1).getCourseDescription());
+        assertEquals(courseBiology.getCourseName(), courseList.get(2).getCourseName());
+        assertEquals(courseBiology.getCourseDescription(), courseList.get(2).getCourseDescription());
     }
 
     @Test
     void findCoursesByStudentIDShouldReturnListOfStudentCourseRelationEntity() {
 
-        Student student1 = Student.builder()
+        Student studentAlex = Student.builder()
                 .withFirstName("Alex")
                 .withLastName("Smith")
                 .withGroupId(35)
                 .build();
 
-        Student student2 = Student.builder()
+        Student studentBoyana = Student.builder()
                 .withFirstName("Boyana")
                 .withLastName("Arbams")
                 .withGroupId(35)
                 .build();
 
-        Course course1 = Course.builder()
+        Course courseMath = Course.builder()
                 .withCourseName("Math")
                 .withCourseDescription("Something hard")
                 .build();
 
-        Course course2 = Course.builder()
+        Course courseBiology = Course.builder()
                 .withCourseName("Biology")
                 .withCourseDescription("Something hard")
                 .build();
 
-        Course course3 = Course.builder()
+        Course courseArt = Course.builder()
                 .withCourseName("Art")
                 .withCourseDescription("Something hard")
                 .build();
 
-        studentDao.save(student1);
-        studentDao.save(student2);
+        studentDao.save(studentAlex);
+        studentDao.save(studentBoyana);
 
-        courseDao.save(course1);
-        courseDao.save(course2);
-        courseDao.save(course3);
+        courseDao.save(courseMath);
+        courseDao.save(courseBiology);
+        courseDao.save(courseArt);
 
         studentDao.addStudentToCourse(1, 1);
         studentDao.addStudentToCourse(1, 2);
@@ -187,9 +187,9 @@ class CourseDaoImplTestIT {
         assertFalse(courseList.isEmpty());
         assertEquals(2, courseList.size());
         assertEquals(1, courseList.get(0).getCourseId());
-        assertEquals("Math", courseList.get(0).getCourseName());
+        assertEquals(courseMath.getCourseName(), courseList.get(0).getCourseName());
         assertEquals(2, courseList.get(1).getCourseId());
-        assertEquals("Biology", courseList.get(1).getCourseName());
+        assertEquals(courseBiology.getCourseName(), courseList.get(1).getCourseName());
     }
 
     @Test

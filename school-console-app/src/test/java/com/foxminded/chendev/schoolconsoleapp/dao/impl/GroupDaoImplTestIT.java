@@ -40,56 +40,57 @@ class GroupDaoImplTestIT {
     @Test
     void testSaveShouldObjectInDataBase() {
 
-        Group group = Group.builder()
-                .withGroupName("Test Group")
+        Group groupMath = Group.builder()
+                .withGroupName("Math")
                 .build();
 
-        groupDao.save(group);
+        groupDao.save(groupMath);
 
         Group foundGroup = groupDao.findById(1).orElse(null);
 
         assertNotNull(foundGroup);
-        assertEquals("Test Group", foundGroup.getGroupName());
+        assertEquals(groupMath.getGroupName(), foundGroup.getGroupName());
     }
 
     @Test
     void findAllShouldFindAllGroupsAndReturnListOfThem() {
 
-        Group group1 = Group.builder()
-                .withGroupName("Test Group 1")
+        Group groupMath = Group.builder()
+                .withGroupName("Math")
                 .build();
 
-        Group group2 = Group.builder()
-                .withGroupName("Test Group 2")
+        Group groupArt = Group.builder()
+                .withGroupName("Art")
                 .build();
 
-        groupDao.save(group1);
-        groupDao.save(group2);
+        groupDao.save(groupMath);
+        groupDao.save(groupArt);
 
-        List<Group> groups = groupDao.findAll();
-        assertNotNull(groups);
-        assertEquals(2, groups.size());
-        assertEquals("Test Group 1", groups.get(0).getGroupName());
-        assertEquals("Test Group 2", groups.get(1).getGroupName());
+        List<Group> fourdGroupList = groupDao.findAll();
+        assertNotNull(fourdGroupList);
+        assertEquals(2, fourdGroupList.size());
+        assertEquals(groupMath.getGroupName(), fourdGroupList.get(0).getGroupName());
+        assertEquals(groupArt.getGroupName(), fourdGroupList.get(1).getGroupName());
     }
 
     @Test
     void updateShouldUpdateName() {
 
-        Group group1 = Group.builder()
-                .withGroupName("Test Group 1")
+        Group groupMath = Group.builder()
+                .withGroupName("Math")
                 .build();
 
-        groupDao.save(group1);
+        groupDao.save(groupMath);
 
-        Group group = groupDao.findById(1).orElse(null);
+        Group foundFgroup = groupDao.findById(1).orElse(null);
 
-        group.setGroupName("Test Group Updated");
+        foundFgroup.setGroupName("Test Group Updated");
 
+        Group foundUpdatedGroup = groupDao.findById(1).orElse(null);
 
-        groupDao.update(group);
+        groupDao.update(foundFgroup);
 
-        assertEquals("Test Group Updated", groupDao.findById(1).orElse(null).getGroupName());
+        assertEquals(foundFgroup.getGroupName(), foundUpdatedGroup.getGroupName());
 
 
     }
@@ -97,191 +98,195 @@ class GroupDaoImplTestIT {
     @Test
     void findGroupsWithLessOrEqualStudentsShouldListOfGroupsWhenInputValid() {
 
-        Group group1 = Group.builder()
-                .withGroupName("Group1")
+        Group groupMath = Group.builder()
+                .withGroupName("Math")
                 .build();
 
-        Group group2 = Group.builder()
-                .withGroupName("Group2")
+        Group groupArt = Group.builder()
+                .withGroupName("Art")
                 .build();
 
-        Group group3 = Group.builder()
-                .withGroupName("Group3")
+        Group groupJava = Group.builder()
+                .withGroupName("Java")
                 .build();
 
-        Student student1 = Student.builder()
+        Student studentJohn = Student.builder()
                 .withFirstName("John")
                 .withLastName("Studentsy")
                 .withGroupId(1)
                 .build();
 
-        Student student2 = Student.builder()
+        Student studentJane = Student.builder()
                 .withFirstName("Jane")
                 .withLastName("Doe")
                 .withGroupId(1)
                 .build();
 
-        Student student3 = Student.builder()
+        Student studentTom = Student.builder()
                 .withFirstName("Tom")
                 .withLastName("Smith")
                 .withGroupId(1)
                 .build();
 
-        Student student4 = Student.builder()
+        Student studentAlice = Student.builder()
                 .withFirstName("Alice")
                 .withLastName("Johnson")
                 .withGroupId(1)
                 .build();
 
-        Student student5 = Student.builder()
+        Student studentBob = Student.builder()
                 .withFirstName("Bob")
                 .withLastName("Brown")
                 .withGroupId(1)
                 .build();
 
-        Student student6 = Student.builder()
+        Student studentCharlie = Student.builder()
                 .withFirstName("Charlie")
                 .withLastName("Green")
                 .withGroupId(2)
                 .build();
 
-        Student student7 = Student.builder()
+        Student studentEmily = Student.builder()
                 .withFirstName("Emily")
                 .withLastName("White")
                 .withGroupId(2)
                 .build();
 
-        Student student8 = Student.builder()
+        Student studentEva = Student.builder()
                 .withFirstName("Eva")
                 .withLastName("Black")
                 .withGroupId(2)
                 .build();
 
-        Student student9 = Student.builder()
+        Student studentFrank = Student.builder()
                 .withFirstName("Frank")
                 .withLastName("Gray")
                 .withGroupId(3)
                 .build();
 
-        Student student10 = Student.builder()
+        Student studentGrace = Student.builder()
                 .withFirstName("Grace")
                 .withLastName("Blue")
                 .withGroupId(3)
                 .build();
 
-        groupDao.save(group1);
-        groupDao.save(group2);
-        groupDao.save(group3);
+        int valueOfStudentsOnCourse = 1;
 
-        studentDao.save(student1);
-        studentDao.save(student2);
-        studentDao.save(student3);
-        studentDao.save(student4);
-        studentDao.save(student5);
-        studentDao.save(student6);
-        studentDao.save(student7);
-        studentDao.save(student8);
-        studentDao.save(student9);
-        studentDao.save(student10);
+        groupDao.save(groupMath);
+        groupDao.save(groupArt);
+        groupDao.save(groupJava);
+
+        studentDao.save(studentJohn);
+        studentDao.save(studentJane);
+        studentDao.save(studentTom);
+        studentDao.save(studentAlice);
+        studentDao.save(studentBob);
+        studentDao.save(studentCharlie);
+        studentDao.save(studentEmily);
+        studentDao.save(studentEva);
+        studentDao.save(studentFrank);
+        studentDao.save(studentGrace);
 
         List<Group> resultList = groupDao.findGroupsWithLessOrEqualStudents(2);
 
         assertEquals(1, resultList.size());
-        assertEquals("Group3", resultList.get(0).getGroupName());
+        assertEquals("Java", resultList.get(0).getGroupName());
 
     }
 
     @Test
     void findGroupsWithLessOrEqualStudentsShouldReturnEmptyListWhenNotFound() {
 
-        Group group1 = Group.builder()
-                .withGroupName("Group1")
+        Group groupMath = Group.builder()
+                .withGroupName("Math")
                 .build();
 
-        Group group2 = Group.builder()
-                .withGroupName("Group2")
+        Group groupArt = Group.builder()
+                .withGroupName("Art")
                 .build();
 
-        Group group3 = Group.builder()
-                .withGroupName("Group3")
+        Group groupJava = Group.builder()
+                .withGroupName("Java")
                 .build();
 
-        Student student1 = Student.builder()
+        Student studentJohn = Student.builder()
                 .withFirstName("John")
                 .withLastName("Studentsy")
                 .withGroupId(1)
                 .build();
 
-        Student student2 = Student.builder()
+        Student studentJane = Student.builder()
                 .withFirstName("Jane")
                 .withLastName("Doe")
                 .withGroupId(1)
                 .build();
 
-        Student student3 = Student.builder()
+        Student studentTom = Student.builder()
                 .withFirstName("Tom")
                 .withLastName("Smith")
                 .withGroupId(1)
                 .build();
 
-        Student student4 = Student.builder()
+        Student studentAlice = Student.builder()
                 .withFirstName("Alice")
                 .withLastName("Johnson")
                 .withGroupId(1)
                 .build();
 
-        Student student5 = Student.builder()
+        Student studentBob = Student.builder()
                 .withFirstName("Bob")
                 .withLastName("Brown")
                 .withGroupId(1)
                 .build();
 
-        Student student6 = Student.builder()
+        Student studentCharlie = Student.builder()
                 .withFirstName("Charlie")
                 .withLastName("Green")
                 .withGroupId(2)
                 .build();
 
-        Student student7 = Student.builder()
+        Student studentEmily = Student.builder()
                 .withFirstName("Emily")
                 .withLastName("White")
                 .withGroupId(2)
                 .build();
 
-        Student student8 = Student.builder()
+        Student studentEva = Student.builder()
                 .withFirstName("Eva")
                 .withLastName("Black")
                 .withGroupId(2)
                 .build();
 
-        Student student9 = Student.builder()
+        Student studentFrank = Student.builder()
                 .withFirstName("Frank")
                 .withLastName("Gray")
                 .withGroupId(3)
                 .build();
 
-        Student student10 = Student.builder()
+        Student studentGrace = Student.builder()
                 .withFirstName("Grace")
                 .withLastName("Blue")
                 .withGroupId(3)
                 .build();
 
-        groupDao.save(group1);
-        groupDao.save(group2);
-        groupDao.save(group3);
+        int valueOfStudentsOnCourse = 1;
 
-        studentDao.save(student1);
-        studentDao.save(student2);
-        studentDao.save(student3);
-        studentDao.save(student4);
-        studentDao.save(student5);
-        studentDao.save(student6);
-        studentDao.save(student7);
-        studentDao.save(student8);
-        studentDao.save(student9);
-        studentDao.save(student10);
+        groupDao.save(groupMath);
+        groupDao.save(groupArt);
+        groupDao.save(groupJava);
 
-        List<Group> resultList = groupDao.findGroupsWithLessOrEqualStudents(1);
+        studentDao.save(studentJohn);
+        studentDao.save(studentJane);
+        studentDao.save(studentTom);
+        studentDao.save(studentAlice);
+        studentDao.save(studentBob);
+        studentDao.save(studentCharlie);
+        studentDao.save(studentEmily);
+        studentDao.save(studentEva);
+        studentDao.save(studentFrank);
+        studentDao.save(studentGrace);
+
+        List<Group> resultList = groupDao.findGroupsWithLessOrEqualStudents(valueOfStudentsOnCourse);
 
         assertTrue(resultList.isEmpty());
     }

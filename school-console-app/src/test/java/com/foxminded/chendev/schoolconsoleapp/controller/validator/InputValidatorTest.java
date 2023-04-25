@@ -18,60 +18,60 @@ class InputValidatorTest {
     @Test
     void validateValueShouldThrowIllegalArgumentExceptionWhenNumberSmallerThenZero() {
 
-        long value = -1;
+        long notValidLong = -1;
 
         assertThrows(IllegalArgumentException.class, () -> {
-            validator.validate(value);
+            validator.validate(notValidLong);
         });
     }
 
     @Test
     void validateValueShouldIllegalArgumentExceptionWhenNumberIsZero() {
 
-        long value = 0;
+        long notValidLong = 0;
 
         assertThrows(IllegalArgumentException.class, () -> {
-            validator.validate(value);
+            validator.validate(notValidLong);
         });
     }
 
     @Test
     void validateShouldNotThrowExceptionWhenInputValidNumber() {
 
-        long value = 1;
+        long validLong = 1;
 
         assertDoesNotThrow(() -> {
-            validator.validate(value);
+            validator.validate(validLong);
         });
     }
 
     @Test
     void validateShouldThrowIllegalArgumentExceptionWhenInputEmpty() {
 
-        String value = "";
+        String emptyString = "";
 
         assertThrows(IllegalArgumentException.class, () -> {
-            validator.validate(value);
+            validator.validate(emptyString);
         });
     }
 
     @Test
     void validateShouldThrowIllegalArgumentExceptionWhenInputNull() {
 
-        String value = null;
+        String nullString = null;
 
         assertThrows(IllegalArgumentException.class, () -> {
-            validator.validate(value);
+            validator.validate(nullString);
         });
     }
 
     @Test
     void validateShouldNotThrowIllegalArgumentWhenInputValidString() {
 
-        String value = "String";
+        String validString = "String";
 
         assertDoesNotThrow(() -> {
-            validator.validate(value);
+            validator.validate(validString);
         });
     }
 }
