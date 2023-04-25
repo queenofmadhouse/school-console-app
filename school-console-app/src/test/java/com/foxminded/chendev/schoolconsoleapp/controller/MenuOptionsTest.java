@@ -71,7 +71,7 @@ class MenuOptionsTest {
                 .withLastName("Smith")
                 .build());
 
-        when(courseServiceMock.findAllStudentsByCourseName("Math")).thenReturn(students);
+        when(studentServiceMock.findAllStudentsByCourseName("Math")).thenReturn(students);
 
         MenuOptions.FIND_STUDENTS_BY_COURSE.execute(studentServiceMock, groupServiceMock, courseServiceMock,
                 validatorMock, consoleHandlerMock);

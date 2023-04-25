@@ -16,6 +16,7 @@ public class GroupDataGenerator implements DataGenerator {
     private final int amountOfGroups;
 
     public GroupDataGenerator(GroupDao groupDao, int amountOfGroups) {
+
         this.groupDao = groupDao;
         this.amountOfGroups = amountOfGroups;
     }
@@ -29,12 +30,14 @@ public class GroupDataGenerator implements DataGenerator {
             Group group = Group.builder()
                     .withGroupName(groupName)
                     .build();
+
             groupDao.save(group);
         }
 
     }
 
     private String generateGroupName() {
+
         char character1 = ALPHABET.charAt(random.nextInt(ALPHABET_SIZE));
         char character2 = ALPHABET.charAt(random.nextInt(ALPHABET_SIZE));
         int number1 = random.nextInt(10);

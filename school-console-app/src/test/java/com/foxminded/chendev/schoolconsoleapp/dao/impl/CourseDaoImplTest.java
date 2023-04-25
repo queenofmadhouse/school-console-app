@@ -1,7 +1,7 @@
 package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
+import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

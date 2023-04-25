@@ -22,7 +22,7 @@ public class ApplicationInitializerImpl implements ApplicationInitializer {
     @PostConstruct
     public void init() {
 
-        if (!areAllDatabasesEmpty()) {
+        if (areAllDatabasesEmpty()) {
             dataGeneratorService.generateData();
         }
     }
