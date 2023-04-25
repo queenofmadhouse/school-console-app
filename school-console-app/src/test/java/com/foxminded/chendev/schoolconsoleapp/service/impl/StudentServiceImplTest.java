@@ -24,13 +24,13 @@ import static org.mockito.Mockito.when;
 class StudentServiceImplTest {
 
     @MockBean
-    CourseDao courseDao;
+    private CourseDao courseDao;
 
     @MockBean
-    StudentDao studentDao;
+    private StudentDao studentDao;
 
     @Autowired
-    StudentServiceImpl studentService;
+    private StudentServiceImpl studentService;
 
     @Test
     void deleteByIDShouldDeleteAllRelations() {

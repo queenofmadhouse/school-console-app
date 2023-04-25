@@ -1,8 +1,6 @@
 package com.foxminded.chendev.schoolconsoleapp.service.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.datagenerator.DataGenerator;
 import com.foxminded.chendev.schoolconsoleapp.datagenerator.impl.GroupDataGenerator;
-import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.service.DataGeneratorService;
 import org.springframework.stereotype.Service;
 

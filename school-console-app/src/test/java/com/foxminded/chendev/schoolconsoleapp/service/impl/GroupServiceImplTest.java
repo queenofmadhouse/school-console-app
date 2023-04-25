@@ -20,13 +20,13 @@ import static org.mockito.Mockito.when;
 class GroupServiceImplTest {
 
     @MockBean
-    StudentDaoImpl studentDao;
+    private StudentDaoImpl studentDao;
 
     @MockBean
-    GroupDaoImpl groupDao;
+    private GroupDaoImpl groupDao;
 
     @Autowired
-    GroupServiceImpl groupService;
+    private GroupServiceImpl groupService;
 
     @Test
     void findGroupsWithLessOrEqualStudentsShouldReturnListOfGroups() {
