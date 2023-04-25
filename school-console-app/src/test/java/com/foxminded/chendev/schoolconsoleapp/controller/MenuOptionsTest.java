@@ -54,31 +54,38 @@ class MenuOptionsTest {
 
         when(consoleHandlerMock.readUserInputString()).thenReturn("Math");
 
-        List<Student> students = new ArrayList<>();
-        students.add(Student.builder()
+        List<Student> studentList = new ArrayList<>();
+
+        Student studentJohn = Student.builder()
                 .withUserId(1)
                 .withFirstName("John")
                 .withLastName("Doe")
-                .build());
-        students.add(Student.builder()
+                .build();
+
+        Student studentJane = Student.builder()
                 .withUserId(2)
                 .withFirstName("Jane")
                 .withLastName("Doe")
-                .build());
-        students.add(Student.builder()
+                .build();
+
+        Student studentBob = Student.builder()
                 .withUserId(3)
                 .withFirstName("Bob")
                 .withLastName("Smith")
-                .build());
+                .build();
 
-        when(studentServiceMock.findAllStudentsByCourseName("Math")).thenReturn(students);
+        studentList.add(studentJohn);
+        studentList.add(studentJane);
+        studentList.add(studentBob);
+
+        when(studentServiceMock.findAllStudentsByCourseName("Math")).thenReturn(studentList);
 
         MenuOptions.FIND_STUDENTS_BY_COURSE.execute(studentServiceMock, groupServiceMock, courseServiceMock,
                 validatorMock, consoleHandlerMock);
 
         InOrder inOrder = inOrder(consoleHandlerMock);
         inOrder.verify(consoleHandlerMock).printMessage("Enter course name: ");
-        for (Student student : students) {
+        for (Student student : studentList) {
             inOrder.verify(consoleHandlerMock).printMessage(student.toString());
         }
     }
@@ -113,12 +120,28 @@ class MenuOptionsTest {
         when(consoleHandlerMock.readUserInputNumber()).thenReturn(1L, 1L);
         when(studentServiceMock.findById(1L)).thenReturn(Optional.ofNullable(Student.builder().build()));
 
-        List<Course> courses = new ArrayList<>();
-        courses.add(Course.builder().withCourseId(1).withCourseName("Math").build());
-        courses.add(Course.builder().withCourseId(2).withCourseName("Physics").build());
-        courses.add(Course.builder().withCourseId(3).withCourseName("Chemistry").build());
+        List<Course> courseList = new ArrayList<>();
 
-        when(courseServiceMock.findAllCourses()).thenReturn(courses);
+        Course courseMath = Course.builder()
+                .withCourseId(1)
+                .withCourseName("Math")
+                .build();
+
+        Course coursePhysics = Course.builder()
+                .withCourseId(2)
+                .withCourseName("Physics")
+                .build();
+
+        Course courseChemistry = Course.builder()
+                .withCourseId(3)
+                .withCourseName("Chemistry")
+                .build();
+
+        courseList.add(courseMath);
+        courseList.add(coursePhysics);
+        courseList.add(courseChemistry);
+
+        when(courseServiceMock.findAllCourses()).thenReturn(courseList);
 
         MenuOptions.ADD_STUDENT_TO_COURSE.execute(studentServiceMock, groupServiceMock, courseServiceMock,
                 validatorMock, consoleHandlerMock);
@@ -126,7 +149,7 @@ class MenuOptionsTest {
         InOrder inOrder = inOrder(consoleHandlerMock);
         inOrder.verify(consoleHandlerMock).printMessage("Enter student ID: ");
         inOrder.verify(consoleHandlerMock).printMessage("Available courses: ");
-        for (Course course : courses) {
+        for (Course course : courseList) {
             inOrder.verify(consoleHandlerMock).printMessage(course.toString());
         }
         inOrder.verify(consoleHandlerMock).printMessage("\nEnter course ID: ");
@@ -149,22 +172,28 @@ class MenuOptionsTest {
     @Test
     void shouldExecuteFindGroupsWithLessOrEqualStudents() {
 
-        when(consoleHandlerMock.readUserInputNumber()).thenReturn(10L);
-
         List<Group> groups = new ArrayList<>();
-        groups.add(Group.builder()
+
+        Group groupA1 = Group.builder()
                 .withGroupId(1)
                 .withGroupName("A1")
-                .build());
-        groups.add(Group.builder()
+                .build();
+
+        Group groupB1 = Group.builder()
                 .withGroupId(2)
                 .withGroupName("B1")
-                .build());
-        groups.add(Group.builder()
+                .build();
+
+        Group groupC1 = Group.builder()
                 .withGroupId(3)
                 .withGroupName("C1")
-                .build());
+                .build();
 
+        groups.add(groupA1);
+        groups.add(groupB1);
+        groups.add(groupC1);
+
+        when(consoleHandlerMock.readUserInputNumber()).thenReturn(10L);
         when(groupServiceMock.findGroupsWithLessOrEqualStudents(10)).thenReturn(groups);
 
         MenuOptions.FIND_GROUPS_WITH_LESS_OR_EQUAL_STUDENTS.execute(studentServiceMock, groupServiceMock, courseServiceMock,

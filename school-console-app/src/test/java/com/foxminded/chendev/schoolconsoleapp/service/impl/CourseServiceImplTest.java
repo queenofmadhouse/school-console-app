@@ -31,26 +31,26 @@ class CourseServiceImplTest {
     @Test
     void findAllShouldReturnListWithAllCoursesWhenInputValid() {
 
-        Course course1 = Course.builder()
+        Course courseMath = Course.builder()
                 .withCourseName("Math")
                 .withCourseDescription("Hard level")
                 .build();
 
-        Course course2 = Course.builder()
+        Course courseBiology = Course.builder()
                 .withCourseName("Biology")
                 .withCourseDescription("Middle level")
                 .build();
 
-        Course course3 = Course.builder()
+        Course courseJava = Course.builder()
                 .withCourseName("Java")
                 .withCourseDescription("Super hard level")
                 .build();
 
         List<Course> courseList = new ArrayList<>();
 
-        courseList.add(course1);
-        courseList.add(course2);
-        courseList.add(course3);
+        courseList.add(courseMath);
+        courseList.add(courseBiology);
+        courseList.add(courseJava);
 
         when(courseDao.findAllCourses()).thenReturn(courseList);
 

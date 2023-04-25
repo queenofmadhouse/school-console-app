@@ -31,21 +31,22 @@ class GroupServiceImplTest {
     @Test
     void findGroupsWithLessOrEqualStudentsShouldReturnListOfGroups() {
 
-        Group group = Group.builder()
+        Group groupArt = Group.builder()
                 .withGroupName("Art")
                 .build();
 
         List<Group> groupList = new ArrayList<>();
-        groupList.add(group);
+        groupList.add(groupArt);
+        int valueOfStudents = 1;
 
-        when(groupDao.findGroupsWithLessOrEqualStudents(1)).thenReturn(groupList);
+        when(groupDao.findGroupsWithLessOrEqualStudents(valueOfStudents)).thenReturn(groupList);
 
-        List<Group> foundGroupList = groupService.findGroupsWithLessOrEqualStudents(1);
+        List<Group> foundGroupList = groupService.findGroupsWithLessOrEqualStudents(valueOfStudents);
 
         assertNotNull(foundGroupList);
         assertEquals(1, foundGroupList.size());
         assertEquals("Art", foundGroupList.get(0).getGroupName());
 
-        verify(groupDao).findGroupsWithLessOrEqualStudents(1);
+        verify(groupDao).findGroupsWithLessOrEqualStudents(valueOfStudents);
     }
 }
