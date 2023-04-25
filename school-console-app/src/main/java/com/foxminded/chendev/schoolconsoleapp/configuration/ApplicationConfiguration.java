@@ -1,8 +1,5 @@
 package com.foxminded.chendev.schoolconsoleapp.configuration;
 
-import com.foxminded.chendev.schoolconsoleapp.datagenerator.DataGenerator;
-import com.foxminded.chendev.schoolconsoleapp.datagenerator.impl.GroupDataGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

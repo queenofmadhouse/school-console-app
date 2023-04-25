@@ -20,13 +20,13 @@ import static org.mockito.Mockito.when;
 class CourseServiceImplTest {
 
     @MockBean
-    CourseDaoImpl courseDao;
+    private CourseDaoImpl courseDao;
 
     @MockBean
-    StudentDaoImpl studentDao;
+    private StudentDaoImpl studentDao;
 
     @Autowired
-    CourseServiceImpl courseService;
+    private CourseServiceImpl courseService;
 
     @Test
     void findAllShouldReturnListWithAllCoursesWhenInputValid() {
