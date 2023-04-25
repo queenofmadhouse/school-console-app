@@ -40,7 +40,7 @@ public enum MenuOptions {
             String courseName = consoleHandler.readUserInputString();
             validator.validate(courseName);
 
-            List<Student> studentList = courseService.findAllStudentsByCourseName(courseName);
+            List<Student> studentList = studentService.findAllStudentsByCourseName(courseName);
 
             for (Student student : studentList) {
                 consoleHandler.printMessage(student.toString());

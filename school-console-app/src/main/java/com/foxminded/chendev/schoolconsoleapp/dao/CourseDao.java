@@ -5,7 +5,7 @@ import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import java.util.List;
 import java.util.Optional;
 
-public interface CourseDao {
+public interface CourseDao extends CrudDao<Course> {
 
     List<Course> findAllCourses();
     List<Course> findCoursesByStudentId(long studentId);
