@@ -3,6 +3,7 @@ package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 import com.foxminded.chendev.schoolconsoleapp.dao.StudentDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
+import org.slf4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -36,8 +37,8 @@ public class StudentDaoImpl extends AbstractCrudDao<Student> implements StudentD
     private static final String DELETE_ALL_RELATIONS_BY_STUDENT_ID = "DELETE FROM school.students_courses_relation " +
             "WHERE user_id = ?";
 
-    public StudentDaoImpl(JdbcTemplate jdbcTemplate) {
-        super(jdbcTemplate, INSERT_USER_AND_STUDENT, SELECT_STUDENT_BY_ID,
+    public StudentDaoImpl(JdbcTemplate jdbcTemplate, Logger studentLogger) {
+        super(jdbcTemplate, studentLogger, INSERT_USER_AND_STUDENT, SELECT_STUDENT_BY_ID,
                 SELECT_ALL_STUDENTS, UPDATE_STUDENT, DELETE_STUDENT_BY_ID);
     }
 
@@ -51,8 +52,14 @@ public class StudentDaoImpl extends AbstractCrudDao<Student> implements StudentD
     @Override
     public void removeStudentFromCourse(long studentId, long courseId) {
         try {
+            logger.info("Method removeStudentFromCourse was cold with parameters: " +
+                    "StudentId: " + studentId +
+                    ", CourseId: " + courseId);
             jdbcTemplate.update(DELETE_RELATION_BY_STUDENT_ID, studentId, courseId);
         } catch (DataAccessException e) {
+            logger.error("Exception in method removeStudentFromCourse with parameters: " +
+                    "StudentId: " + studentId +
+                    ", CourseId: " + courseId);
             throw new DataBaseRuntimeException("Can't remove from student with id: " + studentId +
                     ", from course with id: " + courseId, e);
         }
@@ -61,8 +68,14 @@ public class StudentDaoImpl extends AbstractCrudDao<Student> implements StudentD
     @Override
     public void addStudentToCourse(long studentId, long courseId) {
         try {
+            logger.info("Method addStudentToCourse was cold with parameters: " +
+                    "StudentId: " + studentId +
+                    ", CourseId: " + courseId);
             jdbcTemplate.update(INSERT_COURSE_RELATION, studentId, courseId);
         } catch (DataAccessException e) {
+            logger.error("Exception in method addStudentToCourse with parameters: " +
+                    "StudentId: " + studentId +
+                    ", CourseId: " + courseId);
             throw new DataBaseRuntimeException("Can't add student with id: " + studentId +
                     ", to course with id: " + courseId, e);
         }
@@ -71,8 +84,10 @@ public class StudentDaoImpl extends AbstractCrudDao<Student> implements StudentD
     @Override
     public List<Student> findStudentsByCourseId(long courseId) {
         try {
+            logger.info("Method findStudentsByCourseId was cold with parameters: " + courseId);
             return jdbcTemplate.query(SELECT_ALL_STUDENTS_BY_COURSE_ID, getRowMapper(), courseId);
         } catch (DataAccessException e) {
+            logger.error("Exception in method findStudentsByCourseId with parameters: " + courseId, e);
             throw new DataBaseRuntimeException("Can't find students by course id: " + courseId, e);
         }
     }
@@ -80,8 +95,10 @@ public class StudentDaoImpl extends AbstractCrudDao<Student> implements StudentD
     @Override
     public void deleteAllRelationsByStudentId(long studentId) {
         try {
+            logger.info("Method deleteAllRelationsByStudentId was cold with parameters: " + studentId);
             jdbcTemplate.update(DELETE_ALL_RELATIONS_BY_STUDENT_ID, studentId);
         } catch (DataAccessException e) {
+            logger.error("Exception in method deleteAllRelationsByStudentId with parameters: " + studentId, e);
             throw new DataBaseRuntimeException("Can't delete all relations by student id" + studentId, e);
         }
     }
@@ -89,8 +106,14 @@ public class StudentDaoImpl extends AbstractCrudDao<Student> implements StudentD
     @Override
     public void deleteRelationByStudentId(long studentId, long courseId) {
         try {
+            logger.info("Method deleteRelationByStudentId was cold with parameters: " +
+                    "StudentId: " + studentId +
+                    ", CourseId: " + courseId);
             jdbcTemplate.update(DELETE_RELATION_BY_STUDENT_ID, studentId, courseId);
         } catch (DataAccessException e) {
+            logger.error("Exception in method deleteRelationByStudentId with parameters: " +
+                    "StudentId: " + studentId +
+                    ", CourseId: " + courseId);
             throw new DataBaseRuntimeException("Can't delete relation by student id: " + studentId +
                     ", and course id: " + courseId, e);
         }

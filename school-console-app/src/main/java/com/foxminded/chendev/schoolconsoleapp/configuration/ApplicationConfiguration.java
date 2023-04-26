@@ -1,5 +1,11 @@
 package com.foxminded.chendev.schoolconsoleapp.configuration;
 
+import com.foxminded.chendev.schoolconsoleapp.dao.impl.CourseDaoImpl;
+import com.foxminded.chendev.schoolconsoleapp.dao.impl.GroupDaoImpl;
+import com.foxminded.chendev.schoolconsoleapp.dao.impl.StudentDaoImpl;
+import com.foxminded.chendev.schoolconsoleapp.logger.LoggerFactoryBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,6 +32,21 @@ public class ApplicationConfiguration {
     @Bean
     public int amountOfCourses() {
         return 10;
+    }
+
+    @Bean
+    public Logger studentLogger() {
+        return LoggerFactory.getLogger(StudentDaoImpl.class);
+    }
+
+    @Bean
+    public Logger courseLogger() {
+        return LoggerFactory.getLogger(CourseDaoImpl.class);
+    }
+
+    @Bean
+    public Logger groupLogger() {
+        return LoggerFactory.getLogger(GroupDaoImpl.class);
     }
 }
 
