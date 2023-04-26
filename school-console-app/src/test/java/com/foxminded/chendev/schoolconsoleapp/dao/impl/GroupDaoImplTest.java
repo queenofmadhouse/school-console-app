@@ -7,21 +7,32 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.lang.reflect.Field;
+import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+//@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class GroupDaoImplTest {
 
-    @Mock
+    @MockBean
     private JdbcTemplate jdbcTemplate;
 
-    @InjectMocks
+    @MockBean
+    private Logger groupLogger;
+
+    @Autowired
     private GroupDaoImpl groupDao;
 
     @Test
@@ -56,7 +67,6 @@ class GroupDaoImplTest {
 
         when(jdbcTemplate.update(sqlForTest, groupDao.getUpdateParameters(group)))
                 .thenThrow(new EmptyResultDataAccessException(1));
-
         assertThrows(DataBaseRuntimeException.class, () -> groupDao.update(group));
     }
 
