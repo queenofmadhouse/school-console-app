@@ -1,5 +1,6 @@
 package com.foxminded.chendev.schoolconsoleapp.configuration;
 
+import com.foxminded.chendev.schoolconsoleapp.controller.MenuController;
 import com.foxminded.chendev.schoolconsoleapp.controller.MenuOptions;
 import com.foxminded.chendev.schoolconsoleapp.dao.impl.CourseDaoImpl;
 import com.foxminded.chendev.schoolconsoleapp.dao.impl.GroupDaoImpl;
@@ -50,8 +51,13 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    public Logger menuOptionLogger() {
+    public Logger menuOptionsLogger() {
         return LoggerFactory.getLogger(MenuOptions.class);
+    }
+
+    @Bean
+    public Logger menuControllerLogger() {
+        return LoggerFactory.getLogger(MenuController.class);
     }
 }
 
