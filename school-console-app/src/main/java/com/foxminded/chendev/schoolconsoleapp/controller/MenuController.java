@@ -5,6 +5,8 @@ import com.foxminded.chendev.schoolconsoleapp.service.CourseService;
 import com.foxminded.chendev.schoolconsoleapp.service.GroupService;
 import com.foxminded.chendev.schoolconsoleapp.service.StudentService;
 import com.foxminded.chendev.schoolconsoleapp.view.ConsoleHandler;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,15 +17,17 @@ public class MenuController {
     private final CourseService courseService;
     private final Validator validator;
     private final ConsoleHandler consoleHandler;
+    private final Logger menuOptionsLogger;
 
     public MenuController(StudentService studentService, GroupService groupService, CourseService courseService,
-                          Validator validator, ConsoleHandler consoleHandler) {
+                          Validator validator, ConsoleHandler consoleHandler, @Qualifier("menuOptionLogger") Logger menuOptionsLogger) {
 
         this.studentService = studentService;
         this.groupService = groupService;
         this.courseService = courseService;
         this.validator = validator;
         this.consoleHandler = consoleHandler;
+        this.menuOptionsLogger = menuOptionsLogger;
     }
 
     public void provideMenu() {
@@ -42,8 +46,7 @@ public class MenuController {
                     break;
                 }
 
-
-                findOption(code).execute(studentService, groupService, courseService, validator, consoleHandler);
+                findOption(code).execute(menuOptionsLogger, studentService, groupService, courseService, validator, consoleHandler);
 
                 consoleHandler.printMessage("done!");
             } catch (IllegalArgumentException e) {
