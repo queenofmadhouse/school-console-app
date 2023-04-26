@@ -8,6 +8,7 @@ import com.foxminded.chendev.schoolconsoleapp.service.CourseService;
 import com.foxminded.chendev.schoolconsoleapp.service.GroupService;
 import com.foxminded.chendev.schoolconsoleapp.service.StudentService;
 import com.foxminded.chendev.schoolconsoleapp.view.ConsoleHandler;
+import org.slf4j.Logger;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public enum MenuOptions {
 
     FIND_GROUPS_WITH_LESS_OR_EQUAL_STUDENTS("a", "Find all groups with less or equal students’ number") {
         @Override
-        public void execute(StudentService studentService, GroupService groupService, CourseService courseService,
+        public void execute(Logger menuOptionLogger, StudentService studentService, GroupService groupService, CourseService courseService,
                             Validator validator, ConsoleHandler consoleHandler) {
 
             consoleHandler.printMessage("Enter value: ");
@@ -25,6 +26,8 @@ public enum MenuOptions {
 
             List<Group> groupsList = groupService.findGroupsWithLessOrEqualStudents(value);
 
+            menuOptionLogger.info("Finding groups with less or equal students, number: " + value);
+
             for (Group group : groupsList) {
                 consoleHandler.printMessage(group.toString());
             }
@@ -32,13 +35,15 @@ public enum MenuOptions {
     },
     FIND_STUDENTS_BY_COURSE("b", "Find all students related to the course with the given name") {
         @Override
-        public void execute(StudentService studentService, GroupService groupService, CourseService courseService,
+        public void execute(Logger menuOptionLogger, StudentService studentService, GroupService groupService, CourseService courseService,
                             Validator validator, ConsoleHandler consoleHandler) {
 
             consoleHandler.printMessage("Enter course name: ");
 
             String courseName = consoleHandler.readUserInputString();
             validator.validate(courseName);
+
+            menuOptionLogger.info("Finding students by course name, name: " + courseName);
 
             List<Student> studentList = studentService.findAllStudentsByCourseName(courseName);
 
@@ -49,7 +54,7 @@ public enum MenuOptions {
     },
     ADD_NEW_STUDENT("c", "Add a new student") {
         @Override
-        public void execute(StudentService studentService, GroupService groupService, CourseService courseService,
+        public void execute(Logger menuOptionLogger, StudentService studentService, GroupService groupService, CourseService courseService,
                             Validator validator, ConsoleHandler consoleHandler) {
 
             consoleHandler.printMessage("Enter student name: ");
@@ -62,12 +67,19 @@ public enum MenuOptions {
             String studentSurname = consoleHandler.readUserInputString();
             validator.validate(studentSurname);
 
-            studentService.save(Student.builder().withFirstName(studentName).withLastName(studentSurname).build());
+            Student studentForAdding = Student.builder()
+                    .withFirstName(studentName)
+                    .withLastName(studentSurname)
+                    .build();
+
+            menuOptionLogger.info("Adding new student: " +studentForAdding);
+
+            studentService.save(studentForAdding);
         }
     },
     DELETE_STUDENT_BY_ID("d", "Delete a student by the STUDENT_ID") {
         @Override
-        public void execute(StudentService studentService, GroupService groupService, CourseService courseService,
+        public void execute(Logger menuOptionLogger, StudentService studentService, GroupService groupService, CourseService courseService,
                             Validator validator, ConsoleHandler consoleHandler) {
 
             consoleHandler.printMessage("Enter student ID: ");
@@ -75,12 +87,14 @@ public enum MenuOptions {
             long studentId = Long.parseLong(consoleHandler.readUserInputString());
             validator.validate(studentId);
 
+            menuOptionLogger.info("Deleting student by id: " + studentId);
+
             studentService.deleteById(studentId);
         }
     },
     ADD_STUDENT_TO_COURSE("e", "Add a student to the course (from a list)") {
         @Override
-        public void execute(StudentService studentService, GroupService groupService, CourseService courseService,
+        public void execute(Logger menuOptionLogger, StudentService studentService, GroupService groupService, CourseService courseService,
                             Validator validator, ConsoleHandler consoleHandler) {
 
             consoleHandler.printMessage("Enter student ID: ");
@@ -101,12 +115,15 @@ public enum MenuOptions {
             long courseId = consoleHandler.readUserInputNumber();
             validator.validate(courseId);
 
+            menuOptionLogger.info("Adding student to course with studentId: " + studentId +
+                    "courseId: " + courseId);
+
             studentService.addStudentToCourse(studentId, courseId);
         }
     },
     REMOVE_STUDENT_FROM_COURSE("f", "Remove the student from one of their courses") {
         @Override
-        public void execute(StudentService studentService, GroupService groupService, CourseService courseService,
+        public void execute(Logger menuOptionLogger, StudentService studentService, GroupService groupService, CourseService courseService,
                             Validator validator, ConsoleHandler consoleHandler) {
 
             consoleHandler.printMessage("Enter student ID: ");
@@ -119,6 +136,8 @@ public enum MenuOptions {
             long courseId = consoleHandler.readUserInputNumber();
             validator.validate(courseId);
 
+            menuOptionLogger.info("Removing student from course with studentId: " + studentId +
+                    "courseId: " + courseId);
             studentService.removeStudentFromCourse(studentId, courseId);
         }
     };
@@ -131,7 +150,7 @@ public enum MenuOptions {
         this.description = description;
     }
 
-    public abstract void execute(StudentService studentService, GroupService groupService, CourseService courseService,
+    public abstract void execute(Logger menuOptionLogger, StudentService studentService, GroupService groupService, CourseService courseService,
                                  Validator validator, ConsoleHandler consoleHandler);
 
     public String getCode() {

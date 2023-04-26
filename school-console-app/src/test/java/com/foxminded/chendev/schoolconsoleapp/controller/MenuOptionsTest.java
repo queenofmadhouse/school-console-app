@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,9 @@ class MenuOptionsTest {
     @Mock
     private ConsoleHandler consoleHandlerMock;
 
+    @Mock
+    private Logger menuOptionsLogger;
+
     @Test
     void shouldExecuteFindStudentsByCourse() {
 
@@ -80,7 +84,7 @@ class MenuOptionsTest {
 
         when(studentServiceMock.findAllStudentsByCourseName("Math")).thenReturn(studentList);
 
-        MenuOptions.FIND_STUDENTS_BY_COURSE.execute(studentServiceMock, groupServiceMock, courseServiceMock,
+        MenuOptions.FIND_STUDENTS_BY_COURSE.execute(menuOptionsLogger, studentServiceMock, groupServiceMock, courseServiceMock,
                 validatorMock, consoleHandlerMock);
 
         InOrder inOrder = inOrder(consoleHandlerMock);
@@ -88,6 +92,7 @@ class MenuOptionsTest {
         for (Student student : studentList) {
             inOrder.verify(consoleHandlerMock).printMessage(student.toString());
         }
+        verify(menuOptionsLogger).info(anyString());
     }
 
     @Test
@@ -95,11 +100,12 @@ class MenuOptionsTest {
 
         when(consoleHandlerMock.readUserInputString()).thenReturn("John", "Doe");
 
-        MenuOptions.ADD_NEW_STUDENT.execute(studentServiceMock, groupServiceMock, courseServiceMock,
+        MenuOptions.ADD_NEW_STUDENT.execute(menuOptionsLogger, studentServiceMock, groupServiceMock, courseServiceMock,
                 validatorMock, consoleHandlerMock);
 
         verify(studentServiceMock).save(any(Student.class));
         verify(consoleHandlerMock, times(2)).printMessage(anyString());
+        verify(menuOptionsLogger).info(anyString());
     }
 
     @Test
@@ -107,11 +113,12 @@ class MenuOptionsTest {
 
         when(consoleHandlerMock.readUserInputString()).thenReturn("1");
 
-        MenuOptions.DELETE_STUDENT_BY_ID.execute(studentServiceMock, groupServiceMock, courseServiceMock,
+        MenuOptions.DELETE_STUDENT_BY_ID.execute(menuOptionsLogger, studentServiceMock, groupServiceMock, courseServiceMock,
                 validatorMock, consoleHandlerMock);
 
         verify(studentServiceMock).deleteById(1);
         verify(consoleHandlerMock).printMessage(anyString());
+        verify(menuOptionsLogger).info(anyString());
     }
 
     @Test
@@ -143,7 +150,7 @@ class MenuOptionsTest {
 
         when(courseServiceMock.findAllCourses()).thenReturn(courseList);
 
-        MenuOptions.ADD_STUDENT_TO_COURSE.execute(studentServiceMock, groupServiceMock, courseServiceMock,
+        MenuOptions.ADD_STUDENT_TO_COURSE.execute(menuOptionsLogger, studentServiceMock, groupServiceMock, courseServiceMock,
                 validatorMock, consoleHandlerMock);
 
         InOrder inOrder = inOrder(consoleHandlerMock);
@@ -155,6 +162,7 @@ class MenuOptionsTest {
         inOrder.verify(consoleHandlerMock).printMessage("\nEnter course ID: ");
 
         verify(studentServiceMock).addStudentToCourse(anyLong(), eq(1L));
+        verify(menuOptionsLogger).info(anyString());
     }
 
     @Test
@@ -162,11 +170,12 @@ class MenuOptionsTest {
 
         when(consoleHandlerMock.readUserInputNumber()).thenReturn(1L, 1L);
 
-        MenuOptions.REMOVE_STUDENT_FROM_COURSE.execute(studentServiceMock, groupServiceMock, courseServiceMock,
+        MenuOptions.REMOVE_STUDENT_FROM_COURSE.execute(menuOptionsLogger, studentServiceMock, groupServiceMock, courseServiceMock,
                 validatorMock, consoleHandlerMock);
 
         verify(studentServiceMock).removeStudentFromCourse(1L, 1L);
         verify(consoleHandlerMock, times(2)).printMessage(anyString());
+        verify(menuOptionsLogger).info(anyString());
     }
 
     @Test
@@ -196,7 +205,7 @@ class MenuOptionsTest {
         when(consoleHandlerMock.readUserInputNumber()).thenReturn(10L);
         when(groupServiceMock.findGroupsWithLessOrEqualStudents(10)).thenReturn(groups);
 
-        MenuOptions.FIND_GROUPS_WITH_LESS_OR_EQUAL_STUDENTS.execute(studentServiceMock, groupServiceMock, courseServiceMock,
+        MenuOptions.FIND_GROUPS_WITH_LESS_OR_EQUAL_STUDENTS.execute(menuOptionsLogger, studentServiceMock, groupServiceMock, courseServiceMock,
                 validatorMock, consoleHandlerMock);
 
         InOrder inOrder = inOrder(consoleHandlerMock);
@@ -204,6 +213,7 @@ class MenuOptionsTest {
         for (Group group : groups) {
             inOrder.verify(consoleHandlerMock).printMessage(group.toString());
         }
+        verify(menuOptionsLogger).info(anyString());
     }
 
     @Test
