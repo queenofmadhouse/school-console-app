@@ -75,6 +75,7 @@ public abstract class AbstractCrudDao<E> implements CrudDao<E> {
         } catch (DataAccessException e) {
             logger.error("Exception in method update with parameters: " + entity, e);
             throw new DataBaseRuntimeException("Can't update entity: " + entity, e);
+
         }
     }
 
