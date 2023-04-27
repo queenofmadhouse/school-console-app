@@ -15,7 +15,7 @@ import java.util.Optional;
 public abstract class AbstractCrudDao<E> implements CrudDao<E> {
 
     protected final JdbcTemplate jdbcTemplate;
-    protected final Logger logger;
+    protected final  Logger logger;
     private final String saveQuery;
     private final String findByIdQuery;
     private final String findAllQuery;
@@ -37,8 +37,8 @@ public abstract class AbstractCrudDao<E> implements CrudDao<E> {
     @Override
     public void save(E entity) {
         try {
-            logger.info("Method save was cold with parameters: " + entity);
             jdbcTemplate.update(saveQuery, getSaveParameters(entity));
+            logger.info("Method save was cold with parameters: " + entity);
         } catch (DataAccessException e) {
             logger.error("Exception in method save with parameters: " + entity, e);
             throw new DataBaseRuntimeException("Can't save entity: " + entity, e);
@@ -48,8 +48,9 @@ public abstract class AbstractCrudDao<E> implements CrudDao<E> {
     @Override
     public Optional<E> findById(long id) {
         try {
+            Optional<E> resultOptional = Optional.ofNullable(jdbcTemplate.queryForObject(findByIdQuery, getRowMapper(), id));
             logger.info("Method findById was cold with parameters: " + id);
-            return Optional.ofNullable(jdbcTemplate.queryForObject(findByIdQuery, getRowMapper(), id));
+            return resultOptional;
         } catch (DataAccessException e) {
             logger.error("Exception in method save with parameters: " + id, e);
             return Optional.empty();
@@ -59,8 +60,9 @@ public abstract class AbstractCrudDao<E> implements CrudDao<E> {
     @Override
     public List<E> findAll() {
         try {
+            List<E> resultList = jdbcTemplate.query(findAllQuery, getRowMapper());
             logger.info("Method findAll was cold");
-            return jdbcTemplate.query(findAllQuery, getRowMapper());
+            return resultList;
         } catch (DataAccessException e) {
             logger.error("Exception in method findAll", e);
             throw new DataBaseRuntimeException("Can't find all ", e);
@@ -70,8 +72,8 @@ public abstract class AbstractCrudDao<E> implements CrudDao<E> {
     @Override
     public void update(E entity) {
         try {
-            logger.info("Method update was cold with parameters: " + entity);
             jdbcTemplate.update(updateQuery, getUpdateParameters(entity));
+            logger.info("Method update was cold with parameters: " + entity);
         } catch (DataAccessException e) {
             logger.error("Exception in method update with parameters: " + entity, e);
             throw new DataBaseRuntimeException("Can't update entity: " + entity, e);
@@ -82,8 +84,8 @@ public abstract class AbstractCrudDao<E> implements CrudDao<E> {
     @Override
     public void deleteById(long id) {
         try {
-            logger.info("Method deleteById was cold with parameters: " + id);
             jdbcTemplate.update(deleteByIdQuery, id);
+            logger.info("Method deleteById was cold with parameters: " + id);
         } catch (Exception e) {
             logger.error("Exception in method deleteById with parameters: " + id, e);
             throw new DataBaseRuntimeException("Can't delete by id: " + id, e);
