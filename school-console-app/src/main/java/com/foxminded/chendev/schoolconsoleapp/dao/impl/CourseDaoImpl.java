@@ -4,6 +4,7 @@ import com.foxminded.chendev.schoolconsoleapp.dao.CourseDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -29,9 +30,9 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
             "WHERE school.students_courses_relation.user_id = ?";
     private static final String DELETE_ALL_RELATIONS_BY_COURSE_ID = "DELETE FROM school.students_courses_relation" +
             " WHERE course_id = ?";
-
-    public CourseDaoImpl(JdbcTemplate jdbcTemplate, Logger courseLogger) {
-        super(jdbcTemplate, courseLogger, INSERT_COURSE, SELECT_COURSE_BY_ID, SELECT_ALL_COURSES, UPDATE_COURSE, DELETE_COURSE_BY_ID);
+    private static final Logger logger = LoggerFactory.getLogger(CourseDaoImpl.class);
+    public CourseDaoImpl(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate, logger, INSERT_COURSE, SELECT_COURSE_BY_ID, SELECT_ALL_COURSES, UPDATE_COURSE, DELETE_COURSE_BY_ID);
     }
 
     @Override
@@ -42,8 +43,9 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
     @Override
     public List<Course> findCoursesByStudentId(long studentId) {
         try {
+            List<Course> resultList = jdbcTemplate.query(SELECT_ALL_COURSES_BY_STUDENT_ID, getRowMapper(), studentId);
             logger.info("Method findCoursesByStudentId was cold with parameters: " + studentId);
-            return jdbcTemplate.query(SELECT_ALL_COURSES_BY_STUDENT_ID, getRowMapper(), studentId);
+            return resultList;
         } catch (DataAccessException e) {
             logger.error("Exception in method findCoursesByStudentId with parameters: " + studentId, e);
             throw new DataBaseRuntimeException("Can't find course by student id: " + studentId, e);
@@ -53,8 +55,8 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
     @Override
     public void deleteAllRelationsByCourseId(long courseId) {
         try {
-            logger.info("Method deleteAllRelationsByCourseId was cold with parameters: " + courseId);
             jdbcTemplate.update(DELETE_ALL_RELATIONS_BY_COURSE_ID, courseId);
+            logger.info("Method deleteAllRelationsByCourseId was cold with parameters: " + courseId);
         } catch (DataAccessException e) {
             logger.error("Exception in method deleteAllRelationsByCourseId with parameters: " + courseId, e);
             throw new DataBaseRuntimeException("Can't delete all relations by course id: " + courseId, e);
@@ -64,9 +66,10 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
     @Override
     public Optional<Course> findCourseByName(String courseName) {
         try {
-            logger.info("Method findCourseByName was cold with parameters: " + courseName);
-            return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_COURSE_BY_NAME,
+            Optional<Course> resultOptional = Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_COURSE_BY_NAME,
                     new Object[]{courseName}, getRowMapper()));
+            logger.info("Method findCourseByName was cold with parameters: " + courseName);
+            return resultOptional;
         } catch (DataAccessException e) {
             logger.error("Exception in method findCourseByName with parameters: " + courseName);
             return Optional.empty();

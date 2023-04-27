@@ -10,20 +10,15 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.lang.reflect.Field;
-import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-//@ExtendWith(MockitoExtension.class)
 @SpringBootTest
 class GroupDaoImplTest {
 
     @MockBean
     private JdbcTemplate jdbcTemplate;
-
-    @MockBean
-    private Logger groupLogger;
 
     @Autowired
     private GroupDaoImpl groupDao;

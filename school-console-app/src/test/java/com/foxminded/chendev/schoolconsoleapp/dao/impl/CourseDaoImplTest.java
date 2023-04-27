@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-//@ExtendWith(MockitoExtension.class)
 @SpringBootTest
 class CourseDaoImplTest {
 

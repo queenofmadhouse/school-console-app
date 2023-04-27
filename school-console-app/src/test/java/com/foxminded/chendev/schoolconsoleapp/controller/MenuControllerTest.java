@@ -10,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -33,9 +32,6 @@ class MenuControllerTest {
 
     @Mock
     private ConsoleHandler consoleHandler;
-
-    @Mock
-    private Logger logger;
 
     @InjectMocks
     private MenuController menuController;

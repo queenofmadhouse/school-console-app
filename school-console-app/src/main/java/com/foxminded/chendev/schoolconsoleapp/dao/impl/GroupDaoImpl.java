@@ -4,6 +4,7 @@ import com.foxminded.chendev.schoolconsoleapp.dao.GroupDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -24,15 +25,17 @@ public class GroupDaoImpl extends AbstractCrudDao<Group> implements GroupDao {
             "LEFT JOIN school.students s ON g.group_id = s.group_id " +
             "GROUP BY g.group_id, g.group_name " +
             "HAVING COUNT(s.user_id) <= ?";
+    private static final Logger logger = LoggerFactory.getLogger(GroupDaoImpl.class);
 
-    public GroupDaoImpl(JdbcTemplate jdbcTemplate, Logger groupLogger) {
-        super(jdbcTemplate, groupLogger, INSERT_GROUP, SELECT_GROUP_BY_ID, SELECT_ALL_GROUPS, UPDATE_GROUP, DELETE_GROUP_BY_ID);
+    public GroupDaoImpl(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate, logger, INSERT_GROUP, SELECT_GROUP_BY_ID, SELECT_ALL_GROUPS, UPDATE_GROUP, DELETE_GROUP_BY_ID);
     }
 
     public List<Group> findGroupsWithLessOrEqualStudents(long value) {
         try {
+            List<Group> resultList = jdbcTemplate.query(SELECT_GROUPS_WITH_LESS_OR_EQUALS_STUDENTS, new Object[]{value}, getRowMapper());
             logger.info("Method findGroupsWithLessOrEqualStudents was cold with parameters: " + value);
-            return jdbcTemplate.query(SELECT_GROUPS_WITH_LESS_OR_EQUALS_STUDENTS, new Object[]{value}, getRowMapper());
+            return resultList;
         } catch (DataAccessException e) {
             logger.error("Exception in method findGroupsWithLessOrEqualStudents with parameters: " + value, e);
             throw new DataBaseRuntimeException("Can't find groups with less or equals students: " + value, e);

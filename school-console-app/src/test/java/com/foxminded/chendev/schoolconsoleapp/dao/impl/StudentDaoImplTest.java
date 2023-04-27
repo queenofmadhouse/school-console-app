@@ -85,10 +85,10 @@ class StudentDaoImplTest {
 
         String sqlForTest = (String) privateSqlForTest.get(studentDao);
 
-        when(jdbcTemplate.update(sqlForTest, 100))
+        when(jdbcTemplate.update(sqlForTest, 100L))
                 .thenThrow(new EmptyResultDataAccessException(1));
 
-//        assertThrows(DataBaseRuntimeException.class, () -> studentDao.deleteById(100));
+        assertThrows(DataBaseRuntimeException.class, () -> studentDao.deleteById(100L));
     }
 
     @Test
