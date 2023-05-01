@@ -2,107 +2,84 @@ package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
+import com.foxminded.chendev.schoolconsoleapp.initializer.ApplicationInitializer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.lang.reflect.Field;
+import javax.persistence.EntityManager;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
 
 @SpringBootTest
 class GroupDaoImplTest {
 
     @MockBean
-    private JdbcTemplate jdbcTemplate;
+    private ApplicationInitializer applicationInitializer;
+
+    @MockBean
+    private EntityManager entityManager;
 
     @Autowired
     private GroupDaoImpl groupDao;
 
     @Test
-    void saveShouldThrowDataBaseRuntimeExceptionWhenDataAccessExceptionOccurs()
-            throws NoSuchFieldException, IllegalAccessException {
+    void saveShouldThrowDataBaseRuntimeExceptionWhenDataAccessExceptionOccurs() {
 
         Group group = Group.builder().build();
 
-        Field privateSqlForTest = GroupDaoImpl.class.getDeclaredField("INSERT_GROUP");
-
-        privateSqlForTest.setAccessible(true);
-
-        String sqlForTest = (String) privateSqlForTest.get(groupDao);
-
-        when(jdbcTemplate.update(sqlForTest, groupDao.getSaveParameters(group)))
-                .thenThrow(new EmptyResultDataAccessException(1));
+        doThrow(new RuntimeException())
+                .when(entityManager).persist(group);
 
         assertThrows(DataBaseRuntimeException.class, () -> groupDao.save(group));
     }
 
     @Test
-    void updateShouldThrowDataBaseRuntimeExceptionWhenDataAccessExceptionOccurs()
-            throws NoSuchFieldException, IllegalAccessException {
+    void updateShouldThrowDataBaseRuntimeExceptionWhenDataAccessExceptionOccurs() {
 
         Group group = Group.builder().build();
 
-        Field privateSqlForTest = GroupDaoImpl.class.getDeclaredField("UPDATE_GROUP");
+        doThrow(new RuntimeException())
+                .when(entityManager).merge(group);
 
-        privateSqlForTest.setAccessible(true);
-
-        String sqlForTest = (String) privateSqlForTest.get(groupDao);
-
-        when(jdbcTemplate.update(sqlForTest, groupDao.getUpdateParameters(group)))
-                .thenThrow(new EmptyResultDataAccessException(1));
         assertThrows(DataBaseRuntimeException.class, () -> groupDao.update(group));
     }
 
     @Test
-    void findAllShouldThrowDataBaseRuntimeExceptionWhenDataAccessExceptionOccurs()
-            throws NoSuchFieldException, IllegalAccessException {
+    void findAllShouldThrowDataBaseRuntimeExceptionWhenDataAccessExceptionOccurs() {
 
-        Field privateSqlForTest = GroupDaoImpl.class.getDeclaredField("SELECT_ALL_GROUPS");
-
-        privateSqlForTest.setAccessible(true);
-
-        String sqlForTest = (String) privateSqlForTest.get(groupDao);
-
-        when(jdbcTemplate.query(sqlForTest, groupDao.getRowMapper()))
-                .thenThrow(new EmptyResultDataAccessException(1));
+        doThrow(new RuntimeException())
+                .when(entityManager).createQuery(anyString());
 
         assertThrows(DataBaseRuntimeException.class, () -> groupDao.findAll());
     }
 
     @Test
-    void deleteByIdShouldThrowDataBaseRuntimeExceptionWhenDataAccessExceptionOccurs()
-            throws NoSuchFieldException, IllegalAccessException {
+    void findByIdShouldThrowDataBaseRunTimeExceptionWhenRunTimeExceptionOccurs() {
 
-        Field privateSqlForTest = GroupDaoImpl.class.getDeclaredField("DELETE_GROUP_BY_ID");
+        doThrow(new RuntimeException())
+                .when(entityManager).find(Group.class, 100L);
 
-        privateSqlForTest.setAccessible(true);
-
-        String sqlForTest = (String) privateSqlForTest.get(groupDao);
-
-        when(jdbcTemplate.update(sqlForTest, 1L))
-                .thenThrow(new EmptyResultDataAccessException(1));
-
-        assertThrows(DataBaseRuntimeException.class, () -> groupDao.deleteById(1L));
+        assertThrows(DataBaseRuntimeException.class, () -> groupDao.findById(100L));
     }
 
     @Test
-    void findGroupsWithLessOrEqualStudentsShouldThrowDataBaseRuntimeExceptionWhenDataAccessExceptionOccurs()
-            throws NoSuchFieldException, IllegalAccessException {
+    void deleteByIdShouldThrowDataBaseRuntimeExceptionWhenDataAccessExceptionOccurs() {
 
-        Field privateSqlForTest = GroupDaoImpl.class.getDeclaredField("SELECT_GROUPS_WITH_LESS_OR_EQUALS_STUDENTS");
+        doThrow(new RuntimeException())
+                .when(entityManager).find(Group.class, 100L);
 
-        privateSqlForTest.setAccessible(true);
+        assertThrows(DataBaseRuntimeException.class, () -> groupDao.deleteById(100L));
+    }
+    @Test
+    void findGroupsWithLessOrEqualStudentsShouldThrowDataBaseRuntimeExceptionWhenDataAccessExceptionOccurs() {
 
-        String sqlForTest = (String) privateSqlForTest.get(groupDao);
+        doThrow(new RuntimeException())
+                .when(entityManager).createNativeQuery(anyString());
 
-        when(jdbcTemplate.query(sqlForTest, new Object[]{1L}, groupDao.getRowMapper()))
-                .thenThrow(new EmptyResultDataAccessException(1));
-
-        assertThrows(DataBaseRuntimeException.class, () -> groupDao.findGroupsWithLessOrEqualStudents(1L));
+        assertThrows(DataBaseRuntimeException.class, () -> groupDao.findGroupsWithLessOrEqualStudents(100L));
     }
 }

@@ -4,22 +4,25 @@ import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.jdbc.Sql;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
-import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest
-@Testcontainers
-@ActiveProfiles("test")
+@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+        GroupDaoImpl.class,
+        StudentDaoImpl.class
+}))
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(
         scripts = {"/sql/clear_tables.sql",
                 "/sql/users_create.sql",
@@ -292,18 +295,27 @@ class GroupDaoImplTestIT {
     }
 
     @Test
-    void deleteByIDShouldDeleteByID() {
+    void deleteByIdShouldDeleteByIdWhenExists() {
 
-        Group group = Group.builder()
-                .withGroupName("Group1")
+        Group groupA1 = Group.builder()
+                .withGroupName("A1")
                 .build();
 
-        groupDao.save(group);
+        groupDao.save(groupA1);
+
+        Group foundGroup = groupDao.findById(1).orElse(null);
 
         groupDao.deleteById(1);
 
-        Optional <Group> optionalGroup = groupDao.findById(1);
+        Group deletedGroup = groupDao.findById(1).orElse(null);
 
-        assertFalse(optionalGroup.isPresent());
+        assertNotNull(foundGroup);
+        assertNull(deletedGroup);
+    }
+
+    @Test
+    void deleteByIdShouldNotThrowDataBaseRunTimeExceptionWhenNotFound() {
+
+        assertDoesNotThrow(() -> groupDao.deleteById(100));
     }
 }

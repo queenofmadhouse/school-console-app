@@ -28,7 +28,6 @@ public class Group {
 
     }
 
-
     public static Builder builder() {
         return new Builder();
     }
@@ -45,7 +44,7 @@ public class Group {
         return groupId;
     }
 
-    public void setGroupId(int groupId) {
+    public void setGroupId(long groupId) {
         this.groupId = groupId;
     }
 
