@@ -99,6 +99,7 @@ class CourseDaoImplTestIT {
         courseDao.save(courseNewJavaCourse);
 
         Course foundCourse = courseDao.findCourseByName("New Java Course").orElse(null);
+
         foundCourse.setCourseName("Old Java Course");
         foundCourse.setCourseDescription("Without info at all");
 
@@ -212,13 +213,13 @@ class CourseDaoImplTestIT {
         assertTrue(studentList.isEmpty());
     }
 
-//    @Test
-//    void findCourseByCourseNameShouldReturnEmptyOptionalWhenNotPresent() {
-//
-//        Optional<Course> course = courseDao.findCourseByName("Not Present");
-//
-//        assertFalse(course.isPresent());
-//    }
+    @Test
+    void findCourseByCourseNameShouldReturnEmptyOptionalWhenNotPresent() {
+
+        Optional<Course> course = courseDao.findCourseByName("Not Present");
+
+        assertFalse(course.isPresent());
+    }
 
     @Test
     void deleteByIdShouldNotThrowDatabaseRuntimeExceptionWhenNotFound() {

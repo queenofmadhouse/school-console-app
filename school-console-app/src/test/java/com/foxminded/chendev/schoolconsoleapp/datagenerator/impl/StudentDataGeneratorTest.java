@@ -23,7 +23,6 @@ import static org.mockito.Mockito.when;
 class StudentDataGeneratorTest {
 
     private static final int AMOUNT_OF_STUDENTS = 10;
-
     private StudentDaoImpl studentDao;
     private GroupDaoImpl groupDao;
     private StudentDataGenerator studentsGenerator;

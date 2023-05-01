@@ -64,7 +64,7 @@ public abstract class AbstractCrudDao<E> implements CrudDao<E> {
     }
 
     @Override
-//    @Transactional
+    @Transactional
     public void update(E entity) {
         try {
             entityManager.merge(entity);

@@ -74,6 +74,7 @@ public class Student extends User{
             return this;
         }
 
+        @Override
         public Student build() {
             return new Student(self());
         }

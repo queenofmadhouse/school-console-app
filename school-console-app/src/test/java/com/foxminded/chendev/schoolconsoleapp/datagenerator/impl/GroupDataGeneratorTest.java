@@ -19,7 +19,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class GroupDataGeneratorTest {
+class GroupDataGeneratorTest {
     private static final int AMOUNT_OF_GROUPS = 5;
     private static final String GROUP_NAME_REGEX = "[A-Z]{2}-\\d{2}";
 
