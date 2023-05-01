@@ -17,8 +17,6 @@
         <java.version>1.8</java.version>
         <org.mockito.version>3.12.4</org.mockito.version>
         <org.postgresql.version>42.6.0</org.postgresql.version>
-        <com.h2database.version>2.1.214</com.h2database.version>
-        <com.zaxxer.version>4.0.3</com.zaxxer.version>
         <testcontainers.version>1.17.6</testcontainers.version>
     </properties>
 
@@ -149,12 +147,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>${com.zaxxer.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
@@ -185,12 +177,6 @@
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>5.4.32.Final</version>
         </dependency>
 
     </dependencies>
