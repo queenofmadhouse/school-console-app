@@ -1,13 +1,23 @@
 package com.foxminded.chendev.schoolconsoleapp.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "studetns", schema = "school")
 public class Student extends User{
 
+    @Column(name = "group_id")
     private long groupId;
-
 
     public Student(StudentBuilder userStudentBuilder) {
         super(userStudentBuilder);
         this.groupId = userStudentBuilder.groupId;
+    }
+
+    public Student() {
+        super();
     }
 
     public static StudentBuilder builder() {
