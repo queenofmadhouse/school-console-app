@@ -27,30 +27,5 @@ public class ApplicationConfiguration {
     public int amountOfCourses() {
         return 10;
     }
-
-//    @Bean
-//    public Logger studentLogger() {
-//        return LoggerFactory.getLogger(StudentDaoImpl.class);
-//    }
-//
-//    @Bean
-//    public Logger courseLogger() {
-//        return LoggerFactory.getLogger(CourseDaoImpl.class);
-//    }
-//
-//    @Bean
-//    public Logger groupLogger() {
-//        return LoggerFactory.getLogger(GroupDaoImpl.class);
-//    }
-//
-//    @Bean
-//    public Logger menuOptionsLogger() {
-//        return LoggerFactory.getLogger(MenuOptions.class);
-//    }
-//
-//    @Bean
-//    public Logger menuControllerLogger() {
-//        return LoggerFactory.getLogger(MenuController.class);
-//    }
 }
 

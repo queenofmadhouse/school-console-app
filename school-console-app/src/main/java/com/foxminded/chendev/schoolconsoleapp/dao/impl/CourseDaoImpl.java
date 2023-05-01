@@ -5,34 +5,30 @@ import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao {
 
-    private static final String INSERT_COURSE = "INSERT INTO school.courses (course_name, course_description) " +
-            "VALUES (?, ?)";
-    private static final String SELECT_COURSE_BY_ID = "SELECT * FROM school.courses WHERE course_id = ?";
-    private static final String SELECT_ALL_COURSES = "SELECT * FROM school.courses";
-    private static final String UPDATE_COURSE = "UPDATE school.courses SET course_name = ?" +
-            ", course_description = ? WHERE course_id = ?";
-    private static final String DELETE_COURSE_BY_ID = "DELETE FROM school.courses WHERE course_id = ?";
-    private static final String SELECT_COURSE_BY_NAME = "SELECT * FROM school.courses WHERE course_name = ?";
-    private static final String SELECT_ALL_COURSES_BY_STUDENT_ID = "SELECT school.courses.*, school.students_courses_relation.user_id " +
-            "FROM school.courses " +
-            "INNER JOIN school.students_courses_relation ON school.courses.course_id = school.students_courses_relation.course_id " +
-            "WHERE school.students_courses_relation.user_id = ?";
+    private static final String SELECT_ALL_COURSES = "SELECT g FROM Course g";
+    private static final String SELECT_COURSE_BY_NAME = "SELECT c FROM Course c WHERE c.courseName = :course_name";
+
+//    private static final String SELECT_ALL_COURSES_BY_STUDENT_ID = "SELECT school.courses.*, school.students_courses_relation.user_id " +
+//            "FROM school.courses " +
+//            "INNER JOIN school.students_courses_relation ON school.courses.course_id = school.students_courses_relation.course_id " +
+//            "WHERE school.students_courses_relation.user_id = ?";
+    private static final String SELECT_ALL_COURSES_BY_STUDENT_ID = "SELECT c FROM Course c JOIN c.students s WHERE s.userId = : user_id";
     private static final String DELETE_ALL_RELATIONS_BY_COURSE_ID = "DELETE FROM school.students_courses_relation" +
             " WHERE course_id = ?";
     private static final Logger logger = LoggerFactory.getLogger(CourseDaoImpl.class);
-    public CourseDaoImpl(JdbcTemplate jdbcTemplate) {
-        super(jdbcTemplate, logger, INSERT_COURSE, SELECT_COURSE_BY_ID, SELECT_ALL_COURSES, UPDATE_COURSE, DELETE_COURSE_BY_ID);
+
+    public CourseDaoImpl(EntityManager entityManager) {
+        super(entityManager, logger, SELECT_ALL_COURSES);
     }
 
     @Override
@@ -41,60 +37,52 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
     }
 
     @Override
+    @Transactional
     public List<Course> findCoursesByStudentId(long studentId) {
         try {
-            List<Course> resultList = jdbcTemplate.query(SELECT_ALL_COURSES_BY_STUDENT_ID, getRowMapper(), studentId);
+            List<Course> resultList = entityManager.createQuery(SELECT_ALL_COURSES_BY_STUDENT_ID, Course.class)
+                    .setParameter("user_id", studentId).getResultList();
             logger.info("Method findCoursesByStudentId was cold with parameters: " + studentId);
             return resultList;
-        } catch (DataAccessException e) {
+        } catch (RuntimeException e) {
             logger.error("Exception in method findCoursesByStudentId with parameters: " + studentId, e);
             throw new DataBaseRuntimeException("Can't find course by student id: " + studentId, e);
         }
     }
 
     @Override
+    @Transactional
     public void deleteAllRelationsByCourseId(long courseId) {
         try {
-            jdbcTemplate.update(DELETE_ALL_RELATIONS_BY_COURSE_ID, courseId);
+            entityManager.createNativeQuery(DELETE_ALL_RELATIONS_BY_COURSE_ID).setParameter(1, courseId).executeUpdate();
             logger.info("Method deleteAllRelationsByCourseId was cold with parameters: " + courseId);
-        } catch (DataAccessException e) {
+        } catch (RuntimeException e) {
             logger.error("Exception in method deleteAllRelationsByCourseId with parameters: " + courseId, e);
             throw new DataBaseRuntimeException("Can't delete all relations by course id: " + courseId, e);
         }
     }
 
     @Override
+    @Transactional
     public Optional<Course> findCourseByName(String courseName) {
         try {
-            Optional<Course> resultOptional = Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_COURSE_BY_NAME,
-                    new Object[]{courseName}, getRowMapper()));
+
+            Optional<Course> resultOptional = Optional.ofNullable(entityManager.createQuery(SELECT_COURSE_BY_NAME, Course.class)
+                        .setParameter("course_name", courseName).getSingleResult());
+
             logger.info("Method findCourseByName was cold with parameters: " + courseName);
+
             return resultOptional;
-        } catch (DataAccessException e) {
+        } catch (RuntimeException e) {
+
             logger.error("Exception in method findCourseByName with parameters: " + courseName);
-            return Optional.empty();
+
+            throw new DataBaseRuntimeException("Can't find course by name: " + courseName);
         }
     }
 
     @Override
-    protected RowMapper<Course> getRowMapper() {
-        return (resultSet, rowNum) -> {
-
-            return Course.builder()
-                    .withCourseId(resultSet.getLong("course_id"))
-                    .withCourseName(resultSet.getString("course_name"))
-                    .withCourseDescription(resultSet.getString("course_description"))
-                    .build();
-        };
-    }
-
-    @Override
-    protected Object[] getSaveParameters(Course course) {
-        return new Object[]{course.getCourseName(), course.getCourseDescription()};
-    }
-
-    @Override
-    protected Object[] getUpdateParameters(Course course) {
-        return new Object[]{course.getCourseName(), course.getCourseDescription(), course.getCourseId()};
+    protected Class<Course> getEntityClass() {
+        return Course.class;
     }
 }

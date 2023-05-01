@@ -5,7 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import java.util.Set;
 
 @Entity
 @Table(name = "courses", schema = "school")
@@ -21,6 +25,28 @@ public class Course {
 
     @Column(name = "course_description")
     private String courseDescription;
+
+    @ManyToMany
+    @JoinTable(
+            name = "students_courses_relation",
+            schema = "school",
+            joinColumns = @JoinColumn(name = "course_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<Student> students;
+
+
+    public void setCourseId(long courseId) {
+        this.courseId = courseId;
+    }
+
+    public Set<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Set<Student> students) {
+        this.students = students;
+    }
 
     private Course(Builder builder) {
         this.courseId = builder.courseId;

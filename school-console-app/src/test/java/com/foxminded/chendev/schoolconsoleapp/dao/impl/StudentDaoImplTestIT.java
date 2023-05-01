@@ -4,22 +4,26 @@ import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.jdbc.Sql;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest
-@Testcontainers
-@ActiveProfiles("test")
+@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+        StudentDaoImpl.class,
+        CourseDaoImpl.class
+}))
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(
         scripts = {"/sql/clear_tables.sql",
                 "/sql/users_create.sql",
@@ -180,6 +184,7 @@ class StudentDaoImplTestIT {
                 .withCourseName("Math")
                 .withCourseDescription("Something hard")
                 .build();
+
         Course courseBiology = Course.builder()
                 .withCourseName("Biology")
                 .withCourseDescription("Something hard")
@@ -232,7 +237,7 @@ class StudentDaoImplTestIT {
         studentDao.addStudentToCourse(1, 1);
         studentDao.addStudentToCourse(1, 2);
 
-        studentDao.deleteRelationByStudentId(1, 2);
+        studentDao.removeStudentFromCourse(1, 2);
 
         List<Course> foundCourseList = courseDao.findCoursesByStudentId(1);
 
@@ -299,5 +304,11 @@ class StudentDaoImplTestIT {
         assertEquals(courseMath.getCourseName(), foundCoursesList.get(0).getCourseName());
         assertEquals(3, foundCoursesList.get(1).getCourseId());
         assertEquals(courseArt.getCourseName(), foundCoursesList.get(1).getCourseName());
+    }
+
+    @Test
+    void deleteByIdShouldNotThrowExceptionWhenIdNotExist() {
+
+        assertDoesNotThrow(() -> studentDao.deleteById(10));
     }
 }

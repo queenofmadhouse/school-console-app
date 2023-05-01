@@ -13,6 +13,4 @@ public interface StudentDao extends CrudDao<Student> {
     List<Student> findStudentsByCourseId(long courseId);
 
     void deleteAllRelationsByStudentId(long studentId);
-
-    void deleteRelationByStudentId(long studentId, long courseId);
 }

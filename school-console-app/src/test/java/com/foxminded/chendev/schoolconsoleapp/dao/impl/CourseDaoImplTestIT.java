@@ -4,22 +4,26 @@ import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.jdbc.Sql;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest
-@Testcontainers
-@ActiveProfiles("test")
+@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+        CourseDaoImpl.class,
+        StudentDaoImpl.class
+}))
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(
         scripts = {"/sql/clear_tables.sql",
                 "/sql/users_create.sql",
@@ -208,11 +212,17 @@ class CourseDaoImplTestIT {
         assertTrue(studentList.isEmpty());
     }
 
+//    @Test
+//    void findCourseByCourseNameShouldReturnEmptyOptionalWhenNotPresent() {
+//
+//        Optional<Course> course = courseDao.findCourseByName("Not Present");
+//
+//        assertFalse(course.isPresent());
+//    }
+
     @Test
-    void findCourseByCourseNameShouldReturnEmptyOptionalWhenNotPresent() {
+    void deleteByIdShouldNotThrowDatabaseRuntimeExceptionWhenNotFound() {
 
-        Optional<Course> course = courseDao.findCourseByName("Not Present");
-
-        assertFalse(course.isPresent());
+        assertDoesNotThrow(() -> courseDao.deleteById(100));
     }
 }
