@@ -7,6 +7,7 @@ import com.foxminded.chendev.schoolconsoleapp.service.StudentService;
 import com.foxminded.chendev.schoolconsoleapp.view.ConsoleHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,6 +20,7 @@ public class MenuController {
     private final Validator validator;
     private final ConsoleHandler consoleHandler;
 
+    @Autowired
     public MenuController(StudentService studentService, GroupService groupService, CourseService courseService,
                           Validator validator, ConsoleHandler consoleHandler) {
 

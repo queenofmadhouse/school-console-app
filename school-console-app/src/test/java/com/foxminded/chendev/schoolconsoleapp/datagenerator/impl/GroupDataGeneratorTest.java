@@ -1,6 +1,6 @@
 package com.foxminded.chendev.schoolconsoleapp.datagenerator.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.impl.GroupDaoImpl;
+import com.foxminded.chendev.schoolconsoleapp.repository.GroupRepository;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,14 +24,14 @@ class GroupDataGeneratorTest {
     private static final String GROUP_NAME_REGEX = "[A-Z]{2}-\\d{2}";
 
     @Mock
-    private GroupDaoImpl groupDao;
+    private GroupRepository groupRepository;
 
     private GroupDataGenerator groupsGenerator;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        groupsGenerator = new GroupDataGenerator(groupDao, AMOUNT_OF_GROUPS);
+        groupsGenerator = new GroupDataGenerator(groupRepository, AMOUNT_OF_GROUPS);
     }
 
     @Test
@@ -39,7 +39,7 @@ class GroupDataGeneratorTest {
         groupsGenerator.generateData();
 
         ArgumentCaptor<Group> groupCaptor = ArgumentCaptor.forClass(Group.class);
-        verify(groupDao, times(AMOUNT_OF_GROUPS)).save(groupCaptor.capture());
+        verify(groupRepository, times(AMOUNT_OF_GROUPS)).save(groupCaptor.capture());
 
         List<Group> generatedGroups = groupCaptor.getAllValues();
         assertEquals(AMOUNT_OF_GROUPS, generatedGroups.size());
@@ -52,10 +52,10 @@ class GroupDataGeneratorTest {
 
     @Test
     void generateData_shouldNotGenerateGroupsIfAmountIsZero() {
-        groupsGenerator = new GroupDataGenerator(groupDao, 0);
+        groupsGenerator = new GroupDataGenerator(groupRepository, 0);
         groupsGenerator.generateData();
 
-        verify(groupDao, never()).save(any());
+        verify(groupRepository, never()).save(any());
     }
 
     @Test
@@ -63,7 +63,7 @@ class GroupDataGeneratorTest {
         groupsGenerator.generateData();
 
         ArgumentCaptor<Group> groupCaptor = ArgumentCaptor.forClass(Group.class);
-        verify(groupDao, times(AMOUNT_OF_GROUPS)).save(groupCaptor.capture());
+        verify(groupRepository, times(AMOUNT_OF_GROUPS)).save(groupCaptor.capture());
 
         List<Group> generatedGroups = groupCaptor.getAllValues();
         assertEquals(AMOUNT_OF_GROUPS, generatedGroups.size());

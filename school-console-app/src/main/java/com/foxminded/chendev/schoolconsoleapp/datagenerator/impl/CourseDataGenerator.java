@@ -1,6 +1,6 @@
 package com.foxminded.chendev.schoolconsoleapp.datagenerator.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.CourseDao;
+import com.foxminded.chendev.schoolconsoleapp.repository.CourseRepository;
 import com.foxminded.chendev.schoolconsoleapp.datagenerator.DataGenerator;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import org.springframework.stereotype.Service;
@@ -21,12 +21,12 @@ public class CourseDataGenerator implements DataGenerator {
             "collaboration", "communication", "innovation", "creativity", "research"
     };
     private static final Random random = new Random();
-    private final CourseDao courseDao;
+    private final CourseRepository courseRepository;
     private final int amountOfCourses;
 
-    public CourseDataGenerator(CourseDao courseDao, int amountOfCourses) {
+    public CourseDataGenerator(CourseRepository courseRepository, int amountOfCourses) {
 
-        this.courseDao = courseDao;
+        this.courseRepository = courseRepository;
         this.amountOfCourses = amountOfCourses;
     }
 
@@ -43,7 +43,7 @@ public class CourseDataGenerator implements DataGenerator {
                     .withCourseDescription(courseDescription)
                     .build();
 
-            courseDao.save(course);
+            courseRepository.save(course);
         }
     }
 

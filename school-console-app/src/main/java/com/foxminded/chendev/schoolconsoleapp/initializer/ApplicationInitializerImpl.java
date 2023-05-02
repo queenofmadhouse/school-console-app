@@ -1,13 +1,13 @@
 package com.foxminded.chendev.schoolconsoleapp.initializer;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.CourseDao;
-import com.foxminded.chendev.schoolconsoleapp.dao.CrudDao;
-import com.foxminded.chendev.schoolconsoleapp.dao.GroupDao;
-import com.foxminded.chendev.schoolconsoleapp.dao.StudentDao;
+import com.foxminded.chendev.schoolconsoleapp.repository.CourseRepository;
+import com.foxminded.chendev.schoolconsoleapp.repository.GroupRepository;
+import com.foxminded.chendev.schoolconsoleapp.repository.StudentRepository;
 import com.foxminded.chendev.schoolconsoleapp.service.impl.CourseDataGeneratorService;
 import com.foxminded.chendev.schoolconsoleapp.service.impl.GroupDataGeneratorService;
 import com.foxminded.chendev.schoolconsoleapp.service.impl.StudentCourseRelationDataGeneratorService;
 import com.foxminded.chendev.schoolconsoleapp.service.impl.StudentDataGeneratorService;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -17,22 +17,22 @@ import java.util.List;
 public class ApplicationInitializerImpl implements ApplicationInitializer {
 
 
-    private final StudentDao studentDao;
-    private final GroupDao groupDao;
-    private final CourseDao courseDao;
+    private final StudentRepository studentRepository;
+    private final GroupRepository groupRepository;
+    private final CourseRepository courseRepository;
     private final StudentDataGeneratorService studentGenerator;
     private final GroupDataGeneratorService groupsGenerator;
     private final CourseDataGeneratorService courseGenerator;
     private final StudentCourseRelationDataGeneratorService studentCourseRelationGenerator;
 
-    public ApplicationInitializerImpl(StudentDao studentDao, GroupDao groupDao, CourseDao courseDao,
+    public ApplicationInitializerImpl(StudentRepository studentRepository, GroupRepository groupRepository, CourseRepository courseRepository,
                                       StudentDataGeneratorService studentGenerator,
                                       GroupDataGeneratorService groupsGenerator,
                                       CourseDataGeneratorService courseGenerator,
                                       StudentCourseRelationDataGeneratorService studentCourseRelationGenerator) {
-        this.studentDao = studentDao;
-        this.groupDao = groupDao;
-        this.courseDao = courseDao;
+        this.studentRepository = studentRepository;
+        this.groupRepository = groupRepository;
+        this.courseRepository = courseRepository;
         this.studentGenerator = studentGenerator;
         this.groupsGenerator = groupsGenerator;
         this.courseGenerator = courseGenerator;
@@ -43,9 +43,9 @@ public class ApplicationInitializerImpl implements ApplicationInitializer {
     @PostConstruct
     public void init() {
 
-        boolean isGroupsEmpty = isTableEmpty(groupDao);
-        boolean isStudentsEmpty = isTableEmpty(studentDao);
-        boolean isCoursesEmpty = isTableEmpty(courseDao);
+        boolean isGroupsEmpty = isTableEmpty(groupRepository);
+        boolean isStudentsEmpty = isTableEmpty(studentRepository);
+        boolean isCoursesEmpty = isTableEmpty(courseRepository);
 
         if (isGroupsEmpty) {
             groupsGenerator.generateData();
@@ -61,7 +61,7 @@ public class ApplicationInitializerImpl implements ApplicationInitializer {
         }
     }
 
-    private boolean isTableEmpty(CrudDao<?> dao) {
+    private boolean isTableEmpty(JpaRepository dao) {
         List<?> list = dao.findAll();
         return list.isEmpty();
     }

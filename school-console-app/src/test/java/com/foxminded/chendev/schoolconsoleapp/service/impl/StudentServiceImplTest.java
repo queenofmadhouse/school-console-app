@@ -1,7 +1,7 @@
 package com.foxminded.chendev.schoolconsoleapp.service.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.CourseDao;
-import com.foxminded.chendev.schoolconsoleapp.dao.StudentDao;
+import com.foxminded.chendev.schoolconsoleapp.repository.CourseRepository;
+import com.foxminded.chendev.schoolconsoleapp.repository.StudentRepository;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import org.junit.jupiter.api.Test;
@@ -24,10 +24,10 @@ import static org.mockito.Mockito.when;
 class StudentServiceImplTest {
 
     @MockBean
-    private CourseDao courseDao;
+    private CourseRepository courseRepository;
 
     @MockBean
-    private StudentDao studentDao;
+    private StudentRepository studentRepository;
 
     @Autowired
     private StudentServiceImpl studentService;
@@ -37,11 +37,11 @@ class StudentServiceImplTest {
 
         int studentId = 1;
 
-        doNothing().when(studentDao).deleteById(studentId);
+        doNothing().when(studentRepository).deleteById(studentId);
 
         studentService.deleteById(studentId);
 
-        verify(studentDao).deleteById(studentId);
+        verify(studentRepository).deleteById(studentId);
     }
 
     @Test
@@ -53,11 +53,11 @@ class StudentServiceImplTest {
                 .withGroupId(1)
                 .build();
 
-        doNothing().when(studentDao).save(studentAlex);
+        when(studentRepository.save(studentAlex)).thenReturn(studentAlex);
 
         studentService.save(studentAlex);
 
-        verify(studentDao).save(studentAlex);
+        verify(studentRepository).save(studentAlex);
     }
 
     @Test
@@ -66,11 +66,11 @@ class StudentServiceImplTest {
         int studentId = 1;
         int courseId = 1;
 
-        doNothing().when(studentDao).addStudentToCourse(studentId, courseId);
+        doNothing().when(studentRepository).addStudentToCourse(studentId, courseId);
 
         studentService.addStudentToCourse(studentId, courseId);
 
-        verify(studentDao).addStudentToCourse(studentId, courseId);
+        verify(studentRepository).addStudentToCourse(studentId, courseId);
     }
 
     @Test
@@ -79,11 +79,11 @@ class StudentServiceImplTest {
         int studentId = 1;
         int courseId = 2;
 
-        doNothing().when(studentDao).removeStudentFromCourse(studentId, courseId);
+        doNothing().when(studentRepository).removeStudentFromCourse(studentId, courseId);
 
         studentService.removeStudentFromCourse(studentId, courseId);
 
-        verify(studentDao).removeStudentFromCourse(studentId, courseId);
+        verify(studentRepository).removeStudentFromCourse(studentId, courseId);
     }
 
     @Test
@@ -118,16 +118,16 @@ class StudentServiceImplTest {
 
         Optional<Course> optionalCourse = Optional.ofNullable(Course.builder().withCourseId(courseId).build());
 
-        when(courseDao.findCourseByName(courseName)).thenReturn(optionalCourse);
-        when(studentDao.findStudentsByCourseId(courseId)).thenReturn(studentList);
+        when(courseRepository.findCourseByName(courseName)).thenReturn(optionalCourse);
+        when(studentRepository.findStudentsByCourseId(courseId)).thenReturn(studentList);
 
         List<Student> foundStudentList = studentService.findAllStudentsByCourseName(courseName);
 
         assertFalse(foundStudentList.isEmpty());
         assertEquals(3, foundStudentList.size());
 
-        verify(courseDao).findCourseByName(courseName);
-        verify(studentDao).findStudentsByCourseId(courseId);
+        verify(courseRepository).findCourseByName(courseName);
+        verify(studentRepository).findStudentsByCourseId(courseId);
     }
 
     @Test
@@ -136,13 +136,13 @@ class StudentServiceImplTest {
         Optional<Course> emptyCourse = Optional.empty();
         String courseName = "Math";
 
-        when(courseDao.findCourseByName(courseName)).thenReturn(emptyCourse);
+        when(courseRepository.findCourseByName(courseName)).thenReturn(emptyCourse);
 
         List<Student> emptyStudentList = studentService.findAllStudentsByCourseName(courseName);
 
         assertTrue(emptyStudentList.isEmpty());
 
-        verify(courseDao).findCourseByName(courseName);
+        verify(courseRepository).findCourseByName(courseName);
     }
 
     @Test
@@ -151,10 +151,10 @@ class StudentServiceImplTest {
         Optional<Student> optionalStudent = Optional.ofNullable(Student.builder().build());
         int studentId = 1;
 
-        when(studentDao.findById(studentId)).thenReturn(optionalStudent);
+        when(studentRepository.findById(studentId)).thenReturn(optionalStudent);
 
         studentService.findById(studentId);
 
-        verify(studentDao).findById(studentId);
+        verify(studentRepository).findById(studentId);
     }
 }

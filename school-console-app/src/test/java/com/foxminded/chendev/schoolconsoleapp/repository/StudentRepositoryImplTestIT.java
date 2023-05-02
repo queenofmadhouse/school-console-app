@@ -1,4 +1,4 @@
-package com.foxminded.chendev.schoolconsoleapp.dao.impl;
+package com.foxminded.chendev.schoolconsoleapp.repository;
 
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
@@ -20,8 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-        StudentDaoImpl.class,
-        CourseDaoImpl.class
+        StudentRepository.class,
+        CourseRepository.class
 }))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(
@@ -33,13 +33,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
                 "/sql/students_courses_relation.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
-class StudentDaoImplTestIT {
+class StudentRepositoryImplTestIT {
 
     @Autowired
-    private StudentDaoImpl studentDao;
+    private StudentRepository studentRepository;
 
     @Autowired
-    private CourseDaoImpl courseDao;
+    private CourseRepository courseRepository;
 
 
     @Test
@@ -51,9 +51,9 @@ class StudentDaoImplTestIT {
                 .withGroupId(1)
                 .build();
 
-        studentDao.save(studentAlex);
+        studentRepository.save(studentAlex);
 
-        Student foundStudent = studentDao.findById(1).orElse(null);
+        Student foundStudent = studentRepository.findById(1).orElse(null);
 
         assertNotNull(foundStudent);
         assertEquals(studentAlex.getFirstName(), foundStudent.getFirstName());
@@ -77,10 +77,10 @@ class StudentDaoImplTestIT {
                 .withGroupId(1)
                 .build();
 
-        studentDao.save(studentAlex);
-        studentDao.save(studentNikol);
+        studentRepository.save(studentAlex);
+        studentRepository.save(studentNikol);
 
-        List<Student> foundStudentList = studentDao.findAll();
+        List<Student> foundStudentList = studentRepository.findAll();
 
         assertFalse(foundStudentList.isEmpty());
         assertEquals(2, foundStudentList.size());
@@ -95,16 +95,16 @@ class StudentDaoImplTestIT {
                 .withGroupId(1)
                 .build();
 
-        studentDao.save(student);
+        studentRepository.save(student);
 
-        Student foundStudent = studentDao.findById(1).orElse(null);
+        Student foundStudent = studentRepository.findById(1).orElse(null);
 
         foundStudent.setFirstName("Alexandr");
         foundStudent.setLastName("Kirieshkin");
 
-        studentDao.update(foundStudent);
+        studentRepository.save(foundStudent);
 
-        Student foundUpdatedStudent = studentDao.findById(1).orElse(null);
+        Student foundUpdatedStudent = studentRepository.findById(1).orElse(null);
 
         assertNotNull(foundUpdatedStudent);
         assertEquals(foundStudent.getFirstName(), foundUpdatedStudent.getFirstName());
@@ -122,11 +122,11 @@ class StudentDaoImplTestIT {
 
         int studentId = 1;
 
-        studentDao.save(studentAlex);
+        studentRepository.save(studentAlex);
 
-        studentDao.deleteById(studentId);
+        studentRepository.deleteById(studentId);
 
-        Optional<Student> optionalStudent = studentDao.findById(studentId);
+        Optional<Student> optionalStudent = studentRepository.findById(studentId);
 
         assertFalse(optionalStudent.isPresent());
     }
@@ -145,13 +145,13 @@ class StudentDaoImplTestIT {
                 .withCourseDescription("hard")
                 .build();
 
-        studentDao.save(studentAlex);
+        studentRepository.save(studentAlex);
 
-        courseDao.save(courseMath);
+        courseRepository.save(courseMath);
 
-        studentDao.addStudentToCourse(1, 1);
+        studentRepository.addStudentToCourse(1, 1);
 
-        List<Student> foundStudentList = studentDao.findStudentsByCourseId(1);
+        List<Student> foundStudentList = studentRepository.findStudentsByCourseId(1);
 
         assertFalse(foundStudentList.isEmpty());
         assertEquals(1, foundStudentList.size());
@@ -190,18 +190,18 @@ class StudentDaoImplTestIT {
                 .withCourseDescription("Something hard")
                 .build();
 
-        studentDao.save(studentAlex);
-        studentDao.save(studentBoyana);
-        studentDao.save(studentHira);
+        studentRepository.save(studentAlex);
+        studentRepository.save(studentBoyana);
+        studentRepository.save(studentHira);
 
-        courseDao.save(courseMath);
-        courseDao.save(courseBiology);
+        courseRepository.save(courseMath);
+        courseRepository.save(courseBiology);
 
-        studentDao.addStudentToCourse(1, 1);
-        studentDao.addStudentToCourse(2, 1);
-        studentDao.addStudentToCourse(3, 2);
+        studentRepository.addStudentToCourse(1, 1);
+        studentRepository.addStudentToCourse(2, 1);
+        studentRepository.addStudentToCourse(3, 2);
 
-        List<Student> foundStudentList = studentDao.findStudentsByCourseId(1);
+        List<Student> foundStudentList = studentRepository.findStudentsByCourseId(1);
 
         assertFalse(foundStudentList.isEmpty());
         assertEquals(2, foundStudentList.size());
@@ -229,17 +229,17 @@ class StudentDaoImplTestIT {
                 .withCourseDescription("Something hard")
                 .build();
 
-        studentDao.save(studentHira);
+        studentRepository.save(studentHira);
 
-        courseDao.save(courseMath);
-        courseDao.save(courseBiology);
+        courseRepository.save(courseMath);
+        courseRepository.save(courseBiology);
 
-        studentDao.addStudentToCourse(1, 1);
-        studentDao.addStudentToCourse(1, 2);
+        studentRepository.addStudentToCourse(1, 1);
+        studentRepository.addStudentToCourse(1, 2);
 
-        studentDao.removeStudentFromCourse(1, 2);
+        studentRepository.removeStudentFromCourse(1, 2);
 
-        List<Course> foundCourseList = courseDao.findCoursesByStudentId(1);
+        List<Course> foundCourseList = courseRepository.findCoursesByStudentId(1);
 
         assertFalse(foundCourseList.isEmpty());
         assertEquals(1, foundCourseList.size());
@@ -250,14 +250,14 @@ class StudentDaoImplTestIT {
     @Test
     void deleteAllRelationsByStudentIDShouldDeleteAllRelationsRelatedToStudentID() {
 
-        studentDao.addStudentToCourse(1, 2);
-        studentDao.addStudentToCourse(1, 3);
-        studentDao.addStudentToCourse(1, 7);
-        studentDao.addStudentToCourse(1, 20);
+        studentRepository.addStudentToCourse(1, 2);
+        studentRepository.addStudentToCourse(1, 3);
+        studentRepository.addStudentToCourse(1, 7);
+        studentRepository.addStudentToCourse(1, 20);
 
-        studentDao.deleteAllRelationsByStudentId(3);
+        studentRepository.deleteAllRelationsByStudentId(3);
 
-        List<Course> emptyCourseList = courseDao.findCoursesByStudentId(1);
+        List<Course> emptyCourseList = courseRepository.findCoursesByStudentId(1);
 
         assertTrue(emptyCourseList.isEmpty());
     }
@@ -284,19 +284,19 @@ class StudentDaoImplTestIT {
                 .withCourseDescription("Something hard")
                 .build();
 
-        studentDao.save(studentAlex);
+        studentRepository.save(studentAlex);
 
-        courseDao.save(courseMath);
-        courseDao.save(courseBiology);
-        courseDao.save(courseArt);
+        courseRepository.save(courseMath);
+        courseRepository.save(courseBiology);
+        courseRepository.save(courseArt);
 
-        studentDao.addStudentToCourse(1, 1);
-        studentDao.addStudentToCourse(1, 2);
-        studentDao.addStudentToCourse(1, 3);
+        studentRepository.addStudentToCourse(1, 1);
+        studentRepository.addStudentToCourse(1, 2);
+        studentRepository.addStudentToCourse(1, 3);
 
-        studentDao.removeStudentFromCourse(1, 2);
+        studentRepository.removeStudentFromCourse(1, 2);
 
-        List<Course> foundCoursesList = courseDao.findCoursesByStudentId(1);
+        List<Course> foundCoursesList = courseRepository.findCoursesByStudentId(1);
 
         assertFalse(foundCoursesList.isEmpty());
         assertEquals(2, foundCoursesList.size());
@@ -309,6 +309,6 @@ class StudentDaoImplTestIT {
     @Test
     void deleteByIdShouldNotThrowExceptionWhenIdNotExist() {
 
-        assertDoesNotThrow(() -> studentDao.deleteById(10));
+        assertDoesNotThrow(() -> studentRepository.deleteById(10));
     }
 }

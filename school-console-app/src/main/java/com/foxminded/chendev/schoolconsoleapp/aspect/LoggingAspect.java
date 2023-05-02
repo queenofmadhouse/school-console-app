@@ -1,8 +1,11 @@
 package com.foxminded.chendev.schoolconsoleapp.aspect;
 
+import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -23,24 +26,24 @@ public class LoggingAspect {
         return loggers.computeIfAbsent(clazz, LoggerFactory::getLogger);
     }
 
-    @Pointcut("execution(* com.foxminded.chendev.schoolconsoleapp.dao.impl.*.*(..))")
-    public void daoMethods() {}
+    @Pointcut("execution(* com.foxminded.chendev.schoolconsoleapp.repository.*.*(..))")
+    public void repositoryMethods() {}
 
-    @Before("daoMethods()")
+    @Before("repositoryMethods()")
     public void logBefore(JoinPoint joinPoint) {
         Logger logger = getLogger(joinPoint.getTarget().getClass());
         logger.info("Method {} is called with parameters: {}", joinPoint.getSignature().getName(), joinPoint.getArgs());
     }
 
-    @AfterReturning(pointcut = "daoMethods()", returning = "result")
+    @AfterReturning(pointcut = "repositoryMethods()", returning = "result")
     public void logAfter(JoinPoint joinPoint, Object result) {
         Logger logger = getLogger(joinPoint.getTarget().getClass());
         logger.info("Method {} returned: {}", joinPoint.getSignature().getName(), result);
     }
 
-    @AfterThrowing(pointcut = "daoMethods()")
-    public void logException(JoinPoint joinPoint) {
+    @AfterThrowing(pointcut = "repositoryMethods()", throwing = "exception")
+    public void logException(JoinPoint joinPoint, Throwable exception) {
         Logger logger = getLogger(joinPoint.getTarget().getClass());
-        logger.error("Exception in method {} with parameters: {}", joinPoint.getSignature().getName(), joinPoint.getArgs());
+        logger.error("Exception in method {} with parameters: {}", joinPoint.getSignature().getName(), joinPoint.getArgs(), exception);
     }
 }

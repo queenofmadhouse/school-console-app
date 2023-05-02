@@ -1,7 +1,7 @@
 package com.foxminded.chendev.schoolconsoleapp.service.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.impl.CourseDaoImpl;
-import com.foxminded.chendev.schoolconsoleapp.dao.impl.StudentDaoImpl;
+import com.foxminded.chendev.schoolconsoleapp.repository.CourseRepository;
+import com.foxminded.chendev.schoolconsoleapp.repository.StudentRepository;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,17 +13,16 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class CourseServiceImplTest {
 
     @MockBean
-    private CourseDaoImpl courseDao;
+    private CourseRepository courseRepository;
 
     @MockBean
-    private StudentDaoImpl studentDao;
+    private StudentRepository studentRepository;
 
     @Autowired
     private CourseServiceImpl courseService;
@@ -52,7 +51,7 @@ class CourseServiceImplTest {
         courseList.add(courseBiology);
         courseList.add(courseJava);
 
-        when(courseDao.findAllCourses()).thenReturn(courseList);
+        when(courseRepository.findAll()).thenReturn(courseList);
 
         List<Course> foundCourses = courseService.findAllCourses();
 
@@ -64,7 +63,5 @@ class CourseServiceImplTest {
         assertEquals("Middle level", foundCourses.get(1).getCourseDescription());
         assertEquals("Java", foundCourses.get(2).getCourseName());
         assertEquals("Super hard level", foundCourses.get(2).getCourseDescription());
-
-        verify(courseDao).findAllCourses();
     }
 }

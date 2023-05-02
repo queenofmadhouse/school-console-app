@@ -1,7 +1,7 @@
 package com.foxminded.chendev.schoolconsoleapp.datagenerator.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.impl.CourseDaoImpl;
-import com.foxminded.chendev.schoolconsoleapp.dao.impl.StudentDaoImpl;
+import com.foxminded.chendev.schoolconsoleapp.repository.CourseRepository;
+import com.foxminded.chendev.schoolconsoleapp.repository.StudentRepository;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,9 +24,9 @@ import static org.mockito.Mockito.when;
 class StudentCourseRelationDataGeneratorTest {
 
     @Mock
-    private StudentDaoImpl studentDao;
+    private StudentRepository studentRepository;
     @Mock
-    private CourseDaoImpl courseDao;
+    private CourseRepository courseRepository;
     @InjectMocks
     private StudentCourseRelationDataGenerator generator;
 
@@ -68,13 +68,13 @@ class StudentCourseRelationDataGeneratorTest {
     @Test
     void shouldGenerateData() {
 
-        when(studentDao.findAll()).thenReturn(students);
-        when(courseDao.findAll()).thenReturn(courses);
+        when(studentRepository.findAll()).thenReturn(students);
+        when(courseRepository.findAll()).thenReturn(courses);
 
         generator.generateData();
 
-        verify(studentDao, times(1)).findAll();
-        verify(courseDao, times(1)).findAll();
-        verify(studentDao, atLeast(1)).addStudentToCourse(anyLong(), anyLong());
+        verify(studentRepository, times(1)).findAll();
+        verify(courseRepository, times(1)).findAll();
+        verify(studentRepository, atLeast(1)).addStudentToCourse(anyLong(), anyLong());
     }
 }

@@ -1,4 +1,4 @@
-package com.foxminded.chendev.schoolconsoleapp.dao.impl;
+package com.foxminded.chendev.schoolconsoleapp.repository;
 
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
@@ -20,8 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-        CourseDaoImpl.class,
-        StudentDaoImpl.class
+        CourseRepository.class,
+        StudentRepository.class
 }))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(
@@ -33,13 +33,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
                 "/sql/students_courses_relation.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
-class CourseDaoImplTestIT {
+class CourseRepositoryImplTestIT {
 
     @Autowired
-    private CourseDaoImpl courseDao;
+    private CourseRepository courseRepository;
 
     @Autowired
-    private StudentDaoImpl studentDao;
+    private StudentRepository studentRepository;
 
     @Test
     void findCourseByCourseNameShouldReturnCourse() {
@@ -59,11 +59,11 @@ class CourseDaoImplTestIT {
                 .withCourseDescription("Super hard level")
                 .build();
 
-        courseDao.save(courseMath);
-        courseDao.save(courseBiology);
-        courseDao.save(courseJava);
+        courseRepository.save(courseMath);
+        courseRepository.save(courseBiology);
+        courseRepository.save(courseJava);
 
-        Course foundCourse = courseDao.findCourseByName("Java").orElse(null);
+        Course foundCourse = courseRepository.findCourseByName("Java").orElse(null);
 
         assertNotNull(foundCourse);
         assertEquals(3, foundCourse.getCourseId());
@@ -79,11 +79,11 @@ class CourseDaoImplTestIT {
                 .withCourseDescription("Something hard")
                 .build();
 
-        courseDao.save(courseMath);
+        courseRepository.save(courseMath);
 
-        courseDao.deleteById(1);
+        courseRepository.deleteById(1);
 
-        Optional<Course> optionalCourse = courseDao.findById(1);
+        Optional<Course> optionalCourse = courseRepository.findById(1);
 
         assertFalse(optionalCourse.isPresent());
     }
@@ -96,16 +96,16 @@ class CourseDaoImplTestIT {
                 .withCourseDescription("With old information")
                 .build();
 
-        courseDao.save(courseNewJavaCourse);
+        courseRepository.save(courseNewJavaCourse);
 
-        Course foundCourse = courseDao.findCourseByName("New Java Course").orElse(null);
+        Course foundCourse = courseRepository.findCourseByName("New Java Course").orElse(null);
 
         foundCourse.setCourseName("Old Java Course");
         foundCourse.setCourseDescription("Without info at all");
 
-        courseDao.update(foundCourse);
+        courseRepository.save(foundCourse);
 
-        Course foundUpdatedCourse = courseDao.findById(1).orElse(null);
+        Course foundUpdatedCourse = courseRepository.findById(1).orElse(null);
 
         assertNotNull(foundUpdatedCourse);
         assertEquals(foundCourse.getCourseName(), foundUpdatedCourse.getCourseName());
@@ -130,11 +130,11 @@ class CourseDaoImplTestIT {
                 .withCourseDescription("Something hard")
                 .build();
 
-        courseDao.save(courseMath);
-        courseDao.save(courseBiology);
-        courseDao.save(courseArt);
+        courseRepository.save(courseMath);
+        courseRepository.save(courseBiology);
+        courseRepository.save(courseArt);
 
-        List<Course> courseList = courseDao.findAllCourses();
+        List<Course> courseList = courseRepository.findAll();
 
         assertNotNull(courseList);
         assertEquals(3, courseList.size());
@@ -176,18 +176,18 @@ class CourseDaoImplTestIT {
                 .withCourseDescription("Something hard")
                 .build();
 
-        studentDao.save(studentAlex);
-        studentDao.save(studentBoyana);
+        studentRepository.save(studentAlex);
+        studentRepository.save(studentBoyana);
 
-        courseDao.save(courseMath);
-        courseDao.save(courseBiology);
-        courseDao.save(courseArt);
+        courseRepository.save(courseMath);
+        courseRepository.save(courseBiology);
+        courseRepository.save(courseArt);
 
-        studentDao.addStudentToCourse(1, 1);
-        studentDao.addStudentToCourse(1, 2);
-        studentDao.addStudentToCourse(2, 3);
+        studentRepository.addStudentToCourse(1, 1);
+        studentRepository.addStudentToCourse(1, 2);
+        studentRepository.addStudentToCourse(2, 3);
 
-        List<Course> courseList = courseDao.findCoursesByStudentId(1);
+        List<Course> courseList = courseRepository.findCoursesByStudentId(1);
 
         assertFalse(courseList.isEmpty());
         assertEquals(2, courseList.size());
@@ -200,15 +200,15 @@ class CourseDaoImplTestIT {
     @Test
     void deleteAllRelationsByCourseIDShouldDeleteAllRelationsRelatedToCourseID() {
 
-        studentDao.addStudentToCourse(5, 8);
-        studentDao.addStudentToCourse(3, 8);
-        studentDao.addStudentToCourse(10, 8);
-        studentDao.addStudentToCourse(200, 8);
-        studentDao.addStudentToCourse(1, 8);
+        studentRepository.addStudentToCourse(5, 8);
+        studentRepository.addStudentToCourse(3, 8);
+        studentRepository.addStudentToCourse(10, 8);
+        studentRepository.addStudentToCourse(200, 8);
+        studentRepository.addStudentToCourse(1, 8);
 
-        courseDao.deleteAllRelationsByCourseId(8);
+        courseRepository.deleteAllRelationsByCourseId(8);
 
-        List<Student> studentList = studentDao.findStudentsByCourseId(8);
+        List<Student> studentList = studentRepository.findStudentsByCourseId(8);
 
         assertTrue(studentList.isEmpty());
     }
@@ -216,7 +216,7 @@ class CourseDaoImplTestIT {
     @Test
     void findCourseByCourseNameShouldReturnEmptyOptionalWhenNotPresent() {
 
-        Optional<Course> course = courseDao.findCourseByName("Not Present");
+        Optional<Course> course = courseRepository.findCourseByName("Not Present");
 
         assertFalse(course.isPresent());
     }
@@ -224,6 +224,6 @@ class CourseDaoImplTestIT {
     @Test
     void deleteByIdShouldNotThrowDatabaseRuntimeExceptionWhenNotFound() {
 
-        assertDoesNotThrow(() -> courseDao.deleteById(100));
+        assertDoesNotThrow(() -> courseRepository.deleteById(100));
     }
 }

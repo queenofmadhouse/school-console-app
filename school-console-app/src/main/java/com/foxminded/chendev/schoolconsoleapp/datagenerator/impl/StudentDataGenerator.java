@@ -1,7 +1,7 @@
 package com.foxminded.chendev.schoolconsoleapp.datagenerator.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.GroupDao;
-import com.foxminded.chendev.schoolconsoleapp.dao.StudentDao;
+import com.foxminded.chendev.schoolconsoleapp.repository.GroupRepository;
+import com.foxminded.chendev.schoolconsoleapp.repository.StudentRepository;
 import com.foxminded.chendev.schoolconsoleapp.datagenerator.DataGenerator;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
@@ -26,21 +26,21 @@ public class StudentDataGenerator implements DataGenerator {
             "Thomas", "Taylor", "Moore", "Jackson", "Martin"
     };
     private static final Random random = new Random();
-    private final StudentDao studentDao;
-    private final GroupDao groupDao;
+    private final StudentRepository studentRepository;
+    private final GroupRepository groupRepository;
     private final int amountOfStudents;
 
-    public StudentDataGenerator(StudentDao studentDao, GroupDao groupDao, int amountOfStudents) {
+    public StudentDataGenerator(StudentRepository studentRepository, GroupRepository groupRepository, int amountOfStudents) {
 
-        this.studentDao = studentDao;
-        this.groupDao = groupDao;
+        this.studentRepository = studentRepository;
+        this.groupRepository = groupRepository;
         this.amountOfStudents = amountOfStudents;
     }
 
     @Override
     public void generateData() {
 
-        List<Group> groups = groupDao.findAll();
+        List<Group> groups = groupRepository.findAll();
 
         for (int i = 0; i < amountOfStudents; i++) {
             String firstName = generateFirstName();
@@ -56,7 +56,7 @@ public class StudentDataGenerator implements DataGenerator {
                 student.setGroupId(groupId);
             }
 
-            studentDao.save(student);
+            studentRepository.save(student);
         }
 
     }

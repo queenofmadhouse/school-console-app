@@ -1,7 +1,7 @@
 package com.foxminded.chendev.schoolconsoleapp.service.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.impl.GroupDaoImpl;
-import com.foxminded.chendev.schoolconsoleapp.dao.impl.StudentDaoImpl;
+import com.foxminded.chendev.schoolconsoleapp.repository.GroupRepository;
+import com.foxminded.chendev.schoolconsoleapp.repository.StudentRepository;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +20,10 @@ import static org.mockito.Mockito.when;
 class GroupServiceImplTest {
 
     @MockBean
-    private StudentDaoImpl studentDao;
+    private StudentRepository studentRepository;
 
     @MockBean
-    private GroupDaoImpl groupDao;
+    private GroupRepository groupRepository;
 
     @Autowired
     private GroupServiceImpl groupService;
@@ -39,7 +39,7 @@ class GroupServiceImplTest {
         groupList.add(groupArt);
         int valueOfStudents = 1;
 
-        when(groupDao.findGroupsWithLessOrEqualStudents(valueOfStudents)).thenReturn(groupList);
+        when(groupRepository.findGroupsWithLessOrEqualStudents(valueOfStudents)).thenReturn(groupList);
 
         List<Group> foundGroupList = groupService.findGroupsWithLessOrEqualStudents(valueOfStudents);
 
@@ -47,6 +47,6 @@ class GroupServiceImplTest {
         assertEquals(1, foundGroupList.size());
         assertEquals("Art", foundGroupList.get(0).getGroupName());
 
-        verify(groupDao).findGroupsWithLessOrEqualStudents(valueOfStudents);
+        verify(groupRepository).findGroupsWithLessOrEqualStudents(valueOfStudents);
     }
 }

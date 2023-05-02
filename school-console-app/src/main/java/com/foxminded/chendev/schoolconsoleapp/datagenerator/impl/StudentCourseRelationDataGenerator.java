@@ -1,7 +1,7 @@
 package com.foxminded.chendev.schoolconsoleapp.datagenerator.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.CourseDao;
-import com.foxminded.chendev.schoolconsoleapp.dao.StudentDao;
+import com.foxminded.chendev.schoolconsoleapp.repository.CourseRepository;
+import com.foxminded.chendev.schoolconsoleapp.repository.StudentRepository;
 import com.foxminded.chendev.schoolconsoleapp.datagenerator.DataGenerator;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
@@ -14,18 +14,18 @@ import java.util.Random;
 public class StudentCourseRelationDataGenerator implements DataGenerator {
 
     private static final Random random = new Random();
-    private final StudentDao studentDao;
-    private final CourseDao courseDao;
+    private final StudentRepository studentRepository;
+    private final CourseRepository courseRepository;
 
-    public StudentCourseRelationDataGenerator(StudentDao studentDao, CourseDao courseDao) {
-        this.studentDao = studentDao;
-        this.courseDao = courseDao;
+    public StudentCourseRelationDataGenerator(StudentRepository studentRepository, CourseRepository courseRepository) {
+        this.studentRepository = studentRepository;
+        this.courseRepository = courseRepository;
     }
 
     @Override
     public void generateData() {
-        List<Student> students = studentDao.findAll();
-        List<Course> courses = courseDao.findAll();
+        List<Student> students = studentRepository.findAll();
+        List<Course> courses = courseRepository.findAll();
 
         for (Student student : students) {
             int courseCount = random.nextInt(3) + 1;
@@ -33,7 +33,7 @@ public class StudentCourseRelationDataGenerator implements DataGenerator {
             for (int i = 0; i < courseCount; i++) {
                 Course course = getRandonmCourse(courses);
 
-                studentDao.addStudentToCourse(student.getUserId(), course.getCourseId());
+                studentRepository.addStudentToCourse(student.getUserId(), course.getCourseId());
             }
         }
     }

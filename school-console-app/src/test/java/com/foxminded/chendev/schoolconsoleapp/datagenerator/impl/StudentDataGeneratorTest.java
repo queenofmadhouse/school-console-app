@@ -1,7 +1,7 @@
 package com.foxminded.chendev.schoolconsoleapp.datagenerator.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.impl.GroupDaoImpl;
-import com.foxminded.chendev.schoolconsoleapp.dao.impl.StudentDaoImpl;
+import com.foxminded.chendev.schoolconsoleapp.repository.GroupRepository;
+import com.foxminded.chendev.schoolconsoleapp.repository.StudentRepository;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,16 +23,16 @@ import static org.mockito.Mockito.when;
 class StudentDataGeneratorTest {
 
     private static final int AMOUNT_OF_STUDENTS = 10;
-    private StudentDaoImpl studentDao;
-    private GroupDaoImpl groupDao;
+    private StudentRepository studentRepository;
+    private GroupRepository groupRepository;
     private StudentDataGenerator studentsGenerator;
 
     @BeforeEach
     void setUp() {
 
-        studentDao = mock(StudentDaoImpl.class);
-        groupDao = mock(GroupDaoImpl.class);
-        studentsGenerator = new StudentDataGenerator(studentDao, groupDao, AMOUNT_OF_STUDENTS);
+        studentRepository = mock(StudentRepository.class);
+        groupRepository = mock(GroupRepository.class);
+        studentsGenerator = new StudentDataGenerator(studentRepository, groupRepository, AMOUNT_OF_STUDENTS);
     }
 
     @Test
@@ -40,12 +40,12 @@ class StudentDataGeneratorTest {
 
         List<Group> groups = generateMockGroups(5);
 
-        when(groupDao.findAll()).thenReturn(groups);
+        when(groupRepository.findAll()).thenReturn(groups);
 
         studentsGenerator.generateData();
 
         ArgumentCaptor<Student> studentCaptor = ArgumentCaptor.forClass(Student.class);
-        verify(studentDao, times(AMOUNT_OF_STUDENTS)).save(studentCaptor.capture());
+        verify(studentRepository, times(AMOUNT_OF_STUDENTS)).save(studentCaptor.capture());
 
         List<Student> generatedStudents = studentCaptor.getAllValues();
         assertEquals(AMOUNT_OF_STUDENTS, generatedStudents.size());
@@ -54,12 +54,12 @@ class StudentDataGeneratorTest {
     @Test
     void generateDataShouldGenerateStudentsWithValidNamesAndGroupIDs() {
         List<Group> groups = generateMockGroups(5);
-        when(groupDao.findAll()).thenReturn(groups);
+        when(groupRepository.findAll()).thenReturn(groups);
 
         studentsGenerator.generateData();
 
         ArgumentCaptor<Student> studentCaptor = ArgumentCaptor.forClass(Student.class);
-        verify(studentDao, times(AMOUNT_OF_STUDENTS)).save(studentCaptor.capture());
+        verify(studentRepository, times(AMOUNT_OF_STUDENTS)).save(studentCaptor.capture());
 
         List<Student> generatedStudents = studentCaptor.getAllValues();
         assertEquals(AMOUNT_OF_STUDENTS, generatedStudents.size());
@@ -82,12 +82,12 @@ class StudentDataGeneratorTest {
     @Test
     void generateDataShouldGenerateStudentsWithoutGroupsWhenGroupsAreEmpty() {
         List<Group> groups = Collections.emptyList();
-        when(groupDao.findAll()).thenReturn(groups);
+        when(groupRepository.findAll()).thenReturn(groups);
 
         studentsGenerator.generateData();
 
         ArgumentCaptor<Student> studentCaptor = ArgumentCaptor.forClass(Student.class);
-        verify(studentDao, times(AMOUNT_OF_STUDENTS)).save(studentCaptor.capture());
+        verify(studentRepository, times(AMOUNT_OF_STUDENTS)).save(studentCaptor.capture());
 
         List<Student> generatedStudents = studentCaptor.getAllValues();
         assertEquals(AMOUNT_OF_STUDENTS, generatedStudents.size());

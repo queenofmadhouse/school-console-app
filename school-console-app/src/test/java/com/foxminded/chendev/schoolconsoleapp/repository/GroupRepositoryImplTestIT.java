@@ -1,4 +1,4 @@
-package com.foxminded.chendev.schoolconsoleapp.dao.impl;
+package com.foxminded.chendev.schoolconsoleapp.repository;
 
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
@@ -19,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-        GroupDaoImpl.class,
-        StudentDaoImpl.class
+        GroupRepository.class,
+        StudentRepository.class
 }))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(
@@ -32,13 +32,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
                 "/sql/students_courses_relation.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
-class GroupDaoImplTestIT {
+class GroupRepositoryImplTestIT {
 
     @Autowired
-    private GroupDaoImpl groupDao;
+    private GroupRepository groupRepository;
 
     @Autowired
-    private StudentDaoImpl studentDao;
+    private StudentRepository studentRepository;
 
     @Test
     void testSaveShouldObjectInDataBase() {
@@ -47,9 +47,9 @@ class GroupDaoImplTestIT {
                 .withGroupName("Math")
                 .build();
 
-        groupDao.save(groupMath);
+        groupRepository.save(groupMath);
 
-        Group foundGroup = groupDao.findById(1).orElse(null);
+        Group foundGroup = groupRepository.findById(1).orElse(null);
 
         assertNotNull(foundGroup);
         assertEquals(groupMath.getGroupName(), foundGroup.getGroupName());
@@ -66,10 +66,10 @@ class GroupDaoImplTestIT {
                 .withGroupName("Art")
                 .build();
 
-        groupDao.save(groupMath);
-        groupDao.save(groupArt);
+        groupRepository.save(groupMath);
+        groupRepository.save(groupArt);
 
-        List<Group> fourdGroupList = groupDao.findAll();
+        List<Group> fourdGroupList = groupRepository.findAll();
         assertNotNull(fourdGroupList);
         assertEquals(2, fourdGroupList.size());
         assertEquals(groupMath.getGroupName(), fourdGroupList.get(0).getGroupName());
@@ -83,15 +83,15 @@ class GroupDaoImplTestIT {
                 .withGroupName("Math")
                 .build();
 
-        groupDao.save(groupMath);
+        groupRepository.save(groupMath);
 
-        Group foundFgroup = groupDao.findById(1).orElse(null);
+        Group foundFgroup = groupRepository.findById(1).orElse(null);
 
         foundFgroup.setGroupName("Test Group Updated");
 
-        groupDao.update(foundFgroup);
+        groupRepository.save(foundFgroup);
 
-        Group foundUpdatedGroup = groupDao.findById(1).orElse(null);
+        Group foundUpdatedGroup = groupRepository.findById(1).orElse(null);
 
         assertEquals(foundFgroup.getGroupName(), foundUpdatedGroup.getGroupName());
 
@@ -175,22 +175,22 @@ class GroupDaoImplTestIT {
 
         int valueOfStudentsOnCourse = 1;
 
-        groupDao.save(groupMath);
-        groupDao.save(groupArt);
-        groupDao.save(groupJava);
+        groupRepository.save(groupMath);
+        groupRepository.save(groupArt);
+        groupRepository.save(groupJava);
 
-        studentDao.save(studentJohn);
-        studentDao.save(studentJane);
-        studentDao.save(studentTom);
-        studentDao.save(studentAlice);
-        studentDao.save(studentBob);
-        studentDao.save(studentCharlie);
-        studentDao.save(studentEmily);
-        studentDao.save(studentEva);
-        studentDao.save(studentFrank);
-        studentDao.save(studentGrace);
+        studentRepository.save(studentJohn);
+        studentRepository.save(studentJane);
+        studentRepository.save(studentTom);
+        studentRepository.save(studentAlice);
+        studentRepository.save(studentBob);
+        studentRepository.save(studentCharlie);
+        studentRepository.save(studentEmily);
+        studentRepository.save(studentEva);
+        studentRepository.save(studentFrank);
+        studentRepository.save(studentGrace);
 
-        List<Group> resultList = groupDao.findGroupsWithLessOrEqualStudents(2);
+        List<Group> resultList = groupRepository.findGroupsWithLessOrEqualStudents(2);
 
         assertEquals(1, resultList.size());
         assertEquals("Java", resultList.get(0).getGroupName());
@@ -274,22 +274,22 @@ class GroupDaoImplTestIT {
 
         int valueOfStudentsOnCourse = 1;
 
-        groupDao.save(groupMath);
-        groupDao.save(groupArt);
-        groupDao.save(groupJava);
+        groupRepository.save(groupMath);
+        groupRepository.save(groupArt);
+        groupRepository.save(groupJava);
 
-        studentDao.save(studentJohn);
-        studentDao.save(studentJane);
-        studentDao.save(studentTom);
-        studentDao.save(studentAlice);
-        studentDao.save(studentBob);
-        studentDao.save(studentCharlie);
-        studentDao.save(studentEmily);
-        studentDao.save(studentEva);
-        studentDao.save(studentFrank);
-        studentDao.save(studentGrace);
+        studentRepository.save(studentJohn);
+        studentRepository.save(studentJane);
+        studentRepository.save(studentTom);
+        studentRepository.save(studentAlice);
+        studentRepository.save(studentBob);
+        studentRepository.save(studentCharlie);
+        studentRepository.save(studentEmily);
+        studentRepository.save(studentEva);
+        studentRepository.save(studentFrank);
+        studentRepository.save(studentGrace);
 
-        List<Group> resultList = groupDao.findGroupsWithLessOrEqualStudents(valueOfStudentsOnCourse);
+        List<Group> resultList = groupRepository.findGroupsWithLessOrEqualStudents(valueOfStudentsOnCourse);
 
         assertTrue(resultList.isEmpty());
     }
@@ -301,13 +301,13 @@ class GroupDaoImplTestIT {
                 .withGroupName("A1")
                 .build();
 
-        groupDao.save(groupA1);
+        groupRepository.save(groupA1);
 
-        Group foundGroup = groupDao.findById(1).orElse(null);
+        Group foundGroup = groupRepository.findById(1).orElse(null);
 
-        groupDao.deleteById(1);
+        groupRepository.deleteById(1);
 
-        Group deletedGroup = groupDao.findById(1).orElse(null);
+        Group deletedGroup = groupRepository.findById(1).orElse(null);
 
         assertNotNull(foundGroup);
         assertNull(deletedGroup);
@@ -316,6 +316,6 @@ class GroupDaoImplTestIT {
     @Test
     void deleteByIdShouldNotThrowDataBaseRunTimeExceptionWhenNotFound() {
 
-        assertDoesNotThrow(() -> groupDao.deleteById(100));
+        assertDoesNotThrow(() -> groupRepository.deleteById(100));
     }
 }

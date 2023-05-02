@@ -1,6 +1,6 @@
 package com.foxminded.chendev.schoolconsoleapp.datagenerator.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.GroupDao;
+import com.foxminded.chendev.schoolconsoleapp.repository.GroupRepository;
 import com.foxminded.chendev.schoolconsoleapp.datagenerator.DataGenerator;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import org.springframework.stereotype.Service;
@@ -12,12 +12,12 @@ public class GroupDataGenerator implements DataGenerator {
     private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final int ALPHABET_SIZE = ALPHABET.length();
     private final Random random = new Random();
-    private final GroupDao groupDao;
+    private final GroupRepository groupRepository;
     private final int amountOfGroups;
 
-    public GroupDataGenerator(GroupDao groupDao, int amountOfGroups) {
+    public GroupDataGenerator(GroupRepository groupRepository, int amountOfGroups) {
 
-        this.groupDao = groupDao;
+        this.groupRepository = groupRepository;
         this.amountOfGroups = amountOfGroups;
     }
 
@@ -31,7 +31,7 @@ public class GroupDataGenerator implements DataGenerator {
                     .withGroupName(groupName)
                     .build();
 
-            groupDao.save(group);
+            groupRepository.save(group);
         }
 
     }

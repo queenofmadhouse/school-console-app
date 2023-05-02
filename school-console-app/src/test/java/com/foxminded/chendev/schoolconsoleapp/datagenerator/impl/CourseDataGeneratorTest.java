@@ -1,6 +1,6 @@
 package com.foxminded.chendev.schoolconsoleapp.datagenerator.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.dao.impl.CourseDaoImpl;
+import com.foxminded.chendev.schoolconsoleapp.repository.CourseRepository;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class CourseDataGeneratorTest {
     @Mock
-    private CourseDaoImpl courseDao;
+    private CourseRepository courseRepository;
 
     private CourseDataGenerator coursesGenerator;
 
@@ -24,7 +24,7 @@ class CourseDataGeneratorTest {
     @BeforeEach
     void setUp() {
         amountOfCourses = 10;
-        coursesGenerator = new CourseDataGenerator(courseDao, amountOfCourses);
+        coursesGenerator = new CourseDataGenerator(courseRepository, amountOfCourses);
     }
 
     @Test
@@ -32,6 +32,6 @@ class CourseDataGeneratorTest {
 
         coursesGenerator.generateData();
 
-        verify(courseDao, times(amountOfCourses)).save(any(Course.class));
+        verify(courseRepository, times(amountOfCourses)).save(any(Course.class));
     }
 }
