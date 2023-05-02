@@ -1,5 +1,6 @@
 package com.foxminded.chendev.schoolconsoleapp.service.impl;
 
+import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
 import com.foxminded.chendev.schoolconsoleapp.repository.CourseRepository;
 import com.foxminded.chendev.schoolconsoleapp.repository.StudentRepository;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
@@ -15,8 +16,10 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -156,5 +159,71 @@ class StudentServiceImplTest {
         studentService.findById(studentId);
 
         verify(studentRepository).findById(studentId);
+    }
+
+    @Test
+    void saveShouldThrowDataBaseRuntimeExceptionWhenExceptionOccurs() {
+
+        Student studentJane = Student.builder()
+                .withFirstName("Jane")
+                .withLastName("Potters")
+                .withGroupId(5)
+                .build();
+
+        doThrow(new RuntimeException()).when(studentRepository).save(studentJane);
+
+        assertThrows(DataBaseRuntimeException.class, () -> studentService.save(studentJane));
+    }
+
+    @Test
+    void findByIdShouldThrowDataBaseRuntimeExceptionWhenExceptionOccurs() {
+
+        long studentId = 1;
+
+        doThrow(new RuntimeException()).when(studentRepository).findById(studentId);
+
+        assertThrows(DataBaseRuntimeException.class, () -> studentService.findById(studentId));
+    }
+
+    @Test
+    void deleteByIdShouldThrowDataBaseRuntimeExceptionWhenExceptionOccurs() {
+
+        long studentId = 1;
+
+        doThrow(new RuntimeException()).when(studentRepository).deleteById(studentId);
+
+        assertThrows(DataBaseRuntimeException.class, () -> studentService.deleteById(studentId));
+    }
+
+    @Test
+    void addStudentToCourseShouldThrowDataBaseRuntimeExceptionWhenExceptionOccurs() {
+
+        long studentId = 1;
+        long courseId = 1;
+
+        doThrow(new RuntimeException()).when(studentRepository).addStudentToCourse(studentId, courseId);
+
+        assertThrows(DataBaseRuntimeException.class, () -> studentService.addStudentToCourse(studentId, courseId));
+    }
+
+    @Test
+    void removeStudentFromCourseShouldThrowDataBaseRuntimeExceptionWhenExceptionOccurs() {
+
+        long studentId = 1;
+        long courseId = 1;
+
+        doThrow(new RuntimeException()).when(studentRepository).removeStudentFromCourse(studentId, courseId);
+
+        assertThrows(DataBaseRuntimeException.class, () -> studentService.removeStudentFromCourse(studentId, courseId));
+    }
+
+    @Test
+    void findAllStudentsByCourseNameShouldThrowDataBaseRuntimeExceptionWhenExceptionOccurs() {
+
+        String courseName = "Math";
+
+        doThrow(new RuntimeException()).when(courseRepository).findCourseByName(courseName);
+
+        assertThrows(DataBaseRuntimeException.class, () -> studentService.findAllStudentsByCourseName(courseName));
     }
 }

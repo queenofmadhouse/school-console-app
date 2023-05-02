@@ -1,5 +1,6 @@
 package com.foxminded.chendev.schoolconsoleapp.service.impl;
 
+import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
 import com.foxminded.chendev.schoolconsoleapp.repository.GroupRepository;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.service.GroupService;
@@ -18,6 +19,10 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<Group> findGroupsWithLessOrEqualStudents(long value) {
-        return groupRepository.findGroupsWithLessOrEqualStudents(value);
+        try {
+            return groupRepository.findGroupsWithLessOrEqualStudents(value);
+        } catch (Exception e) {
+            throw new DataBaseRuntimeException(e);
+        }
     }
 }

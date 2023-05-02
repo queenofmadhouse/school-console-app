@@ -1,5 +1,6 @@
 package com.foxminded.chendev.schoolconsoleapp.service.impl;
 
+import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
 import com.foxminded.chendev.schoolconsoleapp.repository.CourseRepository;
 import com.foxminded.chendev.schoolconsoleapp.repository.StudentRepository;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
@@ -13,6 +14,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -63,5 +66,13 @@ class CourseServiceImplTest {
         assertEquals("Middle level", foundCourses.get(1).getCourseDescription());
         assertEquals("Java", foundCourses.get(2).getCourseName());
         assertEquals("Super hard level", foundCourses.get(2).getCourseDescription());
+    }
+
+    @Test
+    void findAllCoursesShouldThrowDataBaseRuntimeExceptionWhenExceptionOccurs() {
+
+        doThrow(new RuntimeException()).when(courseRepository).findAll();
+
+        assertThrows(DataBaseRuntimeException.class, () -> courseService.findAllCourses());
     }
 }

@@ -1,5 +1,6 @@
 package com.foxminded.chendev.schoolconsoleapp.service.impl;
 
+import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
 import com.foxminded.chendev.schoolconsoleapp.repository.CourseRepository;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.service.CourseService;
@@ -19,6 +20,10 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Course> findAllCourses() {
-        return courseRepository.findAll();
+        try {
+            return courseRepository.findAll();
+        } catch (Exception e) {
+            throw new DataBaseRuntimeException(e);
+        }
     }
 }
