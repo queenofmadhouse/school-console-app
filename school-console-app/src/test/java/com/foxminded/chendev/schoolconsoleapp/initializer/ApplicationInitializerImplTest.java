@@ -1,11 +1,11 @@
 package com.foxminded.chendev.schoolconsoleapp.initializer;
 
-import com.foxminded.chendev.schoolconsoleapp.repository.CourseRepository;
-import com.foxminded.chendev.schoolconsoleapp.repository.GroupRepository;
-import com.foxminded.chendev.schoolconsoleapp.repository.StudentRepository;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
+import com.foxminded.chendev.schoolconsoleapp.repository.CourseRepository;
+import com.foxminded.chendev.schoolconsoleapp.repository.GroupRepository;
+import com.foxminded.chendev.schoolconsoleapp.repository.StudentRepository;
 import com.foxminded.chendev.schoolconsoleapp.service.impl.CourseDataGeneratorService;
 import com.foxminded.chendev.schoolconsoleapp.service.impl.GroupDataGeneratorService;
 import com.foxminded.chendev.schoolconsoleapp.service.impl.StudentCourseRelationDataGeneratorService;
@@ -31,16 +31,22 @@ class ApplicationInitializerImplTest {
 
     @Mock
     private StudentRepository studentRepository;
+
     @Mock
     private GroupRepository groupRepository;
+
     @Mock
     private CourseRepository courseRepository;
+
     @Mock
     private StudentDataGeneratorService studentGenerator;
+
     @Mock
     private GroupDataGeneratorService groupsGenerator;
+
     @Mock
     private CourseDataGeneratorService courseGenerator;
+
     @Mock
     private StudentCourseRelationDataGeneratorService studentCourseRelationGenerator;
 
@@ -49,6 +55,7 @@ class ApplicationInitializerImplTest {
 
     @Test
     void initShouldCallGeneratorsWhenTablesAreEmpty() {
+
         when(groupRepository.findAll()).thenReturn(Collections.emptyList());
         when(studentRepository.findAll()).thenReturn(Collections.emptyList());
         when(courseRepository.findAll()).thenReturn(Collections.emptyList());

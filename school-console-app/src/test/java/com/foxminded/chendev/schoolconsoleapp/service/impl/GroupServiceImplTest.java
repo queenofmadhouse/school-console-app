@@ -1,9 +1,9 @@
 package com.foxminded.chendev.schoolconsoleapp.service.impl;
 
+import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
 import com.foxminded.chendev.schoolconsoleapp.repository.GroupRepository;
 import com.foxminded.chendev.schoolconsoleapp.repository.StudentRepository;
-import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

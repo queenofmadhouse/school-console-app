@@ -1,7 +1,7 @@
 package com.foxminded.chendev.schoolconsoleapp.datagenerator.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.repository.CourseRepository;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
+import com.foxminded.chendev.schoolconsoleapp.repository.CourseRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +23,7 @@ class CourseDataGeneratorTest {
 
     @BeforeEach
     void setUp() {
+
         amountOfCourses = 10;
         coursesGenerator = new CourseDataGenerator(courseRepository, amountOfCourses);
     }

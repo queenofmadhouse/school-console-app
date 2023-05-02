@@ -1,7 +1,7 @@
 package com.foxminded.chendev.schoolconsoleapp.datagenerator.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.repository.GroupRepository;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
+import com.foxminded.chendev.schoolconsoleapp.repository.GroupRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -30,12 +30,14 @@ class GroupDataGeneratorTest {
 
     @BeforeEach
     void setUp() {
+
         MockitoAnnotations.openMocks(this);
         groupsGenerator = new GroupDataGenerator(groupRepository, AMOUNT_OF_GROUPS);
     }
 
     @Test
     void generateData_shouldGenerateCorrectNumberOfGroups() {
+
         groupsGenerator.generateData();
 
         ArgumentCaptor<Group> groupCaptor = ArgumentCaptor.forClass(Group.class);
@@ -52,6 +54,7 @@ class GroupDataGeneratorTest {
 
     @Test
     void generateData_shouldNotGenerateGroupsIfAmountIsZero() {
+
         groupsGenerator = new GroupDataGenerator(groupRepository, 0);
         groupsGenerator.generateData();
 
@@ -60,6 +63,7 @@ class GroupDataGeneratorTest {
 
     @Test
     void generateData_shouldGenerateGroupsWithUniqueNames() {
+
         groupsGenerator.generateData();
 
         ArgumentCaptor<Group> groupCaptor = ArgumentCaptor.forClass(Group.class);

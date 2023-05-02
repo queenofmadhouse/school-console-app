@@ -41,7 +41,6 @@ class StudentRepositoryImplTestIT {
     @Autowired
     private CourseRepository courseRepository;
 
-
     @Test
     void saveShouldSaveInEntityInDataBase() {
 
@@ -87,7 +86,7 @@ class StudentRepositoryImplTestIT {
     }
 
     @Test
-    void updateShouldUpdateValues() {
+    void saveShouldUpdateValues() {
 
         Student student = Student.builder()
                 .withFirstName("Alex")

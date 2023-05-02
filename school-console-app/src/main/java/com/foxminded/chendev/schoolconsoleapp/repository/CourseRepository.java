@@ -14,9 +14,11 @@ import java.util.Optional;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
 
+    @Transactional
     @Query(value = "SELECT c FROM Course c WHERE c.courseId = :courseId")
     Optional<Course> findById(@Param("courseId") long courseId);
 
+    @Transactional
     @Modifying
     @Query(value = "DELETE FROM Course c WHERE c.courseId = :courseId")
     void deleteById(@Param("courseId") long courseId);

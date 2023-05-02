@@ -23,23 +23,24 @@ import static org.mockito.Mockito.doThrow;
 @SpringBootTest
 class LoggingAspectIntegrationTest {
 
-    private Logger studentDaoLogger;
+    private Logger studentRepositorylogger;
     private ListAppender<ILoggingEvent> listAppender;
 
     @SpyBean
-    private StudentRepository studentDao;
+    private StudentRepository studentRepository;
 
     @BeforeEach
     void setUp() {
-        studentDaoLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(StudentRepository.class);
+        studentRepositorylogger = (ch.qos.logback.classic.Logger) LoggerFactory
+                .getLogger(StudentRepository.class);
         listAppender = new ListAppender<>();
         listAppender.start();
-        studentDaoLogger.addAppender(listAppender);
+        studentRepositorylogger.addAppender(listAppender);
     }
 
     @AfterEach
     void tearDown() {
-        studentDaoLogger.detachAppender(listAppender);
+        studentRepositorylogger.detachAppender(listAppender);
     }
 
     @Test
@@ -50,7 +51,7 @@ class LoggingAspectIntegrationTest {
                 .withLastName("Hezi")
                 .build();
 
-        studentDao.save(student);
+        studentRepository.save(student);
 
         assertThat(listAppender.list).hasSizeGreaterThanOrEqualTo(2);
         assertThat(listAppender.list.get(0).getLevel()).isEqualTo(Level.INFO);
@@ -60,8 +61,8 @@ class LoggingAspectIntegrationTest {
     @Test
     void exception() {
 
-        doThrow(new RuntimeException()).when(studentDao).deleteById(1); // Настраиваем мок-объект
-        assertThrows(RuntimeException.class, () -> studentDao.deleteById(1));
+        doThrow(new RuntimeException()).when(studentRepository).deleteById(1);
+        assertThrows(RuntimeException.class, () -> studentRepository.deleteById(1));
 
         assertThat(listAppender.list).hasSizeGreaterThanOrEqualTo(1);
         assertThat(listAppender.list.get(3).getLevel()).isEqualTo(Level.ERROR);

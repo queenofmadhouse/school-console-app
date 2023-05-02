@@ -88,7 +88,6 @@ class MenuOptionsTest {
         for (Student student : studentList) {
             inOrder.verify(consoleHandlerMock).printMessage(student.toString());
         }
-//        verify(menuOptionsLogger).info(anyString());
     }
 
     @Test
@@ -101,7 +100,6 @@ class MenuOptionsTest {
 
         verify(studentServiceMock).save(any(Student.class));
         verify(consoleHandlerMock, times(2)).printMessage(anyString());
-//        verify(menuOptionsLogger).info(anyString());
     }
 
     @Test
@@ -114,7 +112,6 @@ class MenuOptionsTest {
 
         verify(studentServiceMock).deleteById(1);
         verify(consoleHandlerMock).printMessage(anyString());
-//        verify(menuOptionsLogger).info(anyString());
     }
 
     @Test
@@ -158,7 +155,6 @@ class MenuOptionsTest {
         inOrder.verify(consoleHandlerMock).printMessage("\nEnter course ID: ");
 
         verify(studentServiceMock).addStudentToCourse(anyLong(), eq(1L));
-//        verify(menuOptionsLogger).info(anyString());
     }
 
     @Test
@@ -171,7 +167,6 @@ class MenuOptionsTest {
 
         verify(studentServiceMock).removeStudentFromCourse(1L, 1L);
         verify(consoleHandlerMock, times(2)).printMessage(anyString());
-//        verify(menuOptionsLogger).info(anyString());
     }
 
     @Test
@@ -209,7 +204,6 @@ class MenuOptionsTest {
         for (Group group : groups) {
             inOrder.verify(consoleHandlerMock).printMessage(group.toString());
         }
-//        verify(menuOptionsLogger).info(anyString());
     }
 
     @Test

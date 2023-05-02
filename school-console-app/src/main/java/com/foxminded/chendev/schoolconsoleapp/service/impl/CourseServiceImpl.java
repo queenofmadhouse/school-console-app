@@ -1,8 +1,8 @@
 package com.foxminded.chendev.schoolconsoleapp.service.impl;
 
+import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
 import com.foxminded.chendev.schoolconsoleapp.repository.CourseRepository;
-import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.service.CourseService;
 import org.springframework.stereotype.Service;
 

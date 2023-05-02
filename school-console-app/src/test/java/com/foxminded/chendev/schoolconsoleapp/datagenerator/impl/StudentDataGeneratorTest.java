@@ -1,9 +1,9 @@
 package com.foxminded.chendev.schoolconsoleapp.datagenerator.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.repository.GroupRepository;
-import com.foxminded.chendev.schoolconsoleapp.repository.StudentRepository;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
+import com.foxminded.chendev.schoolconsoleapp.repository.GroupRepository;
+import com.foxminded.chendev.schoolconsoleapp.repository.StudentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -53,6 +53,7 @@ class StudentDataGeneratorTest {
 
     @Test
     void generateDataShouldGenerateStudentsWithValidNamesAndGroupIDs() {
+
         List<Group> groups = generateMockGroups(5);
         when(groupRepository.findAll()).thenReturn(groups);
 
@@ -81,6 +82,7 @@ class StudentDataGeneratorTest {
 
     @Test
     void generateDataShouldGenerateStudentsWithoutGroupsWhenGroupsAreEmpty() {
+
         List<Group> groups = Collections.emptyList();
         when(groupRepository.findAll()).thenReturn(groups);
 

@@ -1,11 +1,10 @@
 package com.foxminded.chendev.schoolconsoleapp.service.impl;
 
-import ch.qos.logback.core.encoder.EchoEncoder;
+import com.foxminded.chendev.schoolconsoleapp.entity.Course;
+import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
 import com.foxminded.chendev.schoolconsoleapp.repository.CourseRepository;
 import com.foxminded.chendev.schoolconsoleapp.repository.StudentRepository;
-import com.foxminded.chendev.schoolconsoleapp.entity.Course;
-import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import com.foxminded.chendev.schoolconsoleapp.service.StudentService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +20,7 @@ public class StudentServiceImpl implements StudentService {
     private final CourseRepository courseRepository;
 
     public StudentServiceImpl(StudentRepository studentRepository, CourseRepository courseRepository) {
+
         this.studentRepository = studentRepository;
         this.courseRepository = courseRepository;
     }

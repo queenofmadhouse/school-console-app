@@ -1,8 +1,8 @@
 package com.foxminded.chendev.schoolconsoleapp.datagenerator.impl;
 
-import com.foxminded.chendev.schoolconsoleapp.repository.GroupRepository;
 import com.foxminded.chendev.schoolconsoleapp.datagenerator.DataGenerator;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
+import com.foxminded.chendev.schoolconsoleapp.repository.GroupRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;

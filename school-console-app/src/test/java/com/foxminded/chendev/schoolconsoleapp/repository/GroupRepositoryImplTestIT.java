@@ -77,7 +77,7 @@ class GroupRepositoryImplTestIT {
     }
 
     @Test
-    void updateShouldUpdateName() {
+    void saveShouldUpdateName() {
 
         Group groupMath = Group.builder()
                 .withGroupName("Math")

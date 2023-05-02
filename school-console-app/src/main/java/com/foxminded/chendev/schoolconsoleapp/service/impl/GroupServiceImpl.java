@@ -1,8 +1,8 @@
 package com.foxminded.chendev.schoolconsoleapp.service.impl;
 
+import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
 import com.foxminded.chendev.schoolconsoleapp.repository.GroupRepository;
-import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.service.GroupService;
 import org.springframework.stereotype.Service;
 

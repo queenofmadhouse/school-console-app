@@ -38,6 +38,7 @@ class MenuControllerTest {
 
     @Test
     void provideMenuShouldProvideMenuWhenInputValid() {
+
         when(consoleHandler.readUserInputString())
                 .thenReturn("c")
                 .thenReturn("Jane")
@@ -51,6 +52,7 @@ class MenuControllerTest {
 
     @Test
     void provideMenuShouldCatchExceptionWhenInputInvalid() {
+        
         when(consoleHandler.readUserInputString())
                 .thenReturn("invalid_input")
                 .thenReturn("exit");

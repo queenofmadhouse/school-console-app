@@ -89,7 +89,7 @@ class CourseRepositoryImplTestIT {
     }
 
     @Test
-    void updateShouldUpdateValues() {
+    void saveShouldUpdateValues() {
 
         Course courseNewJavaCourse = Course.builder()
                 .withCourseName("New Java Course")
