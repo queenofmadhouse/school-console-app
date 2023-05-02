@@ -76,8 +76,7 @@ class CourseDaoImplTest {
     }
 
     @Test
-    void findCoursesByStudentIdShouldThrowDataBaseRuntimeExceptionWhenDataAccessExceptionOccurs()
-            throws NoSuchFieldException, IllegalAccessException {
+    void findCoursesByStudentIdShouldThrowDataBaseRuntimeExceptionWhenDataAccessExceptionOccurs() {
 
         doThrow(new RuntimeException())
                 .when(entityManager).createQuery(anyString());
@@ -86,8 +85,7 @@ class CourseDaoImplTest {
     }
 
     @Test
-    void deleteAllRelationsByCourseIdShouldThrowDataBaseRuntimeExceptionWhenDataAccessExceptionOccurs()
-            throws NoSuchFieldException, IllegalAccessException {
+    void deleteAllRelationsByCourseIdShouldThrowDataBaseRuntimeExceptionWhenDataAccessExceptionOccurs() {
 
         doThrow(new RuntimeException())
                 .when(entityManager).createNativeQuery(anyString());
