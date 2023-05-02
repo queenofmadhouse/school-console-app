@@ -3,8 +3,6 @@ package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 import com.foxminded.chendev.schoolconsoleapp.dao.GroupDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Group;
 import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,10 +19,8 @@ public class GroupDaoImpl extends AbstractCrudDao<Group> implements GroupDao {
             "GROUP BY g.group_id, g.group_name " +
             "HAVING COUNT(s.user_id) <= :maxStudentCount";
 
-    private static final Logger logger = LoggerFactory.getLogger(GroupDaoImpl.class);
-
     public GroupDaoImpl(EntityManager entityManager) {
-        super(entityManager, logger,SELECT_ALL_GROUPS);
+        super(entityManager, SELECT_ALL_GROUPS);
     }
 
     @Override
@@ -33,14 +29,11 @@ public class GroupDaoImpl extends AbstractCrudDao<Group> implements GroupDao {
         try {
 
             List<Group> groupList = entityManager.createNativeQuery(SELECT_GROUPS_WITH_LESS_OR_EQUALS_STUDENTS, Group.class)
-                    .setParameter("maxStudentCount", value)
-                    .getResultList();
-
-            logger.info("Method findGroupsWithLessOrEqualStudents was cold with parameters: " + value);
+                    .setParameter("maxStudentCount", value).getResultList();
 
             return groupList;
         } catch (RuntimeException e) {
-            logger.error("Exception in method findGroupsWithLessOrEqualStudents with parameters: " + value, e);
+
             throw new DataBaseRuntimeException("Can't find groups with less or equals students: " + value, e);
         }
     }

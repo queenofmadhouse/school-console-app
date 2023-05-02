@@ -3,8 +3,6 @@ package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 import com.foxminded.chendev.schoolconsoleapp.dao.StudentDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
 import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,10 +21,9 @@ public class StudentDaoImpl extends AbstractCrudDao<Student> implements StudentD
             "WHERE user_id = ? AND course_id = ?";
     private static final String DELETE_ALL_RELATIONS_BY_STUDENT_ID = "DELETE FROM school.students_courses_relation " +
             "WHERE user_id = ?";
-    private static final Logger logger = LoggerFactory.getLogger(StudentDaoImpl.class);
 
     public StudentDaoImpl(EntityManager entityManager) {
-        super(entityManager, logger, SELECT_ALL_STUDENTS);
+        super(entityManager, SELECT_ALL_STUDENTS);
     }
 
     @Override
@@ -47,18 +44,8 @@ public class StudentDaoImpl extends AbstractCrudDao<Student> implements StudentD
         try {
 
             entityManager.createNativeQuery(DELETE_RELATION_BY_STUDENT_ID)
-                    .setParameter(1, studentId)
-                    .setParameter(2, courseId)
-                    .executeUpdate();
-
-            logger.info("Method removeStudentFromCourse was cold with parameters: " +
-                    "StudentId: " + studentId +
-                    ", CourseId: " + courseId);
+                    .setParameter(1, studentId).setParameter(2, courseId).executeUpdate();
         } catch (RuntimeException e) {
-
-            logger.error("Exception in method removeStudentFromCourse with parameters: " +
-                    "StudentId: " + studentId +
-                    ", CourseId: " + courseId);
 
             throw new DataBaseRuntimeException("Can't remove from student with id: " + studentId +
                     ", from course with id: " + courseId, e);
@@ -70,17 +57,9 @@ public class StudentDaoImpl extends AbstractCrudDao<Student> implements StudentD
     public void addStudentToCourse(long studentId, long courseId) {
         try {
 
-            entityManager.createNativeQuery(INSERT_COURSE_RELATION).setParameter(1, studentId)
-                    .setParameter(2, courseId).executeUpdate();
-
-            logger.info("Method addStudentToCourse was cold with parameters: " +
-                    "StudentId: " + studentId +
-                    ", CourseId: " + courseId);
+            entityManager.createNativeQuery(INSERT_COURSE_RELATION)
+                    .setParameter(1, studentId).setParameter(2, courseId).executeUpdate();
         } catch (RuntimeException e) {
-
-            logger.error("Exception in method addStudentToCourse with parameters: " +
-                    "StudentId: " + studentId +
-                    ", CourseId: " + courseId);
 
             throw new DataBaseRuntimeException("Can't add student with id: " + studentId +
                     ", to course with id: " + courseId, e);
@@ -91,13 +70,10 @@ public class StudentDaoImpl extends AbstractCrudDao<Student> implements StudentD
     @Transactional
     public List<Student> findStudentsByCourseId(long courseId) {
         try {
-            List<Student> resultList = entityManager.createQuery(SELECT_ALL_STUDENTS_BY_COURSE_ID, getEntityClass()).setParameter("course_id", courseId).getResultList();
-
-            logger.info("Method findStudentsByCourseId was cold with parameters: " + courseId);
-
-            return resultList;
+            return entityManager.createQuery(SELECT_ALL_STUDENTS_BY_COURSE_ID, getEntityClass())
+                    .setParameter("course_id", courseId).getResultList();
         } catch (RuntimeException e) {
-            logger.error("Exception in method findStudentsByCourseId with parameters: " + courseId, e);
+
             throw new DataBaseRuntimeException("Can't find students by course id: " + courseId, e);
         }
     }
@@ -107,12 +83,9 @@ public class StudentDaoImpl extends AbstractCrudDao<Student> implements StudentD
     public void deleteAllRelationsByStudentId(long studentId) {
         try {
 
-            entityManager.createNativeQuery(DELETE_ALL_RELATIONS_BY_STUDENT_ID).setParameter(1, studentId);
-
-            logger.info("Method deleteAllRelationsByStudentId was cold with parameters: " + studentId);
+            entityManager.createNativeQuery(DELETE_ALL_RELATIONS_BY_STUDENT_ID)
+                    .setParameter(1, studentId);
         } catch (RuntimeException e) {
-
-            logger.error("Exception in method deleteAllRelationsByStudentId with parameters: " + studentId, e);
 
             throw new DataBaseRuntimeException("Can't delete all relations by student id" + studentId, e);
         }

@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-class DaoLoggingAspectIntegrationTest {
+class LoggingAspectIntegrationTest {
 
     private Logger studentDaoLogger;
     private ListAppender<ILoggingEvent> listAppender;

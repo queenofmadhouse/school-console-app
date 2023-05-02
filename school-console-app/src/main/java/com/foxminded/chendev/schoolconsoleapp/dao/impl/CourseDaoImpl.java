@@ -3,8 +3,6 @@ package com.foxminded.chendev.schoolconsoleapp.dao.impl;
 import com.foxminded.chendev.schoolconsoleapp.dao.CourseDao;
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +20,9 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
             "WHERE s.userId = : user_id";
     private static final String DELETE_ALL_RELATIONS_BY_COURSE_ID = "DELETE FROM school.students_courses_relation" +
             " WHERE course_id = :course_id";
-    private static final Logger logger = LoggerFactory.getLogger(CourseDaoImpl.class);
 
     public CourseDaoImpl(EntityManager entityManager) {
-        super(entityManager, logger, SELECT_ALL_COURSES);
+        super(entityManager, SELECT_ALL_COURSES);
     }
 
     @Override
@@ -41,12 +38,8 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
             List<Course> resultList = entityManager.createQuery(SELECT_ALL_COURSES_BY_STUDENT_ID, Course.class)
                     .setParameter("user_id", studentId).getResultList();
 
-            logger.info("Method findCoursesByStudentId was cold with parameters: " + studentId);
-
             return resultList;
         } catch (RuntimeException e) {
-
-            logger.error("Exception in method findCoursesByStudentId with parameters: " + studentId, e);
 
             throw new DataBaseRuntimeException("Can't find course by student id: " + studentId, e);
         }
@@ -59,11 +52,7 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
 
             entityManager.createNativeQuery(DELETE_ALL_RELATIONS_BY_COURSE_ID)
                     .setParameter("course_id", courseId).executeUpdate();
-
-            logger.info("Method deleteAllRelationsByCourseId was cold with parameters: " + courseId);
         } catch (RuntimeException e) {
-
-            logger.error("Exception in method deleteAllRelationsByCourseId with parameters: " + courseId, e);
 
             throw new DataBaseRuntimeException("Can't delete all relations by course id: " + courseId, e);
         }
@@ -79,17 +68,11 @@ public class CourseDaoImpl extends AbstractCrudDao<Course> implements CourseDao 
                     .setParameter("course_name", courseName).getSingleResult()
             );
 
-            logger.info("Method findCourseByName was cold with parameters: " + courseName);
-
             return resultOptional;
         } catch (NoResultException e) {
 
-            logger.warn("Can't find by name: " + courseName);
-
             return Optional.empty();
         } catch (RuntimeException e) {
-
-            logger.error("Exception in method findCourseByName with parameters: " + courseName);
 
             throw new DataBaseRuntimeException("Can't find course by name: " + courseName);
         }

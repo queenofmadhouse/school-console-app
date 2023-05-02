@@ -15,13 +15,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Aspect
 @Component
-public class DaoLoggingAspect {
+public class LoggingAspect {
 
     private final Map<Class<?>, Logger> loggers = new ConcurrentHashMap<>();
-
-    public void addLogger(Class<?> clazz, Logger logger) {
-        loggers.put(clazz, logger);
-    }
 
     private Logger getLogger(Class<?> clazz) {
         return loggers.computeIfAbsent(clazz, LoggerFactory::getLogger);
@@ -42,7 +38,7 @@ public class DaoLoggingAspect {
         logger.info("Method {} returned: {}", joinPoint.getSignature().getName(), result);
     }
 
-    @AfterThrowing(pointcut = "daoMethods()", throwing = "DataBaseRuntimeException")
+    @AfterThrowing(pointcut = "daoMethods()")
     public void logException(JoinPoint joinPoint) {
         Logger logger = getLogger(joinPoint.getTarget().getClass());
         logger.error("Exception in method {} with parameters: {}", joinPoint.getSignature().getName(), joinPoint.getArgs());

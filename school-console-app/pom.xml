@@ -18,6 +18,7 @@
         <org.mockito.version>3.12.4</org.mockito.version>
         <org.postgresql.version>42.6.0</org.postgresql.version>
         <testcontainers.version>1.17.6</testcontainers.version>
+        <org.assertj.version>3.21.0</org.assertj.version>
     </properties>
 
     <build>
@@ -163,6 +164,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
         </dependency>
@@ -176,6 +182,13 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${org.assertj.version}</version>
             <scope>test</scope>
         </dependency>
 
