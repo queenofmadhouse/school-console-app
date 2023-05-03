@@ -52,7 +52,7 @@ class StudentRepositoryImplTestIT {
 
         studentRepository.save(studentAlex);
 
-        Student foundStudent = studentRepository.findById(1).orElse(null);
+        Student foundStudent = studentRepository.findByUserId(1).orElse(null);
 
         assertNotNull(foundStudent);
         assertEquals(studentAlex.getFirstName(), foundStudent.getFirstName());
@@ -96,14 +96,14 @@ class StudentRepositoryImplTestIT {
 
         studentRepository.save(student);
 
-        Student foundStudent = studentRepository.findById(1).orElse(null);
+        Student foundStudent = studentRepository.findByUserId(1).orElse(null);
 
         foundStudent.setFirstName("Alexandr");
         foundStudent.setLastName("Kirieshkin");
 
         studentRepository.save(foundStudent);
 
-        Student foundUpdatedStudent = studentRepository.findById(1).orElse(null);
+        Student foundUpdatedStudent = studentRepository.findByUserId(1).orElse(null);
 
         assertNotNull(foundUpdatedStudent);
         assertEquals(foundStudent.getFirstName(), foundUpdatedStudent.getFirstName());
@@ -123,9 +123,9 @@ class StudentRepositoryImplTestIT {
 
         studentRepository.save(studentAlex);
 
-        studentRepository.deleteById(studentId);
+        studentRepository.deleteByUserId(studentId);
 
-        Optional<Student> optionalStudent = studentRepository.findById(studentId);
+        Optional<Student> optionalStudent = studentRepository.findByUserId(studentId);
 
         assertFalse(optionalStudent.isPresent());
     }
@@ -308,6 +308,6 @@ class StudentRepositoryImplTestIT {
     @Test
     void deleteByIdShouldNotThrowExceptionWhenIdNotExist() {
 
-        assertDoesNotThrow(() -> studentRepository.deleteById(10));
+        assertDoesNotThrow(() -> studentRepository.deleteByUserId(10));
     }
 }

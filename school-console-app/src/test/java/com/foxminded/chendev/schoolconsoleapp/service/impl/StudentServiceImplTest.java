@@ -40,11 +40,11 @@ class StudentServiceImplTest {
 
         int studentId = 1;
 
-        doNothing().when(studentRepository).deleteById(studentId);
+        doNothing().when(studentRepository).deleteByUserId(studentId);
 
         studentService.deleteById(studentId);
 
-        verify(studentRepository).deleteById(studentId);
+        verify(studentRepository).deleteByUserId(studentId);
     }
 
     @Test
@@ -121,7 +121,7 @@ class StudentServiceImplTest {
 
         Optional<Course> optionalCourse = Optional.ofNullable(Course.builder().withCourseId(courseId).build());
 
-        when(courseRepository.findCourseByName(courseName)).thenReturn(optionalCourse);
+        when(courseRepository.findByCourseName(courseName)).thenReturn(optionalCourse);
         when(studentRepository.findStudentsByCourseId(courseId)).thenReturn(studentList);
 
         List<Student> foundStudentList = studentService.findAllStudentsByCourseName(courseName);
@@ -129,7 +129,7 @@ class StudentServiceImplTest {
         assertFalse(foundStudentList.isEmpty());
         assertEquals(3, foundStudentList.size());
 
-        verify(courseRepository).findCourseByName(courseName);
+        verify(courseRepository).findByCourseName(courseName);
         verify(studentRepository).findStudentsByCourseId(courseId);
     }
 
@@ -139,13 +139,13 @@ class StudentServiceImplTest {
         Optional<Course> emptyCourse = Optional.empty();
         String courseName = "Math";
 
-        when(courseRepository.findCourseByName(courseName)).thenReturn(emptyCourse);
+        when(courseRepository.findByCourseName(courseName)).thenReturn(emptyCourse);
 
         List<Student> emptyStudentList = studentService.findAllStudentsByCourseName(courseName);
 
         assertTrue(emptyStudentList.isEmpty());
 
-        verify(courseRepository).findCourseByName(courseName);
+        verify(courseRepository).findByCourseName(courseName);
     }
 
     @Test
@@ -154,11 +154,11 @@ class StudentServiceImplTest {
         Optional<Student> optionalStudent = Optional.ofNullable(Student.builder().build());
         int studentId = 1;
 
-        when(studentRepository.findById(studentId)).thenReturn(optionalStudent);
+        when(studentRepository.findByUserId(studentId)).thenReturn(optionalStudent);
 
         studentService.findById(studentId);
 
-        verify(studentRepository).findById(studentId);
+        verify(studentRepository).findByUserId(studentId);
     }
 
     @Test
@@ -180,7 +180,7 @@ class StudentServiceImplTest {
 
         long studentId = 1;
 
-        doThrow(new RuntimeException()).when(studentRepository).findById(studentId);
+        doThrow(new RuntimeException()).when(studentRepository).findByUserId(studentId);
 
         assertThrows(DataBaseRuntimeException.class, () -> studentService.findById(studentId));
     }
@@ -190,7 +190,7 @@ class StudentServiceImplTest {
 
         long studentId = 1;
 
-        doThrow(new RuntimeException()).when(studentRepository).deleteById(studentId);
+        doThrow(new RuntimeException()).when(studentRepository).deleteByUserId(studentId);
 
         assertThrows(DataBaseRuntimeException.class, () -> studentService.deleteById(studentId));
     }
@@ -222,7 +222,7 @@ class StudentServiceImplTest {
 
         String courseName = "Math";
 
-        doThrow(new RuntimeException()).when(courseRepository).findCourseByName(courseName);
+        doThrow(new RuntimeException()).when(courseRepository).findByCourseName(courseName);
 
         assertThrows(DataBaseRuntimeException.class, () -> studentService.findAllStudentsByCourseName(courseName));
     }

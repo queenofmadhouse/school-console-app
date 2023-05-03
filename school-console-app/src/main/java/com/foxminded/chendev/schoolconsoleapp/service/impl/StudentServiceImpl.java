@@ -37,7 +37,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Optional<Student> findById(long id) {
         try {
-            return studentRepository.findById(id);
+            return studentRepository.findByUserId(id);
         } catch (Exception e) {
             throw new DataBaseRuntimeException(e);
         }
@@ -46,7 +46,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void deleteById(long id) {
         try {
-            studentRepository.deleteById(id);
+            studentRepository.deleteByUserId(id);
 
         } catch (Exception e) {
             throw new DataBaseRuntimeException(e);
@@ -76,7 +76,7 @@ public class StudentServiceImpl implements StudentService {
     public List<Student> findAllStudentsByCourseName(String courseName) {
         try {
 
-            Optional<Course> course = courseRepository.findCourseByName(courseName);
+            Optional<Course> course = courseRepository.findByCourseName(courseName);
 
             if (course.isPresent()) {
                 long courseID = course.get().getCourseId();

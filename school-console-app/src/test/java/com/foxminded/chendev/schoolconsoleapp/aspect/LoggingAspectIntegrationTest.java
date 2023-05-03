@@ -61,8 +61,8 @@ class LoggingAspectIntegrationTest {
     @Test
     void exception() {
 
-        doThrow(new RuntimeException()).when(studentRepository).deleteById(1);
-        assertThrows(RuntimeException.class, () -> studentRepository.deleteById(1));
+        doThrow(new RuntimeException()).when(studentRepository).deleteByUserId(1);
+        assertThrows(RuntimeException.class, () -> studentRepository.deleteByUserId(1));
 
         assertThat(listAppender.list).hasSizeGreaterThanOrEqualTo(1);
         assertThat(listAppender.list.get(3).getLevel()).isEqualTo(Level.ERROR);

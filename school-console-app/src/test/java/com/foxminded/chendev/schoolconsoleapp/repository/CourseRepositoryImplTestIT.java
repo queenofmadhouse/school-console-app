@@ -63,7 +63,7 @@ class CourseRepositoryImplTestIT {
         courseRepository.save(courseBiology);
         courseRepository.save(courseJava);
 
-        Course foundCourse = courseRepository.findCourseByName("Java").orElse(null);
+        Course foundCourse = courseRepository.findByCourseName("Java").orElse(null);
 
         assertNotNull(foundCourse);
         assertEquals(3, foundCourse.getCourseId());
@@ -81,9 +81,9 @@ class CourseRepositoryImplTestIT {
 
         courseRepository.save(courseMath);
 
-        courseRepository.deleteById(1);
+        courseRepository.deleteByCourseId(1);
 
-        Optional<Course> optionalCourse = courseRepository.findById(1);
+        Optional<Course> optionalCourse = courseRepository.findByCourseId(1);
 
         assertFalse(optionalCourse.isPresent());
     }
@@ -98,14 +98,14 @@ class CourseRepositoryImplTestIT {
 
         courseRepository.save(courseNewJavaCourse);
 
-        Course foundCourse = courseRepository.findCourseByName("New Java Course").orElse(null);
+        Course foundCourse = courseRepository.findByCourseName("New Java Course").orElse(null);
 
         foundCourse.setCourseName("Old Java Course");
         foundCourse.setCourseDescription("Without info at all");
 
         courseRepository.save(foundCourse);
 
-        Course foundUpdatedCourse = courseRepository.findById(1).orElse(null);
+        Course foundUpdatedCourse = courseRepository.findByCourseId(1).orElse(null);
 
         assertNotNull(foundUpdatedCourse);
         assertEquals(foundCourse.getCourseName(), foundUpdatedCourse.getCourseName());
@@ -216,7 +216,7 @@ class CourseRepositoryImplTestIT {
     @Test
     void findCourseByCourseNameShouldReturnEmptyOptionalWhenNotPresent() {
 
-        Optional<Course> course = courseRepository.findCourseByName("Not Present");
+        Optional<Course> course = courseRepository.findByCourseName("Not Present");
 
         assertFalse(course.isPresent());
     }
@@ -224,6 +224,6 @@ class CourseRepositoryImplTestIT {
     @Test
     void deleteByIdShouldNotThrowDatabaseRuntimeExceptionWhenNotFound() {
 
-        assertDoesNotThrow(() -> courseRepository.deleteById(100));
+        assertDoesNotThrow(() -> courseRepository.deleteByCourseId(100));
     }
 }

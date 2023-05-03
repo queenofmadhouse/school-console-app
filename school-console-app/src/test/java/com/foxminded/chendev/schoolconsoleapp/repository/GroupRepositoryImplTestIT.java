@@ -49,7 +49,7 @@ class GroupRepositoryImplTestIT {
 
         groupRepository.save(groupMath);
 
-        Group foundGroup = groupRepository.findById(1).orElse(null);
+        Group foundGroup = groupRepository.findByGroupId(1).orElse(null);
 
         assertNotNull(foundGroup);
         assertEquals(groupMath.getGroupName(), foundGroup.getGroupName());
@@ -85,13 +85,13 @@ class GroupRepositoryImplTestIT {
 
         groupRepository.save(groupMath);
 
-        Group foundFgroup = groupRepository.findById(1).orElse(null);
+        Group foundFgroup = groupRepository.findByGroupId(1).orElse(null);
 
         foundFgroup.setGroupName("Test Group Updated");
 
         groupRepository.save(foundFgroup);
 
-        Group foundUpdatedGroup = groupRepository.findById(1).orElse(null);
+        Group foundUpdatedGroup = groupRepository.findByGroupId(1).orElse(null);
 
         assertEquals(foundFgroup.getGroupName(), foundUpdatedGroup.getGroupName());
 
@@ -303,11 +303,11 @@ class GroupRepositoryImplTestIT {
 
         groupRepository.save(groupA1);
 
-        Group foundGroup = groupRepository.findById(1).orElse(null);
+        Group foundGroup = groupRepository.findByGroupId(1).orElse(null);
 
-        groupRepository.deleteById(1);
+        groupRepository.deleteByGroupId(1);
 
-        Group deletedGroup = groupRepository.findById(1).orElse(null);
+        Group deletedGroup = groupRepository.findByGroupId(1).orElse(null);
 
         assertNotNull(foundGroup);
         assertNull(deletedGroup);
@@ -316,6 +316,6 @@ class GroupRepositoryImplTestIT {
     @Test
     void deleteByIdShouldNotThrowDataBaseRunTimeExceptionWhenNotFound() {
 
-        assertDoesNotThrow(() -> groupRepository.deleteById(100));
+        assertDoesNotThrow(() -> groupRepository.deleteByGroupId(100));
     }
 }
