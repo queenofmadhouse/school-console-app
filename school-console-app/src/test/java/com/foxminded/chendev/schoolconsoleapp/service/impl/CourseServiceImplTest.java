@@ -67,12 +67,4 @@ class CourseServiceImplTest {
         assertEquals("Java", foundCourses.get(2).getCourseName());
         assertEquals("Super hard level", foundCourses.get(2).getCourseDescription());
     }
-
-    @Test
-    void findAllCoursesShouldThrowDataBaseRuntimeExceptionWhenExceptionOccurs() {
-
-        doThrow(new RuntimeException()).when(courseRepository).findAll();
-
-        assertThrows(DataBaseRuntimeException.class, () -> courseService.findAllCourses());
-    }
 }

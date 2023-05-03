@@ -2,7 +2,6 @@ package com.foxminded.chendev.schoolconsoleapp.service.impl;
 
 import com.foxminded.chendev.schoolconsoleapp.entity.Course;
 import com.foxminded.chendev.schoolconsoleapp.entity.Student;
-import com.foxminded.chendev.schoolconsoleapp.exception.DataBaseRuntimeException;
 import com.foxminded.chendev.schoolconsoleapp.repository.CourseRepository;
 import com.foxminded.chendev.schoolconsoleapp.repository.StudentRepository;
 import com.foxminded.chendev.schoolconsoleapp.service.StudentService;
@@ -25,67 +24,51 @@ public class StudentServiceImpl implements StudentService {
         this.courseRepository = courseRepository;
     }
 
+    @Transactional
     @Override
     public void save(Student entity) {
-        try {
-            studentRepository.save(entity);
-        } catch (Exception e) {
-            throw new DataBaseRuntimeException(e);
-        }
+
+        studentRepository.save(entity);
     }
 
     @Override
     public Optional<Student> findById(long id) {
-        try {
-            return studentRepository.findByUserId(id);
-        } catch (Exception e) {
-            throw new DataBaseRuntimeException(e);
-        }
+
+        return studentRepository.findByUserId(id);
     }
 
+    @Transactional
     @Override
     public void deleteById(long id) {
-        try {
-            studentRepository.deleteByUserId(id);
 
-        } catch (Exception e) {
-            throw new DataBaseRuntimeException(e);
-        }
+        studentRepository.deleteByUserId(id);
     }
 
+    @Transactional
     @Override
     public void addStudentToCourse(long studentId, long courseId) {
-        try {
-            studentRepository.addStudentToCourse(studentId, courseId);
-        } catch (Exception e) {
-            throw new DataBaseRuntimeException(e);
-        }
+
+        studentRepository.addStudentToCourse(studentId, courseId);
     }
 
+    @Transactional
     @Override
     public void removeStudentFromCourse(long studentId, long courseId) {
-        try {
-            studentRepository.removeStudentFromCourse(studentId, courseId);
-        } catch (Exception e) {
-            throw new DataBaseRuntimeException(e);
-        }
+
+        studentRepository.removeStudentFromCourse(studentId, courseId);
     }
 
     @Override
     @Transactional
     public List<Student> findAllStudentsByCourseName(String courseName) {
-        try {
 
-            Optional<Course> course = courseRepository.findByCourseName(courseName);
+        Optional<Course> course = courseRepository.findByCourseName(courseName);
 
-            if (course.isPresent()) {
-                long courseID = course.get().getCourseId();
-                return studentRepository.findStudentsByCourseId(courseID);
-            } else {
-                return Collections.emptyList();
-            }
-        } catch (Exception e) {
-            throw new DataBaseRuntimeException(e);
+        if (course.isPresent()) {
+            long courseID = course.get().getCourseId();
+            return studentRepository.findStudentsByCourseId(courseID);
+        } else {
+            return Collections.emptyList();
         }
     }
 }

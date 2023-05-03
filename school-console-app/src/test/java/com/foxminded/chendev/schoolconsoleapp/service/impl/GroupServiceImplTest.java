@@ -52,15 +52,4 @@ class GroupServiceImplTest {
 
         verify(groupRepository).findGroupsWithLessOrEqualStudents(valueOfStudents);
     }
-
-    @Test
-    void findGroupsWithLessOrEqualStudentsShouldThrowDataBaseRuntimeExceptionWhenExceptionOccurs() {
-
-        long valueOfStudents = 10;
-
-        doThrow(new RuntimeException()).when(groupRepository).findGroupsWithLessOrEqualStudents(valueOfStudents);
-
-        assertThrows(DataBaseRuntimeException.class,
-                () -> groupService.findGroupsWithLessOrEqualStudents(valueOfStudents));
-    }
 }
