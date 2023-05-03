@@ -24,7 +24,6 @@ public class StudentServiceImpl implements StudentService {
         this.courseRepository = courseRepository;
     }
 
-    @Transactional
     @Override
     public void save(Student entity) {
 
@@ -37,29 +36,26 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findByUserId(id);
     }
 
-    @Transactional
     @Override
     public void deleteById(long id) {
 
         studentRepository.deleteByUserId(id);
     }
 
-    @Transactional
     @Override
     public void addStudentToCourse(long studentId, long courseId) {
 
         studentRepository.addStudentToCourse(studentId, courseId);
     }
 
-    @Transactional
     @Override
     public void removeStudentFromCourse(long studentId, long courseId) {
 
         studentRepository.removeStudentFromCourse(studentId, courseId);
     }
 
-    @Override
     @Transactional
+    @Override
     public List<Student> findAllStudentsByCourseName(String courseName) {
 
         Optional<Course> course = courseRepository.findByCourseName(courseName);
