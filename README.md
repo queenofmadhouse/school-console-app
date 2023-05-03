@@ -1,5 +1,7 @@
 # School Console Appplication
-  A console-based application designed to manage school-related information, such as groups, students, and courses.
+
+  A console-based application designed to manage school-related information, such as groups, students, and courses. There are several versions of the     application available across different branches. You can explore the development history and observe how the application evolved over time, with new technologies being incrementally added.
+  
 ## Functions
 
 - Find all groups with less or equal students’ number
@@ -17,6 +19,8 @@
 - PostgrSQL
 - Flyway Migration
 - Spring Data
+- Hibernate
+- Spring Boot JDBC
 - Spring AOP + aspectJ (for logging)
 
 ## How to install:
